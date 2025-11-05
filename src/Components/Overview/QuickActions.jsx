@@ -56,7 +56,7 @@ const QuickActions = () => {
         </div>
         <h3 className="text-lg font-bold text-gray-200">GitHub Profile</h3>
         <p className="text-sm mb-4 text-gray-400">Explore my projects & contributions</p>
-        <a target="_blank" href="https://github.com/rsakib15" rel="noopener noreferrer">
+        <a target="_blank" href="https://github.com/arifrexa" rel="noopener noreferrer">
           <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-10 px-4 py-2 w-full bg-green-500/20 hover:bg-green-500/30 text-green-400 border-green-500/50 border backdrop-blur-sm">
             View GitHub
           </button>
@@ -85,7 +85,7 @@ const QuickActions = () => {
         </div>
         <h3 className="text-lg font-bold text-gray-200">LinkedIn</h3>
         <p className="text-sm mb-4 text-gray-400">Connect & grow our network together</p>
-        <a target="_blank" href="https://www.linkedin.com/in/sakibrahman/" rel="noopener noreferrer">
+        <a target="_blank" href="https://www.linkedin.com/in/md-arif-rexa/" rel="noopener noreferrer">
           <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-10 px-4 py-2 w-full bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border-blue-500/50 border backdrop-blur-sm">
             View LinkedIn
           </button>
