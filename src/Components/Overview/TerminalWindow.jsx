@@ -1,6 +1,6 @@
 'use client';
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 
 const container = {
   hidden: { opacity: 0 },
@@ -18,11 +18,15 @@ const item = {
 };
 
 const TerminalWindow = () => {
+    const ref = useRef(null);
+    const isInView = useInView(ref, { once: true, margin: "-50px" });
+
     return (
         <motion.div 
-          variants={container}
+          ref={ref}
           initial="hidden"
-          animate="show"
+          animate={isInView ? "show" : "hidden"}
+          variants={container}
           className="w-full mx-auto bg-gray-900 border-gray-700/50 backdrop-blur-md rounded-xl border overflow-hidden shadow-sm"
         >
             <motion.div className="bg-gray-800/30 border-gray-700/50 px-4 py-3 flex items-center justify-between border-b" variants={item}>

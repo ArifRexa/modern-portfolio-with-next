@@ -1,6 +1,6 @@
 'use client';
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 
 const container = {
   hidden: { opacity: 0 },
@@ -18,11 +18,15 @@ const item = {
 };
 
 const PersonalInfo = () => {
+    const ref = useRef(null);
+    const isInView = useInView(ref, { once: true, margin: "-50px" });
+    
     return (
         <motion.div 
-          variants={container}
+          ref={ref}
           initial="hidden"
-          animate="show"
+          animate={isInView ? "show" : "hidden"}
+          variants={container}
           className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm"
         >
             <motion.div className="flex flex-col md:flex-row lg:items-start lg:justify-between w-full relative" variants={item}>
