@@ -14,7 +14,9 @@ const Footer = () => {
                     </div>
                     <div className="flex space-x-6">
                         <a 
-                            href="#" 
+                            href="https://github.com" 
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                             aria-label="GitHub"
                         >
@@ -23,7 +25,9 @@ const Footer = () => {
                             </svg>
                         </a>
                         <a 
-                            href="#" 
+                            href="https://linkedin.com" 
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                             aria-label="LinkedIn"
                         >
@@ -32,7 +36,9 @@ const Footer = () => {
                             </svg>
                         </a>
                         <a 
-                            href="#" 
+                            href="https://twitter.com" 
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                             aria-label="Twitter"
                         >
