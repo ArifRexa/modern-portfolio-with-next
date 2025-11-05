@@ -3,7 +3,7 @@ import React from 'react';
 
 const GetInTouch = () => {
   return (
-    <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm h-full">
+    <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm">
       <div className="text-center mx-auto text-gray-900">
         <h3 className="text-2xl font-bold mb-2 text-gray-200">Get In Touch</h3>
         <p className="text-base mb-6 text-gray-400">

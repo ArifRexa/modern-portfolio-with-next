@@ -6,7 +6,7 @@ const Sidebar = ({ className = '' }) => {
   const [activeTab, setActiveTab] = useState('overview');
 
   return (
-    <aside className={`fixed left-0 top-0 h-screen w-80 z-50 bg-gray-900 backdrop-blur-md border border-gray-700/50 shadow-sm transform transition-transform duration-300 lg:translate-x-0 -translate-x-full ${className} lg:static lg:h-screen`}>
+    <aside className={`fixed left-0 top-0 h-screen w-80 z-50 bg-gray-900 backdrop-blur-md border border-gray-700/50 shadow-sm transform transition-transform duration-300 lg:translate-x-0 -translate-x-full ${className} lg:static lg:sticky lg:top-0 lg:h-screen lg:overflow-hidden`}>
       <div className="p-6">
         <div className="flex items-center space-x-4 mb-6">
           <img
