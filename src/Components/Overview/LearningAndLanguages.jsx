@@ -102,7 +102,8 @@ const LearningAndLanguages = () => {
             {[
               { name: 'Bengali', level: 'Native', width: '100%' },
               { name: 'English', level: 'Fluent', width: '90%' },
-              { name: 'Chinese', level: 'Conversational', width: '70%' },
+              { name: 'Urdu', level: 'Conversational', width: '70%' },
+              { name: 'Turkish', level: 'Conversational', width: '70%' },
             ].map((lang) => (
               <div
                 key={lang.name}
