@@ -13,7 +13,7 @@ import Testimonials from "@/Components/Overview/Testimonials";
 
 const Overview = () => {
   return (
-    <>
+    <div className="space-y-8">
       <PersonalInfo />
       <CurrentActivity />
       <TerminalWindow />
@@ -25,7 +25,7 @@ const Overview = () => {
       <QuickActions />
       <FunFactsAndInterests />
       <GetInTouch />
-    </>
+    </ div>
   );
 };
 
