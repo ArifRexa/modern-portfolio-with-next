@@ -1,14 +1,15 @@
-import PersonalInfo from '@/Components/PersonalInfo/PersonalInfo';
-import CurrentActivity from '@/Components/CurrentActivity/CurrentActivity';
-import TerminalWindow from '@/Components/TerminalWindow/TerminalWindow';
-import RecentProjects from '@/Components/RecentProjects/RecentProjects';
-import QuickInsights from '@/Components/QuickInsights/QuickInsights';
-import LatestBlogPosts from '@/Components/LatestBlogPosts/LatestBlogPosts';
-import LearningAndLanguages from '@/Components/LearningAndLanguages/LearningAndLanguages';
-import Testimonials from '@/Components/Testimonials/Testimonials';
-import QuickActions from '@/Components/QuickActions/QuickActions';
-import FunFactsAndInterests from '@/Components/FunFactsAndInterests/FunFactsAndInterests';
-import GetInTouch from '@/Components/GetInTouch/GetInTouch';
+import CurrentActivity from "@/Components/Overview/CurrentActivity";
+import FunFactsAndInterests from "@/Components/Overview/FunFactsAndInterests";
+import GetInTouch from "@/Components/Overview/GetInTouch";
+import LatestBlogPosts from "@/Components/Overview/LatestBlogPosts";
+import LearningAndLanguages from "@/Components/Overview/LearningAndLanguages";
+import PersonalInfo from "@/Components/Overview/PersonalInfo";
+import QuickActions from "@/Components/Overview/QuickActions";
+import QuickInsights from "@/Components/Overview/QuickInsights";
+import RecentProjects from "@/Components/Overview/RecentProjects";
+import TerminalWindow from "@/Components/Overview/TerminalWindow";
+import Testimonials from "@/Components/Overview/Testimonials";
+
 
 const Overview = () => {
   return (
