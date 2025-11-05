@@ -1,3 +1,5 @@
+'use client';
+import { motion } from 'framer-motion';
 import CurrentActivity from "@/Components/Overview/CurrentActivity";
 import FunFactsAndInterests from "@/Components/Overview/FunFactsAndInterests";
 import GetInTouch from "@/Components/Overview/GetInTouch";
@@ -10,22 +12,63 @@ import RecentProjects from "@/Components/Overview/RecentProjects";
 import TerminalWindow from "@/Components/Overview/TerminalWindow";
 import Testimonials from "@/Components/Overview/Testimonials";
 
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const item = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+};
 
 const Overview = () => {
   return (
-    <div className="space-y-8">
-      <PersonalInfo />
-      <CurrentActivity />
-      <TerminalWindow />
-      <RecentProjects />
-      <QuickInsights />
-      <LatestBlogPosts />
-      <LearningAndLanguages />
-      <Testimonials />
-      <QuickActions />
-      <FunFactsAndInterests />
-      <GetInTouch />
-    </ div>
+    <motion.div
+      variants={container}
+      initial="hidden"
+      animate="show"
+      className="space-y-8"
+    >
+      <motion.div variants={item}>
+        <PersonalInfo />
+      </motion.div>
+      <motion.div variants={item}>
+        <CurrentActivity />
+      </motion.div>
+      <motion.div variants={item}>
+        <TerminalWindow />
+      </motion.div>
+      <motion.div variants={item}>
+        <RecentProjects />
+      </motion.div>
+      <motion.div variants={item}>
+        <QuickInsights />
+      </motion.div>
+      <motion.div variants={item}>
+        <LatestBlogPosts />
+      </motion.div>
+      <motion.div variants={item}>
+        <LearningAndLanguages />
+      </motion.div>
+      <motion.div variants={item}>
+        <Testimonials />
+      </motion.div>
+      <motion.div variants={item}>
+        <QuickActions />
+      </motion.div>
+      <motion.div variants={item}>
+        <FunFactsAndInterests />
+      </motion.div>
+      <motion.div variants={item}>
+        <GetInTouch />
+      </motion.div>
+    </motion.div>
   );
 };
 
