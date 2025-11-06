@@ -1,7 +1,7 @@
 'use client';
 import Sidebar from "@/Components/Sidebar/Sidebar";
 import Footer from "@/Components/Common/Footer";
-import RouteProgressBar from "@/Components/Common/RouteProgressBar";
+import AestheticSpinner from "@/Components/Common/RouteProgressBar";
 import { useState, useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext';
 
@@ -23,7 +23,7 @@ export default function ClientLayout({ children }) {
 
   return (
     <>
-      <RouteProgressBar />
+      {/* <AestheticSpinner /> */}
       <div className="flex">
         {/* Mobile menu button */}
         <button
