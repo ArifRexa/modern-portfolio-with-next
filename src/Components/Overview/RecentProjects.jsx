@@ -35,8 +35,8 @@ const RecentProjects = () => {
       status: "in-progress"
     },
     {
-      title: "Rsakib15",
-      description: "rsakib15 is a special repository. Its README.md will appear on your public GitHub profile.",
+      title: "arifrexa",
+      description: "arifrexa is a special repository. Its README.md will appear on your public GitHub profile.",
       tags: ["git", "github", "python", "readme"],
       status: "in-progress"
     }
