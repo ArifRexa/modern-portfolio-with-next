@@ -2,6 +2,56 @@
 'use client';
 import React from 'react';
 
+const StatCard = ({ title, value, color }) => (
+  <div className="relative text-center rounded-xl border backdrop-blur-md px-2 py-4 shadow-sm bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700/50">
+    <div className={`text-2xl font-bold ${color}`}>{value}</div>
+    <div className="text-base font-bold text-gray-300">{title}</div>
+  </div>
+);
+
+const SubmissionItem = ({ title, details, verdict }) => (
+  <div className="relative rounded-xl border backdrop-blur-md px-2 py-4 shadow-sm bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700/50">
+    <div className="px-2">
+      <div className="flex items-center justify-between">
+        <div>
+          <h6 className="font-semibold text-md text-gray-300">{title}</h6>
+          <div className="text-sm text-gray-400">{details}</div>
+        </div>
+        <div
+          className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold whitespace-nowrap ml-4 ${
+            verdict === 'Accepted' || verdict === 'OK'
+              ? 'bg-green-500/20 text-green-400 border-green-500/50'
+              : 'bg-red-500/20 text-red-400 border-red-500/50'
+          }`}
+        >
+          <span className="hidden sm:inline">
+            {verdict === 'Accepted' || verdict === 'OK' ? 'Accepted' : verdict}
+          </span>
+          <span className="inline sm:hidden">
+            {verdict === 'Accepted' || verdict === 'OK' ? 'AC' : verdict.substring(0, 2)}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const ContestItem = ({ title, details, rank }) => (
+  <div className="relative rounded-xl border backdrop-blur-md px-2 py-4 shadow-sm bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700/50">
+    <div className="px-2">
+      <div className="flex items-center justify-between">
+        <div>
+          <h6 className="font-semibold text-md text-gray-300">{title}</h6>
+          <div className="text-sm text-gray-400">{details}</div>
+        </div>
+        <div className="text-sm rounded-lg ml-8 px-2 py-1 whitespace-nowrap text-gray-400">
+          Rank: {rank}
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
 const CompetitiveProgramming = () => {
   const platformData = {
     leetcode: {
@@ -110,56 +160,6 @@ const CompetitiveProgramming = () => {
       hackerrank: { solved: 0, badges: 0 }
     }
   };
-
-  const StatCard = ({ title, value, color }) => (
-    <div className="relative text-center rounded-xl border backdrop-blur-md px-2 py-4 shadow-sm bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700/50">
-      <div className={`text-2xl font-bold ${color}`}>{value}</div>
-      <div className="text-base font-bold text-gray-300">{title}</div>
-    </div>
-  );
-
-  const SubmissionItem = ({ title, details, verdict }) => (
-    <div className="relative rounded-xl border backdrop-blur-md px-2 py-4 shadow-sm bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700/50">
-      <div className="px-2">
-        <div className="flex items-center justify-between">
-          <div>
-            <h6 className="font-semibold text-md text-gray-300">{title}</h6>
-            <div className="text-sm text-gray-400">{details}</div>
-          </div>
-          <div
-            className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold whitespace-nowrap ml-4 ${
-              verdict === 'Accepted' || verdict === 'OK'
-                ? 'bg-green-500/20 text-green-400 border-green-500/50'
-                : 'bg-red-500/20 text-red-400 border-red-500/50'
-            }`}
-          >
-            <span className="hidden sm:inline">
-              {verdict === 'Accepted' || verdict === 'OK' ? 'Accepted' : verdict}
-            </span>
-            <span className="inline sm:hidden">
-              {verdict === 'Accepted' || verdict === 'OK' ? 'AC' : verdict.substring(0, 2)}
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const ContestItem = ({ title, details, rank }) => (
-    <div className="relative rounded-xl border backdrop-blur-md px-2 py-4 shadow-sm bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700/50">
-      <div className="px-2">
-        <div className="flex items-center justify-between">
-          <div>
-            <h6 className="font-semibold text-md text-gray-300">{title}</h6>
-            <div className="text-sm text-gray-400">{details}</div>
-          </div>
-          <div className="text-sm rounded-lg ml-8 px-2 py-1 whitespace-nowrap text-gray-400">
-            Rank: {rank}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
 
   return (
     <section className="space-y-6">

@@ -2,6 +2,14 @@
 'use client';
 import React from 'react';
 
+const StatCard = ({ title, value, icon, color }) => (
+  <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm flex flex-col items-center justify-center h-full">
+    <div className={`${color} w-6 h-6 mb-2`}>{icon}</div>
+    <div className="text-2xl font-bold">{value}</div>
+    <div className="text-sm font-semibold text-gray-400">{title}</div>
+  </div>
+);
+
 const CodingActivities = () => {
   // Mock data — in practice, you'd fetch this from an API or pass it as props
   const codingData = {
@@ -65,14 +73,6 @@ const CodingActivities = () => {
     ],
     last_updated: "2025-11-03 7:59:01 AM"
   };
-
-  const StatCard = ({ title, value, icon, color }) => (
-    <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm flex flex-col items-center justify-center h-full">
-      <div className={`${color} w-6 h-6 mb-2`}>{icon}</div>
-      <div className="text-2xl font-bold">{value}</div>
-      <div className="text-sm font-semibold text-gray-400">{title}</div>
-    </div>
-  );
 
   return (
     <section className="space-y-6">
