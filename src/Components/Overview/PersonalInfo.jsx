@@ -1,5 +1,5 @@
 'use client';
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, useInView } from 'framer-motion';
 import avatar from '../../../public/images/avatar.jpg';
@@ -22,6 +22,27 @@ const item = {
 const PersonalInfo = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-50px' });
+  const [codingTime, setCodingTime] = useState('...'); // Loading indicator
+
+  useEffect(() => {
+    // Fetch coding time from our API route
+    const fetchCodingTime = async () => {
+      try {
+        const response = await fetch('/api/wakatime');
+        if (!response.ok) {
+          throw new Error('Failed to fetch coding time');
+        }
+        const data = await response.json();
+        setCodingTime(data.codingTime);
+      } catch (error) {
+        console.error('Error fetching coding time:', error);
+        // Fallback to a default value if API fails
+        setCodingTime('0 mins'); 
+      }
+    };
+
+    fetchCodingTime();
+  }, []); // Empty dependency array means this runs once when component mounts
 
   return (
     <motion.div
@@ -160,7 +181,7 @@ const PersonalInfo = () => {
         <motion.dl className="grid grid-cols-2 sm:grid-cols-4 gap-4" variants={container}>
           <motion.div className="text-center" variants={item}>
             <dd className="text-3xl font-bold bg-gradient-to-r from-amber-400 to-orange-500 text-transparent bg-clip-text">
-              0.9h
+              {codingTime}
             </dd>
             <dt className="uppercase text-sm font-semibold text-gray-300">Coding</dt>
           </motion.div>
