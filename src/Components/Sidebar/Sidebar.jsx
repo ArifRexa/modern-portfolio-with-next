@@ -87,7 +87,7 @@ const Sidebar = ({ className = '', theme = 'dark' }) => {
               <polyline points="8 6 2 12 8 18"></polyline>
             </svg><span class="font-medium">Coding Activities</span></a><a
               class={`w-full flex items-center space-x-3 py-2 lg:py-2.5 px-4 rounded-xl transition-colors duration-300 border ${theme === 'dark' ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-800/30 border-transparent' : 'text-gray-600 hover:text-gray-800 hover:bg-gray-300/30 border-transparent'} text-left`}
-              href="/github"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+              href="/github-contributions"><svg xmlns="http://www.w3.org/2000/svg" width="24"
                 height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                 class="lucide lucide-github w-5 h-5">
@@ -109,7 +109,7 @@ const Sidebar = ({ className = '', theme = 'dark' }) => {
               <path d="M14 4h2v6"></path>
             </svg><span class="font-medium">Competitive Programming</span></a><a
               class={`w-full flex items-center space-x-3 py-2 lg:py-2.5 px-4 rounded-xl transition-colors duration-300 border ${theme === 'dark' ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-800/30 border-transparent' : 'text-gray-600 hover:text-gray-800 hover:bg-gray-300/30 border-transparent'} text-left`}
-              href="/awards"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+              href="/awards-certifications"><svg xmlns="http://www.w3.org/2000/svg" width="24"
                 height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                 class="lucide lucide-trophy w-5 h-5">
