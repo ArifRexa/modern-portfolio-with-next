@@ -323,11 +323,11 @@ const Testimonials = () => {
                     <div className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700/40 rounded-xl p-4 lg:p-4 shadow-md backdrop-blur-md min-h-56 h-full cursor-pointer transition-transform hover:scale-[1.01] hover:shadow-md duration-300 ease-in-out">
                       <div className="flex items-center space-x-4 mb-4 relative z-10">
                         <img
-                          src=""
+                          src={testimonial.avatar}
                           onError={(e) => {
                             e.currentTarget.src = "/placeholder-avatar.png";
                           }}
-                          alt=""
+                          alt={testimonial.name}
                           className="w-12 h-12 rounded-full object-cover ring-2 ring-yellow-400/70 shadow-md"
                         />
                         <div className="flex-1 min-w-0">
