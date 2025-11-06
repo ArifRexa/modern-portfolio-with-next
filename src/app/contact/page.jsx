@@ -219,7 +219,7 @@ const Contact = () => {
         <h3 className="text-3xl font-bold text-center text-gray-200 mb-4">Connect With Me</h3>
         <div className="flex justify-center gap-4">
           <a
-            href="https://github.com/rsakib15"
+            href="https://github.com/arifrexa"
             target="_blank"
             rel="noopener noreferrer"
             className="group cursor-pointer rounded-xl p-4 transition-all transform hover:-translate-y-1 bg-gray-800/40 hover:bg-gray-800/70 shadow-md hover:shadow-xl"
@@ -230,7 +230,7 @@ const Contact = () => {
             </svg>
           </a>
           <a
-            href="mailto:rsakib13@gmail.com"
+            href="mailto:arif.reza3126@gmail.com"
             className="group cursor-pointer rounded-xl p-4 transition-all transform hover:-translate-y-1 bg-gray-800/40 hover:bg-gray-800/70 shadow-md hover:shadow-xl"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-mail w-10 h-10 transition-transform duration-300 group-hover:scale-110 text-white">
@@ -239,7 +239,7 @@ const Contact = () => {
             </svg>
           </a>
           <a
-            href="https://www.linkedin.com/in/sakibrahman"
+            href="https://www.linkedin.com/in/md-arif-rexa"
             target="_blank"
             rel="noopener noreferrer"
             className="group cursor-pointer rounded-xl p-4 transition-all transform hover:-translate-y-1 bg-gray-800/40 hover:bg-gray-800/70 shadow-md hover:shadow-xl"
