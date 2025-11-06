@@ -182,13 +182,14 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 
 const Testimonials = () => {
   const testimonialsData = [
     {
       name: "Rashedul Islam",
       role: "CTO at Mediusware Ltd.",
-      avatar: "/avatar.webp",
+      avatar: "https://png.pngtree.com/png-clipart/20230927/original/pngtree-man-avatar-image-for-profile-png-image_13001882.png",
       content:
         "Working with Sakib bhai has been fantastic. He's sharp, practical, and knows exactly how to get things done. He handles tricky problems without overcomplicating them and is truly a go-to person on the team. His communication skills are excellent as well.",
     },
@@ -223,7 +224,7 @@ const Testimonials = () => {
     {
       name: "Abbas Uddin Sheikh",
       role: "CTO at Talent Pro",
-      avatar: "/avatar.webp",
+      avatar: "https://png.pngtree.com/png-clipart/20230927/original/pngtree-man-avatar-image-for-profile-png-image_13001882.png",
       content:
         "I had the pleasure of working with Sakib Rahman during his time at Talent Pro, where he consistently demonstrated strong dedication and professionalism.",
     }
