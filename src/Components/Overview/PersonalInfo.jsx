@@ -23,6 +23,7 @@ const PersonalInfo = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-50px' });
   const [codingTime, setCodingTime] = useState('...'); // Loading indicator
+  const [commitCount, setCommitCount] = useState('...'); // Loading indicator
 
   useEffect(() => {
     // Fetch coding time from our API route
@@ -37,11 +38,27 @@ const PersonalInfo = () => {
       } catch (error) {
         console.error('Error fetching coding time:', error);
         // Fallback to a default value if API fails
-        setCodingTime('0 mins'); 
+        setCodingTime('0 mins');
       }
     };
 
+    // Fetch commit count from our API route
+    const fetchCommitCount = async () => {
+      try {
+        const response = await fetch('/api/github/commits');
+        if (!response.ok) throw new Error('Failed to fetch commit count');
+
+        const data = await response.json();
+        setCommitCount(data.commitCount); // ✔️ matches the API now
+      } catch (error) {
+        console.error('Error fetching commit count:', error);
+        setCommitCount(0);
+      }
+    };
+
+
     fetchCodingTime();
+    fetchCommitCount();
   }, []); // Empty dependency array means this runs once when component mounts
 
   return (
@@ -187,7 +204,7 @@ const PersonalInfo = () => {
           </motion.div>
           <motion.div className="text-center" variants={item}>
             <dd className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-indigo-500 text-transparent bg-clip-text">
-              —
+              {commitCount}
             </dd>
             <dt className="uppercase text-sm font-semibold text-gray-300">Commits</dt>
           </motion.div>
