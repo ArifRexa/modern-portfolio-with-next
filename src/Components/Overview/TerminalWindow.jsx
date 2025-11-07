@@ -1,5 +1,5 @@
 'use client';
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion, useInView } from 'framer-motion';
 
 const container = {
@@ -19,7 +19,117 @@ const item = {
 
 const TerminalWindow = () => {
     const ref = useRef(null);
+    const terminalRef = useRef(null);
     const isInView = useInView(ref, { once: true, margin: "-50px" });
+    const [commandHistory, setCommandHistory] = useState([]);
+    const [currentCommand, setCurrentCommand] = useState('');
+    const [currentPath, setCurrentPath] = useState('~');
+    const [isTyping, setIsTyping] = useState(false);
+    const [username, setUsername] = useState('Ariful Islam');
+    const [showCursor, setShowCursor] = useState(true);
+    const hasRun = useRef(false); // Ref to track if the simulation has already run
+    
+    
+    // Initialize demo sequence and simulate typing inside the effect to avoid changing deps
+    useEffect(() => {
+        // In StrictMode, this effect runs twice, but we use ref to prevent double execution
+        const demoSequence = [
+            {
+                command: 'who_am_i?',
+                output: `${username} — Lead Engineer | System Architect | Problem Solver`
+            },
+            {
+                command: 'uptime',
+                output: '15,000+ hours shipped | 99.99% uptime mindset'
+            },
+            {
+                command: 'ls stack/',
+                output: 'Python Django FastAPI Redis Kafka Postgres AWS Docker K8s gRPC CI/CD'
+            },
+            {
+                command: 'top -l 1 | grep leadership',
+                output: 'Scaling teams, systems & engineering culture'
+            },
+            {
+                command: 'tail -f logs/strategy.log',
+                output: 'Decisions fueled by data, uptime, and user empathy'
+            },
+            {
+                command: 'netstat -an | grep :443',
+                output: 'Secured systems. Encrypted by default.'
+            },
+            {
+                command: `curl -X POST /ideas -d 'from=${username}'`,
+                output: 'Building what matters. Shipping what scales.'
+            },
+            {
+                command: 'crontab -l',
+                output: 'Automating pain points. 0 3 * * * deploy && sleep'
+            },
+            {
+                command: "echo 'Let's build resilient, scalable systems.'",
+                output: "Let's build resilient, scalable systems. Ready when you are."
+            }
+        ];
+
+        const simulateTyping = async () => {
+            setIsTyping(true);
+
+            // Clear command history at the start of simulation
+            setCommandHistory([]);
+
+            // Add commands with delays to simulate typing
+            for (let i = 0; i < demoSequence.length; i++) {
+                const { command, output } = demoSequence[i];
+
+                // Add the command and output to history
+                const commandEntry = {
+                    input: command,
+                    output: output
+                };
+
+                setCommandHistory(prev => [...prev, commandEntry]);
+
+                // Wait for the output to be displayed
+                await new Promise(resolve => setTimeout(resolve, 2000));
+            }
+
+            setIsTyping(false);
+        };
+
+        const timer = setTimeout(() => {
+            if (hasRun.current) return; // Prevent double execution in React StrictMode
+            hasRun.current = true;
+
+            // Run simulation after setting up the interval
+            simulateTyping();
+        }, 0);
+
+        // Set up cursor blinking effect (this runs on each effect run, but that's okay)
+        const cursorInterval = setInterval(() => {
+            setShowCursor(prev => !prev);
+        }, 500);
+
+        return () => {
+            clearTimeout(timer);
+            clearInterval(cursorInterval);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); // run once
+
+    // Focus terminal when component mounts
+    useEffect(() => {
+        if (terminalRef.current) {
+            terminalRef.current.focus();
+        }
+    }, []);
+
+    // Add command history to terminal
+    useEffect(() => {
+        if (terminalRef.current) {
+            terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+        }
+    }, [commandHistory]);
 
     return (
         <motion.div 
@@ -58,12 +168,31 @@ const TerminalWindow = () => {
             </motion.div>
             <motion.div className="p-4 lg:p-6" variants={item}>
                 <motion.div
-                    className="font-mono text-xs md:text-sm leading-relaxed whitespace-pre-wrap h-130 md:h-120 mb-4 w-full overflow-hidden border rounded-md px-4 py-4 text-green-400 bg-black/30 border-gray-700/50"
+                    ref={terminalRef}
+                    className="font-mono text-xs md:text-sm leading-relaxed h-130 md:h-120 mb-4 w-full overflow-y-auto border rounded-md px-4 py-4 text-green-400 bg-black/30 border-gray-700/50"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5, duration: 0.5 }}
+                    tabIndex="0"
                 >
-                    $ <span className="animate-pulse">▌</span>
+                    <>
+                        {/* Command history */}
+                        {commandHistory.map((cmd, index) => (
+                            <div key={index}>
+                                <div className="mb-1 text-green-400">
+                                    $ {username}@macbook:~$ {cmd.input}
+                                </div>
+                                <div className="mb-2 text-green-400 whitespace-pre-wrap">{cmd.output}</div>
+                            </div>
+                        ))}
+                    </>
+                    
+                    {/* Current input - starts with $ and then shows the prompt */}
+                    <div className="flex items-center">
+                        <span className="text-green-400">$ {username}@macbook:~$ </span>
+                        {/* <span className={`${showCursor ? 'opacity-100' : 'opacity-0'} transition-opacity text-green-400`}>_</span> */}
+                        <span className={`${showCursor ? 'opacity-100' : 'opacity-0'} transition-opacity text-green-400`}> &nbsp;▌</span>
+                    </div>
                 </motion.div>
                 <motion.div
                     className="flex flex-wrap gap-2 mb-4"
@@ -72,14 +201,37 @@ const TerminalWindow = () => {
                     <motion.button
                         className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 rounded-md px-3 bg-green-500/20 hover:bg-green-500/30 text-green-400 border-green-500/50 border text-xs"
                         variants={item}
+                        onClick={() => {
+                            const newCommand = {
+                                input: './download_cv.sh',
+                                output: 'Downloading resume...',
+                            };
+                            setCommandHistory(prev => [...prev, newCommand]);
+                        }}
                     >./download_cv.sh</motion.button>
                     <motion.button
                         className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 rounded-md px-3 bg-gray-700/50 hover:bg-gray-600/50 text-gray-300 border-gray-700/50 border text-xs"
                         variants={item}
+                        onClick={() => {
+                            navigator.clipboard.writeText('arif.reza3126@gmail.com');
+                            const newCommand = {
+                                input: 'copy email',
+                                output: 'arif.reza3126@gmail.com copied to clipboard!',
+                            };
+                            setCommandHistory(prev => [...prev, newCommand]);
+                        }}
                     >copy email</motion.button>
                     <motion.button
                         className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 rounded-md px-3 bg-gray-700/50 hover:bg-gray-600/50 text-gray-300 border-gray-700/50 border text-xs"
                         variants={item}
+                        onClick={() => {
+                            window.open('https://github.com/arif-code', '_blank');
+                            const newCommand = {
+                                input: 'open github',
+                                output: 'Opening GitHub profile...',
+                            };
+                            setCommandHistory(prev => [...prev, newCommand]);
+                        }}
                     >open github</motion.button>
                 </motion.div>
                 <motion.div
