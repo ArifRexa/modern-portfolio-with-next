@@ -36,7 +36,7 @@ const CurrentActivity = () => {
                         </div>
                     </div>
                 </div>
-                <div className="flex items-center text-sm w-full md:w-auto mt-auto"><a href="real-time-activity.html"
+                <div className="flex items-center text-sm w-full md:w-auto mt-auto"><a href="/real-time-activity"
                     className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-10 px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 border-green-500/50 border backdrop-blur-sm">View
                     Activity<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"

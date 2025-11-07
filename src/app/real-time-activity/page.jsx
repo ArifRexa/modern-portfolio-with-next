@@ -1,0 +1,409 @@
+// app/components/RealTimeActivity.jsx
+'use client';
+import React, { useState, useEffect } from 'react';
+
+const RealTimeActivity = () => {
+  const [currentActivity, setCurrentActivity] = useState({
+    activity: "Lunch Break",
+    emoji: "🍽️",
+    location: "Mediusware LTD.",
+    mood: "Relaxed",
+    time: "02:08 PM",
+    status: "Offline",
+    activeDevices: 4,
+  });
+
+  const [dailySchedule] = useState([
+    { time: "00:00", activity: "Sleeping", emoji: "🛌", status: "Completed" },
+    { time: "08:00", activity: "Morning routine", emoji: "🪥", status: "Completed" },
+    { time: "08:30", activity: "Morning Walk", emoji: "🚶", status: "Completed" },
+    { time: "09:30", activity: "Having breakfast", emoji: "🍞", status: "Completed" },
+    { time: "10:00", activity: "Going to the office", emoji: "🚗", status: "Completed" },
+    { time: "11:00", activity: "Scrum meeting", emoji: "📅", status: "Completed" },
+    { time: "12:00", activity: "Writing code", emoji: "💻", status: "Completed" },
+    { time: "14:00", activity: "Lunch Break", emoji: "🍽️", status: "Current" },
+    { time: "15:00", activity: "Debugging code", emoji: "🐛", status: "Upcoming" },
+    { time: "16:00", activity: "Deep coding focus", emoji: "🖥️", status: "Upcoming" },
+    { time: "17:00", activity: "Code review", emoji: "🔍", status: "Upcoming" },
+    { time: "18:00", activity: "Client Meeting", emoji: "🤝", status: "Upcoming" },
+    { time: "19:00", activity: "Mentoring team", emoji: "👥", status: "Upcoming" },
+    { time: "20:00", activity: "Commuting back home", emoji: "🚗", status: "Upcoming" },
+    { time: "21:00", activity: "Evening meal", emoji: "🍲", status: "Upcoming" },
+    { time: "22:00", activity: "Learning new tech", emoji: "🚀", status: "Upcoming" },
+    { time: "23:00", activity: "Evening wind-down", emoji: "📺", status: "Upcoming" },
+  ]);
+
+  const [dailyStats] = useState({
+    codingTime: "0.9h",
+    commits: 0,
+    meetings: 3,
+    coffees: 1,
+  });
+
+  const [codingActivity] = useState([
+    { period: "Night (12AM-6AM)", hours: "0.00", percent: 0, height: "0px" },
+    { period: "Morning (6AM-12PM)", hours: "0.00", percent: 0.09, height: "0px" },
+    { period: "Afternoon (12PM-6PM)", hours: "0.92", percent: 99.91, height: "45px" }, // Reduced height for better visual balance
+    { period: "Evening (6PM-12AM)", hours: "0.00", percent: 0, height: "0px" },
+  ]);
+
+  const [activeDevices] = useState([
+    { name: "MacBook Pro", type: "laptop", status: "active" },
+    { name: "Acer Nitro 5", type: "laptop", status: "active" },
+    { name: "iPhone 12 Pro", type: "smartphone", status: "active" },
+    { name: "Xiaomi Note 13 Pro", type: "smartphone", status: "active" },
+  ]);
+
+  const [healthData] = useState({
+    steps: { today: 0, goal: 10000, progress: 0 },
+    calories: { burned: 964, bmr: 963, active: 0 },
+    distance: { today: "0.00", week: "15.59", longest: "8.56" },
+    weeklyGoalCompleted: 1,
+    totalWeeklySteps: 18274,
+  });
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'Completed':
+        return 'bg-green-500/20 text-green-400 border-green-500/50';
+      case 'Current':
+        return 'bg-blue-500/20 text-blue-400 border-blue-500/50';
+      case 'Upcoming':
+        return 'bg-gray-500/20 text-gray-400 border-gray-500/50';
+      case 'active':
+        return 'bg-green-500/20 text-green-400 border-green-500/50';
+      case 'Offline':
+        return 'bg-gray-500/20 text-gray-400 border-gray-500/50';
+      default:
+        return 'bg-gray-500/20 text-gray-400 border-gray-500/50';
+    }
+  };
+
+  const getDeviceIcon = (type) => {
+    if (type === 'laptop') {
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-laptop w-5 h-5 text-white">
+          <path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16"></path>
+        </svg>
+      );
+    }
+    return (
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-smartphone w-5 h-5 text-white">
+        <rect width="14" height="20" x="5" y="2" rx="2" ry="2"></rect>
+        <path d="M12 18h.01"></path>
+      </svg>
+    );
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Current Activity Card */}
+      <div 
+        className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm"
+        style={{ opacity: 1, transform: 'none' }}
+      >
+        <div className="flex flex-col md:flex-row flex-wrap md:justify-between gap-6 items-center text-center md:text-left">
+          <div className="flex flex-col space-y-4 w-full md:w-auto items-center md:items-start">
+            <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 items-center">
+              <div className="relative">
+                <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center text-white text-3xl font-bold">
+                  {currentActivity.emoji}
+                </div>
+                <div className="absolute bottom-0.5 -right-0.5 w-4 h-4 bg-green-400 rounded-full border-2 border-white animate-pulse"></div>
+              </div>
+              <div>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 items-center mb-1">
+                  <h3 className="text-2xl font-bold text-gray-200">Currently: {currentActivity.activity}</h3>
+                </div>
+                <div className="flex flex-wrap justify-center sm:justify-start items-center gap-2 lg:gap-4 text-sm lg:text-md">
+                  <span className="flex items-center text-gray-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-map-pin w-4 h-4 mr-1">
+                      <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path>
+                      <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                    {currentActivity.location}
+                  </span>
+                  <span className="flex items-center text-gray-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-heart w-4 h-4 mr-1">
+                      <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                    </svg>
+                    {currentActivity.mood}
+                  </span>
+                  <span className="flex items-center text-gray-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-clock w-4 h-4 mr-1">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    {currentActivity.time}
+                  </span>
+                  <span className="flex items-center text-gray-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-eye w-4 h-4 mr-1">
+                      <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    {currentActivity.activeDevices} active devices
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="flex w-full md:w-auto justify-center md:justify-end">
+            <div className="py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 w-fit flex items-center gap-1 px-3 text-sm font-medium border backdrop-blur-sm rounded-full bg-gray-500/20 hover:bg-gray-500/30 text-gray-400 border-gray-500/50">
+              <span className="flex w-2.5 h-2.5 rounded-full animate-pulse bg-gray-400"></span>
+              {currentActivity.status}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-col-reverse lg:flex-row gap-4 items-stretch">
+        {/* Schedule Section */}
+        <div className="w-full lg:w-2/3 space-y-4 order-2 lg:order-1 flex flex-col">
+          <div 
+            className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm h-full"
+            style={{ opacity: 1, transform: 'none' }}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-4">
+                <h3 className="text-2xl lg:text-2xl font-bold tracking-tight text-gray-200">Today&apos;s Schedule</h3>
+              </div>
+            </div>
+            <div className="space-y-2">
+              {dailySchedule.map((item, index) => (
+                <div 
+                  key={index}
+                  className="relative rounded-xl border backdrop-blur-md shadow-md p-1 lg:py-2 bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700/40"
+                >
+                  <div className="flex items-center space-x-4">
+                    <div className="text-sm font-mono text-gray-400">{item.time}</div>
+                    <div className="text-2xl">{item.emoji}</div>
+                    <div className="flex-1">
+                      <div className="font-medium text-white">{item.activity}</div>
+                    </div>
+                    <div className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${getStatusColor(item.status)}`}>
+                      {item.status}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Stats & Devices Section */}
+        <aside className="w-full lg:w-1/3 space-y-4 order-1 lg:order-2 flex flex-col h-auto">
+          {/* Today's Stats */}
+          <div 
+            className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm"
+            style={{ opacity: 1, transform: 'none' }}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-4">
+                <h3 className="text-2xl lg:text-2xl font-bold tracking-tight text-gray-200">Today&apos;s Stats</h3>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-yellow-400">{dailyStats.codingTime}</div>
+                <div className="text-sm text-gray-400">Coding</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-green-400">{dailyStats.commits}</div>
+                <div className="text-sm text-gray-400">Commits</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-purple-400">{dailyStats.meetings}</div>
+                <div className="text-sm text-gray-400">Meetings</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-blue-400">{dailyStats.coffees}</div>
+                <div className="text-sm text-gray-400">Coffees</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Coding Activity */}
+          <div 
+            className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm"
+            style={{ opacity: 1, transform: 'none' }}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-4">
+                <h3 className="text-2xl lg:text-2xl font-bold tracking-tight text-gray-200">Today&apos;s Coding Activity</h3>
+              </div>
+            </div>
+            <div className="rounded-lg transition-all duration-300">
+              <div className="flex justify-between items-end h-42 gap-2">
+                {codingActivity.map((period, index) => (
+                  <div key={index} className="flex-1 flex flex-col items-center gap-1 group">
+                    <span className="text-xs font-semibold order-1 text-gray-300">{period.period.split(' ')[0]}</span>
+                    <span className="text-xs font-semibold order-2 text-gray-300">{`(${period.period.split('(')[1].split(')')[0]})`}</span>
+                    <div className="w-full flex flex-col items-center relative">
+                      <span className="text-xs font-semibold mb-1 text-gray-200">{period.hours}h</span>
+                      <div className="w-full max-w-[80px] h-[180px] rounded-t-md bg-gray-800/30 overflow-hidden transition-all duration-300 group-hover:shadow-md flex items-end">
+                        <div
+                          className="w-full rounded-t-md bg-gradient-to-t from-teal-500 to-cyan-400 group-hover:opacity-90 transition-all duration-300"
+                          style={{ height: period.height }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Devices */}
+          <div 
+            className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm"
+            style={{ opacity: 1, transform: 'none' }}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-4">
+                <h3 className="text-2xl lg:text-2xl font-bold tracking-tight text-gray-200">Devices</h3>
+              </div>
+            </div>
+            {activeDevices.map((device, index) => (
+              <div key={index} className="flex items-center space-x-4 py-2 rounded-lg">
+                <div className="w-10 h-10 bg-gradient-to-br from-gray-800 to-gray-700 rounded-lg flex items-center justify-center">
+                  {getDeviceIcon(device.type)}
+                </div>
+                <div className="flex-1">
+                  <div className="font-medium text-white">{device.name}</div>
+                </div>
+                <div className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${getStatusColor(device.status)}`}>
+                  {device.status}
+                </div>
+              </div>
+            ))}
+          </div>
+        </aside>
+      </div>
+
+      {/* Health & Fitness Section */}
+      <div 
+        className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm space-y-4"
+        style={{ opacity: 1, transform: 'none' }}
+      >
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-4">
+            <h3 className="text-2xl lg:text-2xl font-bold tracking-tight text-gray-200">Health & Fitness</h3>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2 lg:gap-3">
+          {/* Steps Card */}
+          <div className="relative rounded-xl p-4 lg:p-4 border backdrop-blur-md shadow-md bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700/40 h-full">
+            <div className="flex items-center space-x-3 mb-4">
+              <div className="w-12 h-12 bg-green-500 rounded rounded-lg flex items-center justify-center shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-footprints text-white">
+                  <path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z"></path>
+                  <path d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z"></path>
+                  <path d="M16 17h4"></path>
+                  <path d="M4 13h4"></path>
+                </svg>
+              </div>
+              <div>
+                <div className="text-lg font-semibold text-gray-200">Steps</div>
+                <div className="text-sm text-gray-400">Total movement count</div>
+              </div>
+            </div>
+            <div className="space-y-1 text-sm">
+              <div className="flex justify-between">
+                <span className="font-medium text-gray-300">Today</span>
+                <span className="font-medium text-gray-300">{healthData.steps.today}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-medium text-gray-300">Goal</span>
+                <span className="font-medium text-gray-300">{healthData.steps.goal}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-medium text-gray-300">Progress</span>
+                <span className="font-medium text-gray-300">{healthData.steps.progress}%</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Calories Card */}
+          <div className="relative rounded-xl p-4 lg:p-4 border backdrop-blur-md shadow-md bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700/40 h-full">
+            <div className="flex items-center space-x-3 mb-4">
+              <div className="w-12 h-12 bg-red-500 rounded rounded-lg flex items-center justify-center shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-flame text-white">
+                  <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path>
+                </svg>
+              </div>
+              <div>
+                <div className="text-lg font-semibold text-gray-200">Calories</div>
+                <div className="text-sm text-gray-400">Calories burned vs goal</div>
+              </div>
+            </div>
+            <div className="space-y-1 text-sm">
+              <div className="flex justify-between">
+                <span className="font-medium text-gray-300">Burned</span>
+                <span className="font-medium text-gray-300">{healthData.calories.burned}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-medium text-gray-300">BMR</span>
+                <span className="font-medium text-gray-300">{healthData.calories.bmr}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-medium text-gray-300">Active Minutes</span>
+                <span className="font-medium text-gray-300">{healthData.calories.active}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Distance Card */}
+          <div className="relative rounded-xl p-4 lg:p-4 border backdrop-blur-md shadow-md bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700/40 h-full">
+            <div className="flex items-center space-x-3 mb-4">
+              <div className="w-12 h-12 bg-blue-500 rounded rounded-lg flex items-center justify-center shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-trending-up text-white">
+                  <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+                  <polyline points="16 7 22 7 22 13"></polyline>
+                </svg>
+              </div>
+              <div>
+                <div className="text-lg font-semibold text-gray-200">Distance</div>
+                <div className="text-sm text-gray-400">Distance covered</div>
+              </div>
+            </div>
+            <div className="space-y-1 text-sm">
+              <div className="flex justify-between">
+                <span className="font-medium text-gray-300">Today</span>
+                <span className="font-medium text-gray-300">{healthData.distance.today} km</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-medium text-gray-300">This Week</span>
+                <span className="font-medium text-gray-300">{healthData.distance.week} km</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-medium text-gray-300">Longest</span>
+                <span className="font-medium text-gray-300">{healthData.distance.longest} km</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Weekly Goal Achievement */}
+        <div className="relative rounded-xl p-4 lg:p-4 border backdrop-blur-md shadow-md bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700/40 h-full">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div>
+              <h3 className="text-xl font-semibold mb-2 text-gray-200">Weekly Goal Achievement</h3>
+              <p className="text-gray-400">Walked <span className="font-semibold text-gray-300">{healthData.totalWeeklySteps}</span> steps this week!</p>
+            </div>
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full transition-colors bg-gray-600 text-gray-200">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-target w-5 h-5">
+                <circle cx="12" cy="12" r="10"></circle>
+                <circle cx="12" cy="12" r="6"></circle>
+                <circle cx="12" cy="12" r="2"></circle>
+              </svg>
+              <span className="font-semibold text-gray-200">{healthData.weeklyGoalCompleted}/7 Days Goal Met</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default RealTimeActivity;
