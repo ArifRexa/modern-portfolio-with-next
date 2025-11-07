@@ -112,7 +112,7 @@ const QuickActions = () => {
         </div>
         <h3 className="text-lg font-bold text-gray-200">Submit Feedback</h3>
         <p className="text-sm mb-4 text-gray-400">Share your feedback about me</p>
-        <a href="submit-testimonial.html">
+        <a href="/submit-testimonial">
           <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-10 px-4 py-2 w-full bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 border-purple-500/50 border backdrop-blur-sm">
             Submit Testimonial
           </button>
