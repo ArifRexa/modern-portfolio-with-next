@@ -13,25 +13,29 @@ const RealTimeActivity = () => {
     activeDevices: 4,
   });
 
-  const [dailySchedule] = useState([
-    { time: "00:00", activity: "Sleeping", emoji: "🛌", status: "Completed" },
-    { time: "08:00", activity: "Morning routine", emoji: "🪥", status: "Completed" },
-    { time: "08:30", activity: "Morning Walk", emoji: "🚶", status: "Completed" },
-    { time: "09:30", activity: "Having breakfast", emoji: "🍞", status: "Completed" },
-    { time: "10:00", activity: "Going to the office", emoji: "🚗", status: "Completed" },
-    { time: "11:00", activity: "Scrum meeting", emoji: "📅", status: "Completed" },
-    { time: "12:00", activity: "Writing code", emoji: "💻", status: "Completed" },
-    { time: "14:00", activity: "Lunch Break", emoji: "🍽️", status: "Current" },
-    { time: "15:00", activity: "Debugging code", emoji: "🐛", status: "Upcoming" },
-    { time: "16:00", activity: "Deep coding focus", emoji: "🖥️", status: "Upcoming" },
-    { time: "17:00", activity: "Code review", emoji: "🔍", status: "Upcoming" },
-    { time: "18:00", activity: "Client Meeting", emoji: "🤝", status: "Upcoming" },
-    { time: "19:00", activity: "Mentoring team", emoji: "👥", status: "Upcoming" },
-    { time: "20:00", activity: "Commuting back home", emoji: "🚗", status: "Upcoming" },
-    { time: "21:00", activity: "Evening meal", emoji: "🍲", status: "Upcoming" },
-    { time: "22:00", activity: "Learning new tech", emoji: "🚀", status: "Upcoming" },
-    { time: "23:00", activity: "Evening wind-down", emoji: "📺", status: "Upcoming" },
-  ]);
+  // Initial schedule with start and end hours
+  const initialSchedule = [
+    { time: "00:00", activity: "Sleeping", emoji: "🛌", startHour: 0, endHour: 8, status: "Completed" },
+    { time: "08:00", activity: "Morning routine", emoji: "🪥", startHour: 8, endHour: 8.5, status: "Completed" },
+    { time: "08:30", activity: "Morning Walk", emoji: "🚶", startHour: 8.5, endHour: 9.5, status: "Completed" },
+    { time: "09:30", activity: "Having breakfast", emoji: "🍞", startHour: 9.5, endHour: 10, status: "Completed" },
+    { time: "10:00", activity: "Going to the office", emoji: "🚗", startHour: 10, endHour: 11, status: "Completed" },
+    { time: "11:00", activity: "Scrum meeting", emoji: "📅", startHour: 11, endHour: 12, status: "Completed" },
+    { time: "12:00", activity: "Writing code", emoji: "💻", startHour: 12, endHour: 14, status: "Completed" },
+    { time: "14:00", activity: "Lunch Break", emoji: "🍽️", startHour: 14, endHour: 15, status: "Current" },
+    { time: "15:00", activity: "Debugging code", emoji: "🐛", startHour: 15, endHour: 16, status: "Upcoming" },
+    { time: "16:00", activity: "Deep coding focus", emoji: "🖥️", startHour: 16, endHour: 17, status: "Upcoming" },
+    { time: "17:00", activity: "Code review", emoji: "🔍", startHour: 17, endHour: 18, status: "Upcoming" },
+    { time: "18:00", activity: "Client Meeting", emoji: "🤝", startHour: 18, endHour: 19, status: "Upcoming" },
+    { time: "19:00", activity: "Mentoring team", emoji: "👥", startHour: 19, endHour: 20, status: "Upcoming" },
+    { time: "20:00", activity: "Commuting back home", emoji: "🚗", startHour: 20, endHour: 21, status: "Upcoming" },
+    { time: "21:00", activity: "Evening meal", emoji: "🍲", startHour: 21, endHour: 22, status: "Upcoming" },
+    { time: "22:00", activity: "Learning new tech", emoji: "🚀", startHour: 22, endHour: 23, status: "Upcoming" },
+    { time: "23:00", activity: "Evening wind-down", emoji: "📺", startHour: 23, endHour: 24, status: "Upcoming" },
+  ];
+
+  const [dailySchedule, setDailySchedule] = useState(initialSchedule);
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   const [dailyStats] = useState({
     codingTime: "0.9h",
@@ -61,6 +65,60 @@ const RealTimeActivity = () => {
     weeklyGoalCompleted: 1,
     totalWeeklySteps: 18274,
   });
+
+  // Function to determine activity status based on current time
+  const determineActivityStatus = (startHour, endHour, currentHour) => {
+    if (currentHour >= startHour && currentHour < endHour) {
+      return 'Current';
+    } else if (currentHour >= endHour) {
+      return 'Completed';
+    } else {
+      return 'Upcoming';
+    }
+  };
+
+  // Update schedule based on current time
+  useEffect(() => {
+    const updateSchedule = () => {
+      const now = new Date();
+      const currentHour = now.getHours() + now.getMinutes() / 60;
+      
+      const updatedSchedule = initialSchedule.map(item => {
+        const status = determineActivityStatus(item.startHour, item.endHour, currentHour);
+        return { ...item, status };
+      });
+      
+      setDailySchedule(updatedSchedule);
+      
+      // Update current activity based on current hour
+      const currentActivityItem = updatedSchedule.find(item => item.status === 'Current') || 
+                                  updatedSchedule.find(item => item.status === 'Upcoming');
+      if (currentActivityItem) {
+        setCurrentActivity({
+          ...currentActivity,
+          activity: currentActivityItem.activity,
+          emoji: currentActivityItem.emoji,
+          time: currentActivityItem.time,
+          status: currentActivityItem.status === 'Current' ? 'Online' : 'Offline'
+        });
+      }
+    };
+
+    // Update immediately and then every minute
+    updateSchedule();
+    const intervalId = setInterval(updateSchedule, 60000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  // Update current time every minute
+  useEffect(() => {
+    const timeInterval = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60000);
+
+    return () => clearInterval(timeInterval);
+  }, []);
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -172,13 +230,27 @@ const RealTimeActivity = () => {
               {dailySchedule.map((item, index) => (
                 <div 
                   key={index}
-                  className="relative rounded-xl border backdrop-blur-md shadow-md p-1 lg:py-2 bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700/40"
+                  className={`relative rounded-xl border backdrop-blur-md shadow-md p-1 lg:py-2 bg-gradient-to-br ${
+                    item.status === 'Current' 
+                      ? 'from-blue-900/30 to-blue-800/20 border-blue-500/50' 
+                      : item.status === 'Completed'
+                      ? 'from-green-900/20 to-green-800/10 border-green-500/30'
+                      : 'from-gray-800 to-gray-900 border-gray-700/40'
+                  }`}
                 >
                   <div className="flex items-center space-x-4">
                     <div className="text-sm font-mono text-gray-400">{item.time}</div>
                     <div className="text-2xl">{item.emoji}</div>
                     <div className="flex-1">
-                      <div className="font-medium text-white">{item.activity}</div>
+                      <div className={`font-medium ${
+                        item.status === 'Current' 
+                          ? 'text-blue-300' 
+                          : item.status === 'Completed'
+                          ? 'text-green-300'
+                          : 'text-white'
+                      }`}>
+                        {item.activity}
+                      </div>
                     </div>
                     <div className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${getStatusColor(item.status)}`}>
                       {item.status}
