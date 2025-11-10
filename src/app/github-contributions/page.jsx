@@ -1,28 +1,205 @@
 // app/components/GitHubContributions.jsx
 'use client';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const GitHubContributions = () => {
-  const githubData = {
-    total_repos: 258,
-    total_commits: 3200,
-    total_stars_earned: 18,
-    total_prs: 5,
-    contributed_to_last_year: 7,
-    language_usage: [
-      { language: "JavaScript", count: 8, percentage: 8 },
-      { language: "Python", count: 7, percentage: 7 },
-      { language: "TypeScript", count: 4, percentage: 4 },
-      { language: "Java", count: 3, percentage: 3 },
-      { language: "CSS", count: 3, percentage: 3 },
-      { language: "Jupyter Notebook", count: 2, percentage: 2 }
-    ],
-    top_repositories: [
-      { repo_name: "Tower-Of-Hanoi-Game-java", stars: 6 },
-      { repo_name: "WikiSearch", stars: 5 },
-      { repo_name: "One-Shot-Learning", stars: 3 }
-    ]
-  };
+  const [githubData, setGithubData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchGitHubData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        // Fetch commit data from our extended GitHub API
+        const commitResponse = await fetch('/api/github/commits?extended=true');
+        if (!commitResponse.ok) {
+          throw new Error(`Failed to fetch commit data: ${commitResponse.status}`);
+        }
+        const commitData = await commitResponse.json();
+        if (!commitData) {
+          throw new Error('No commit data received');
+        }
+        
+        // Check if we have the token before making any GitHub API calls
+        const githubToken = process.env.NEXT_PUBLIC_GITHUB_TOKEN || process.env.GITHUB_TOKEN;
+        const githubUsername = process.env.NEXT_PUBLIC_GITHUB_USERNAME || 'arifrexa';
+        
+        let realData = {
+          total_repos: commitData.extendedData?.commit_stats?.monthly || 0,
+          total_commits: commitData.extendedData?.commit_stats?.monthly || 0,
+          total_stars_earned: 0,
+          total_prs: 0,
+          contributed_to_last_year: Math.min(commitData.extendedData?.commit_stats?.monthly || 20, 20),
+          language_usage: [],
+          top_repositories: []
+        };
+        
+        // Only fetch extended GitHub data if token is available
+        if (githubToken) {
+          // Get user data from GitHub API
+          const userResponse = await fetch(`https://api.github.com/users/${githubUsername}`, {
+            headers: {
+              Authorization: `Bearer ${githubToken}`,
+              Accept: 'application/vnd.github.v3+json',
+            },
+          });
+          
+          if (!userResponse.ok) {
+            console.error(`GitHub API responded with ${userResponse.status}`);
+          } else {
+            const userData = await userResponse.json();
+            
+            // Get user's repositories (public)
+            const reposResponse = await fetch(
+              `https://api.github.com/users/${githubUsername}/repos?sort=updated&direction=desc&per_page=100`,
+              {
+                headers: {
+                  Authorization: `Bearer ${githubToken}`,
+                  Accept: 'application/vnd.github.v3+json',
+                },
+              }
+            );
+            
+            if (reposResponse.ok) {
+              const reposData = await reposResponse.json();
+              
+              // Calculate total stars earned
+              const totalStars = reposData.reduce((sum, repo) => sum + repo.stargazers_count, 0);
+              
+              // Get top repositories (by stars)
+              const topRepositories = reposData
+                .sort((a, b) => b.stargazers_count - a.stargazers_count)
+                .slice(0, 10)
+                .map(repo => ({
+                  repo_name: repo.name,
+                  stars: repo.stargazers_count,
+                  description: repo.description,
+                  language: repo.language,
+                  forks: repo.forks_count,
+                }));
+              
+              // Calculate language usage from repos
+              const languageCount = {};
+              reposData.forEach(repo => {
+                if (repo.language) {
+                  languageCount[repo.language] = (languageCount[repo.language] || 0) + 1;
+                }
+              });
+              
+              // Format language usage data
+              const totalReposWithLanguage = reposData.filter(repo => repo.language).length;
+              const languageUsage = Object.entries(languageCount)
+                .map(([language, count]) => ({
+                  language,
+                  count,
+                  percentage: Math.round((count / totalReposWithLanguage) * 100)
+                }))
+                .sort((a, b) => b.percentage - a.percentage)
+                .slice(0, 6); // Top 6 languages
+              
+              // Calculate total PRs (this is harder to get, using GitHub API search)
+              let totalPrs = 0;
+              try {
+                const prResponse = await fetch(
+                  `https://api.github.com/search/issues?q=type:pr+author:${githubUsername}`,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${githubToken}`,
+                      Accept: 'application/vnd.github.v3+json',
+                    },
+                  }
+                );
+                
+                if (prResponse.ok) {
+                  const prData = await prResponse.json();
+                  totalPrs = prData.total_count || 0;
+                }
+              } catch (prError) {
+                console.error('Error fetching PRs:', prError);
+                totalPrs = 0; // Set to 0 if we can't fetch
+              }
+              
+              // Update real data with GitHub API data
+              realData = {
+                ...realData,
+                total_repos: userData.public_repos || 0,
+                total_stars_earned: totalStars,
+                total_prs: totalPrs,
+                contributed_to_last_year: userData.following || 0,
+                language_usage: languageUsage,
+                top_repositories: topRepositories.slice(0, 3) // Top 3
+              };
+            }
+          }
+        } else {
+          console.warn('GITHUB_TOKEN is not configured. Using limited functionality from our own API.');
+        }
+        
+        setGithubData(realData);
+      } catch (err) {
+        console.error('Error fetching GitHub data:', err);
+        setError(err.message);
+        
+        // Set some fallback data if possible
+        setGithubData({
+          total_repos: 0,
+          total_commits: 0,
+          total_stars_earned: 0,
+          total_prs: 0,
+          contributed_to_last_year: 0,
+          language_usage: [],
+          top_repositories: []
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchGitHubData();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="space-y-6">
+        <div className="text-center p-2 sm:px-8 lg:px-12">
+          <h1 className="relative inline-block text-3xl sm:text-4xl md:text-4xl font-extrabold tracking-tight text-gray-200">
+            GitHub Contributions
+          </h1>
+          <p className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed text-gray-300">
+            Explore my GitHub contributions and projects
+          </p>
+          <span className="block h-1 w-16 mx-auto mt-3 rounded-full bg-blue-400"></span>
+        </div>
+        
+        <div className="text-center py-12">
+          <p className="text-gray-400">Loading GitHub data...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (error && !githubData) {
+    return (
+      <section className="space-y-6">
+        <div className="text-center p-2 sm:px-8 lg:px-12">
+          <h1 className="relative inline-block text-3xl sm:text-4xl md:text-4xl font-extrabold tracking-tight text-gray-200">
+            GitHub Contributions
+          </h1>
+          <p className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed text-gray-300">
+            Explore my GitHub contributions and projects
+          </p>
+          <span className="block h-1 w-16 mx-auto mt-3 rounded-full bg-blue-400"></span>
+        </div>
+        
+        <div className="text-center py-12">
+          <p className="text-red-400">Error loading GitHub data: {error}</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="space-y-6">
@@ -100,7 +277,7 @@ const GitHubContributions = () => {
       {/* Language Usage */}
       <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm">
         <h3 className="text-2xl font-bold tracking-tight text-gray-200 mb-4">
-          Language Usage (This Month)
+          Language Usage
         </h3>
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
           {githubData.language_usage.map((lang, idx) => (
@@ -135,6 +312,9 @@ const GitHubContributions = () => {
             >
               <div>
                 <h6 className="font-semibold text-lg text-white">{repo.repo_name}</h6>
+                {repo.description && (
+                  <p className="text-sm text-gray-400 mt-1 line-clamp-1">{repo.description}</p>
+                )}
               </div>
               <div className="flex space-x-6 text-sm">
                 <span className="flex items-center text-yellow-400">
@@ -143,12 +323,14 @@ const GitHubContributions = () => {
                   </svg>
                   {repo.stars}
                 </span>
+                {repo.language && (
                 <span className="flex items-center text-gray-400">
                   <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.684 13.342C9.375 12.652 10.376 12.652 11.067 13.342L12 14.274l.933-.932c.691-.69 1.692-.69 2.383 0 .69.69.69 1.692 0 2.383l-2.316 2.316a1 1 0 01-1.414 0l-2.316-2.316c-.69-.69-.69-1.692 0-2.383zM12 4v8" />
                   </svg>
-                  0
+                  {repo.language}
                 </span>
+                )}
               </div>
             </div>
           ))}
