@@ -37,17 +37,49 @@ const RealTimeActivity = () => {
     const [dailySchedule, setDailySchedule] = useState(initialSchedule);
     const [currentTime, setCurrentTime] = useState(new Date());
 
-    const [dailyStats] = useState({
-        codingTime: "0.9h",
-        commits: 0,
-        meetings: 3,
-        coffees: 1,
+    // State for dynamic stats with loading indicators
+    const [dailyStats, setDailyStats] = useState({
+        codingTime: "...", // Loading indicator
+        commits: "...",    // Loading indicator
+        meetings: 3,       // Static for now, you can make it dynamic similarly
+        coffees: 1,        // Static for now, you can make it dynamic similarly
     });
+
+    // Fetch dynamic data on component mount
+    useEffect(() => {
+        const fetchCodingTime = async () => {
+            try {
+                const response = await fetch('/api/wakatime'); // Replace with your actual API endpoint
+                if (!response.ok) throw new Error('Failed to fetch coding time');
+                const data = await response.json();
+                setDailyStats(prev => ({ ...prev, codingTime: data.codingTime })); // Assuming API returns { codingTime: "Xh Ym" }
+            } catch (error) {
+                console.error('Error fetching coding time:', error);
+                setDailyStats(prev => ({ ...prev, codingTime: '0 mins' })); // Fallback on error
+            }
+        };
+
+        const fetchCommitCount = async () => {
+            try {
+                const response = await fetch('/api/github/commits'); // Replace with your actual API endpoint
+                if (!response.ok) throw new Error('Failed to fetch commit count');
+                const data = await response.json();
+                setDailyStats(prev => ({ ...prev, commits: data.commitCount })); // Assuming API returns { commitCount: 5 }
+            } catch (error) {
+                console.error('Error fetching commit count:', error);
+                setDailyStats(prev => ({ ...prev, commits: 0 })); // Fallback on error
+            }
+        };
+
+        // Call the fetch functions
+        fetchCodingTime();
+        fetchCommitCount();
+    }, []); // Empty dependency array ensures this runs only once on mount
 
     const [codingActivity] = useState([
         { period: "Night (12AM-6AM)", hours: "0.00", percent: 0, height: "0px" },
         { period: "Morning (6AM-12PM)", hours: "0.00", percent: 0.09, height: "0px" },
-        { period: "Afternoon (12PM-6PM)", hours: "0.92", percent: 99.91, height: "45px" }, // Reduced height for better visual balance
+        { period: "Afternoon (12PM-6PM)", hours: "0.92", percent: 99.91, height: "45px" },
         { period: "Evening (6PM-12AM)", hours: "0.00", percent: 0, height: "0px" },
     ]);
 
@@ -82,12 +114,10 @@ const RealTimeActivity = () => {
         const updateSchedule = () => {
             const now = new Date();
             const currentHour = now.getHours() + now.getMinutes() / 60;
-
             const updatedSchedule = initialSchedule.map(item => {
                 const status = determineActivityStatus(item.startHour, item.endHour, currentHour);
                 return { ...item, status };
             });
-
             setDailySchedule(updatedSchedule);
 
             // Update current activity based on current hour
@@ -107,7 +137,6 @@ const RealTimeActivity = () => {
         // Update immediately and then every minute
         updateSchedule();
         const intervalId = setInterval(updateSchedule, 60000);
-
         return () => clearInterval(intervalId);
     }, [initialSchedule]);
 
@@ -116,7 +145,6 @@ const RealTimeActivity = () => {
         const timeInterval = setInterval(() => {
             setCurrentTime(new Date());
         }, 60000);
-
         return () => clearInterval(timeInterval);
     }, []);
 
@@ -213,7 +241,6 @@ const RealTimeActivity = () => {
                     </div>
                 </div>
             </div>
-
             <div className="flex flex-col-reverse lg:flex-row gap-4 items-stretch">
                 {/* Schedule Section */}
                 <div className="w-full lg:w-2/3 space-y-4 order-2 lg:order-1 flex flex-col">
@@ -259,7 +286,6 @@ const RealTimeActivity = () => {
                         </div>
                     </div>
                 </div>
-
                 {/* Stats & Devices Section */}
                 <aside className="w-full lg:w-1/3 space-y-4 order-1 lg:order-2 flex flex-col h-auto">
                     {/* Today's Stats */}
@@ -274,11 +300,11 @@ const RealTimeActivity = () => {
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                             <div className="text-center">
-                                <div className="text-2xl font-bold text-yellow-400">{dailyStats.codingTime}</div>
+                                <div className="text-2xl font-bold text-yellow-400">{dailyStats.codingTime}</div> {/* Dynamic */}
                                 <div className="text-sm text-gray-400">Coding</div>
                             </div>
                             <div className="text-center">
-                                <div className="text-2xl font-bold text-green-400">{dailyStats.commits}</div>
+                                <div className="text-2xl font-bold text-green-400">{dailyStats.commits}</div> {/* Dynamic */}
                                 <div className="text-sm text-gray-400">Commits</div>
                             </div>
                             <div className="text-center">
@@ -291,7 +317,6 @@ const RealTimeActivity = () => {
                             </div>
                         </div>
                     </div>
-
                     {/* Coding Activity */}
                     <div
                         className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm"
@@ -322,7 +347,6 @@ const RealTimeActivity = () => {
                             </div>
                         </div>
                     </div>
-
                     {/* Devices */}
                     <div
                         className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm"
@@ -349,7 +373,6 @@ const RealTimeActivity = () => {
                     </div>
                 </aside>
             </div>
-
             {/* Health & Fitness Section */}
             <div
                 className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm space-y-4"
@@ -360,7 +383,6 @@ const RealTimeActivity = () => {
                         <h3 className="text-2xl lg:text-2xl font-bold tracking-tight text-gray-200">Health & Fitness</h3>
                     </div>
                 </div>
-
                 <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2 lg:gap-3">
                     {/* Steps Card */}
                     <div className="relative rounded-xl p-4 lg:p-4 border backdrop-blur-md shadow-md bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700/40 h-full">
@@ -393,7 +415,6 @@ const RealTimeActivity = () => {
                             </div>
                         </div>
                     </div>
-
                     {/* Calories Card */}
                     <div className="relative rounded-xl p-4 lg:p-4 border backdrop-blur-md shadow-md bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700/40 h-full">
                         <div className="flex items-center space-x-3 mb-4">
@@ -422,7 +443,6 @@ const RealTimeActivity = () => {
                             </div>
                         </div>
                     </div>
-
                     {/* Distance Card */}
                     <div className="relative rounded-xl p-4 lg:p-4 border backdrop-blur-md shadow-md bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700/40 h-full">
                         <div className="flex items-center space-x-3 mb-4">
@@ -453,7 +473,6 @@ const RealTimeActivity = () => {
                         </div>
                     </div>
                 </div>
-
                 {/* Weekly Goal Achievement */}
                 <div className="relative rounded-xl p-4 lg:p-4 border backdrop-blur-md shadow-md bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700/40 h-full">
                     <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
