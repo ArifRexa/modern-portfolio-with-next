@@ -53,7 +53,7 @@ const RealTimeActivity = () => {
                 const response = await fetch('/api/wakatime'); // Replace with your actual API endpoint
                 if (!response.ok) throw new Error('Failed to fetch coding time');
                 const data = await response.json();
-                setDailyStats(prev => ({ ...prev, codingTime: data.codingTime })); // Assuming API returns { codingTime: "Xh Ym" }
+                setDailyStats(prev => ({ ...prev, codingTime: data.codingTime })); // Using the formatted time from API
             } catch (error) {
                 console.error('Error fetching coding time:', error);
                 setDailyStats(prev => ({ ...prev, codingTime: '0 mins' })); // Fallback on error

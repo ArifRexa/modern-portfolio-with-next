@@ -1,5 +1,6 @@
 // src/app/api/wakatime/route.js
 import { NextResponse } from 'next/server';
+import { updateDailyCodingTime } from '@/utils/codingTimeTracker';
 
 export async function GET() {
   try {
@@ -52,10 +53,32 @@ export async function GET() {
     // Extract today's coding time
     const codingTime = data.data[0]?.grand_total?.text || '0 mins';
     
-    console.log('Extracted coding time:', codingTime);
+    // Extract numeric hours from the text (e.g., "5 hrs 30 mins" -> convert to hours as number)
+    let numericHours = 0;
+    if (codingTime && typeof codingTime === 'string') {
+      // Parse the text to extract hours and minutes
+      const hoursMatch = codingTime.match(/(\d+(?:\.\d+)?)\s*(?:hr|hrs|h)/i);
+      const minsMatch = codingTime.match(/(\d+)\s*(?:min|mins|m)/i);
+      
+      const hours = hoursMatch ? parseFloat(hoursMatch[1]) : 0;
+      const mins = minsMatch ? parseInt(minsMatch[1]) : 0;
+      
+      numericHours = hours + (mins / 60);
+    }
+    
+    console.log('Extracted coding time:', codingTime, 'Numeric hours:', numericHours);
+    
+    // Save the coding time to Supabase (this will create or update the record for today)
+    const updateResult = await updateDailyCodingTime(numericHours);
+    if (!updateResult.success) {
+      console.error('Failed to update daily coding time in Supabase:', updateResult.error);
+    } else {
+      console.log('Successfully updated coding time in Supabase:', updateResult);
+    }
     
     return NextResponse.json({
       codingTime,
+      numericHours,
       success: true,
       timestamp: new Date().toISOString(),
     });
