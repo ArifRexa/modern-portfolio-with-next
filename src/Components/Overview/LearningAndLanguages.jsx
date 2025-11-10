@@ -169,7 +169,7 @@ const LearningAndLanguages = () => {
   const languagesData = [
     { name: "Bengali", level: "Native", width: "100%" },
     { name: "English", level: "Fluent", width: "90%" },
-    { name: "Chinese", level: "Conversational", width: "70%" }
+    { name: "Turkish", level: "Comfortable", width: "50%" }
   ];
 
   const [currentLearningIndex, setCurrentLearningIndex] = useState(0);
