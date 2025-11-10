@@ -1,35 +1,39 @@
 // app/components/TechnicalSkills.jsx
 'use client';
 import React, { useState } from 'react';
+import Image from 'next/image';
 
 const TechnicalSkills = () => {
     // Programming Languages Data
     const programmingLanguages = [
         { name: "Python", icon: "/images/icons/python.svg", color: "from-blue-500 to-green-400" },
         { name: "JavaScript", icon: "/images/icons/javascript.svg", color: "from-yellow-400 to-orange-500" },
-        { name: "TypeScript", icon: "/images/icons/typescript.svg", color: "from-sky-500 to-blue-700" },
-        { name: "JAVA", icon: "/images/icons/java.svg", color: "from-red-600 to-orange-400" },
+        // { name: "TypeScript", icon: "/images/icons/typescript.svg", color: "from-sky-500 to-blue-700" },
+        { name: "SQL", icon: "/images/icons/sql.png", color: "from-red-600 to-orange-400" },
     ];
 
     // Full Tech Stack (as per your HTML)
     const allTechStack = [
-        "Django", "Python", "FastAPI", "Flask", "Node.js", "Express", "Spring Boot", "JAVA",
-        "React", "Next.js", "Vue.js", "Tailwind", "TypeScript", "Sass",
+        "Django", "Python", "FastAPI", "Flask", "Node.js", "Express",
+        "React", "Next.js", "Tailwind", "Sass",
         "PostgreSQL", "MongoDB", "Redis", "MySQL", "Firebase", "Elasticsearch",
         "Git", "Postman", "Figma", "Trello", "Selenium", "VSCode",
         "TensorFlow", "PyTorch", "Scikit-learn", "Keras", "OpenCV",
-        "Docker", "AWS", "Kubernetes", "Terraform", "Argo CD",
+        "Docker",
         "Linux", "macOS", "Windows"
     ];
 
     // Define category mappings
     const categories = {
         "All Stack": allTechStack,
-        "Frontend": ["React", "Next.js", "Vue.js", "Tailwind", "TypeScript", "Sass"],
-        "Backend": ["Django", "Python", "FastAPI", "Flask", "Node.js", "Express", "Spring Boot", "JAVA"],
+        // "Frontend": ["React", "Next.js", "Vue.js", "Tailwind", "TypeScript", "Sass"],
+        // "Backend": ["Django", "Python", "FastAPI", "Flask", "Node.js", "Express", "Spring Boot", "JAVA"],
+        "Frontend": ["React", "Next.js", "Tailwind", "Sass"],
+        "Backend": ["Django", "Python", "FastAPI", "Flask", "Node.js", "Express"],
         "Database": ["PostgreSQL", "MongoDB", "Redis", "MySQL", "Firebase", "Elasticsearch"],
         "ML Frameworks": ["TensorFlow", "PyTorch", "Scikit-learn", "Keras", "OpenCV"],
-        "Cloud & DevOps": ["Docker", "AWS", "Kubernetes", "Terraform", "Argo CD"],
+        // "Cloud & DevOps": ["Docker", "AWS", "Kubernetes", "Terraform", "Argo CD"],
+        "Cloud & DevOps": ["Docker"],
         "Tools": ["Git", "Postman", "Figma", "Trello", "Selenium", "VSCode"],
         "Operating Systems": ["Linux", "macOS", "Windows"]
     };
@@ -47,11 +51,11 @@ const TechnicalSkills = () => {
         "Flask": "/images/icons/flask.svg",
         "Node.js": "/images/icons/nodejs.svg",
         "Express": "/images/icons/expressjs.svg",
-        "Spring Boot": "/images/icons/springboot.svg",
-        "JAVA": "/images/icons/java.svg",
+        // "Spring Boot": "/images/icons/springboot.svg",
+        // "JAVA": "/images/icons/java.svg",
         "React": "/images/icons/react.svg",
         "Next.js": "/images/icons/nextjs.svg",
-        "Vue.js": "/images/icons/vuejs.svg",
+        // "Vue.js": "/images/icons/vuejs.svg",
         "Tailwind": "/images/icons/tailwind.svg",
         "TypeScript": "/images/icons/typescript.svg",
         "Sass": "/images/icons/sass.svg",
@@ -73,10 +77,10 @@ const TechnicalSkills = () => {
         "Keras": "/images/icons/keras.svg",
         "OpenCV": "/images/icons/opencv.svg",
         "Docker": "/images/icons/docker.svg",
-        "AWS": "/images/icons/aws.svg",
-        "Kubernetes": "/images/icons/kubernetes.svg",
-        "Terraform": "/images/icons/terraform.svg",
-        "Argo CD": "/images/icons/argocd.svg",
+        // "AWS": "/images/icons/aws.svg",
+        // "Kubernetes": "/images/icons/kubernetes.svg",
+        // "Terraform": "/images/icons/terraform.svg",
+        // "Argo CD": "/images/icons/argocd.svg",
         "Linux": "/images/icons/linux.svg",
         "macOS": "/images/icons/macos.svg",
         "Windows": "/images/icons/windows.svg",
@@ -109,12 +113,14 @@ const TechnicalSkills = () => {
                                 key={lang.name}
                                 className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700/40 rounded-xl p-4 shadow-md backdrop-blur-md"
                             >
-                                <div className="text-center">
-                                    <img
-                                        src={lang.icon}
-                                        alt={lang.name}
-                                        className="mx-auto mb-2 w-8 h-8 object-contain"
-                                    />
+                                <Image
+                                    src={lang.icon}
+                                    alt={lang.name}
+                                    width={32}
+                                    height={32}
+                                    className="mx-auto mb-2 object-contain"
+                                />
+                                <div>
                                     <div className="font-bold text-base text-white">{lang.name}</div>
                                     <div className="w-full h-2 rounded-full mb-2 mt-2 bg-gray-700">
                                         <div className={`h-2 rounded-full bg-gradient-to-r ${lang.color}`}></div>
@@ -154,8 +160,8 @@ const TechnicalSkills = () => {
                                 key={label}
                                 onClick={() => setActiveFilter(label)}
                                 className={`px-4 py-2 text-xs lg:text-base font-medium rounded-full transition-colors duration-300 ${label === activeFilter
-                                        ? "bg-blue-600/90 text-white border border-blue-600 shadow-md"
-                                        : "text-gray-200 bg-gray-800 border border-gray-700 hover:bg-gray-700 hover:text-white"
+                                    ? "bg-blue-600/90 text-white border border-blue-600 shadow-md"
+                                    : "text-gray-200 bg-gray-800 border border-gray-700 hover:bg-gray-700 hover:text-white"
                                     }`}
                             >
                                 {label}
@@ -174,17 +180,21 @@ const TechnicalSkills = () => {
                     bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700 hover:border-gray-600
                     hover:shadow-lg hover:shadow-gray-900/30 transition-all duration-300"
                                 >
-                                    <div className="w-full h-full flex items-center justify-center">
-                                        <div className="relative w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14">
-                                            <img
-                                                src={icon}
-                                                alt={tech}
-                                                className="object-contain filter drop-shadow-sm"
-                                                onError={(e) => {
+                                    <div className="flex items-center justify-center">
+                                        <Image
+                                            src={icon}
+                                            alt={tech}
+                                            width={56}
+                                            height={56}
+                                            className="object-contain filter drop-shadow-sm"
+                                            onError={(e) => {
+                                                try {
                                                     e.currentTarget.src = "/images/icons/python.svg";
-                                                }}
-                                            />
-                                        </div>
+                                                } catch (err) {
+                                                    // fallback: ignore if not available
+                                                }
+                                            }}
+                                        />
                                     </div>
                                     {/* Tooltip on hover */}
                                     <div className="absolute -top-10 left-1/2 transform -translate-x-1/2
