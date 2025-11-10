@@ -1,51 +1,52 @@
 // app/components/AcademicBackground.jsx
 'use client';
 import React from 'react';
+import Image from 'next/image';
 
 const AcademicBackground = () => {
   const educationData = [
-    {
-      degree: "Master of Science in Computer Science & Technology",
-      institution: "Shanghai Jiao Tong University",
-      institutionLink: "https://www.sjtu.edu.cn",
-      location: "Shanghai, China",
-      locationLink: "https://maps.app.goo.gl/UiFKp3Fd3773DjFw8",
-      period: "2020 - 2023",
-      gpa: "3.59 / 4.00",
-      description:
-        "Built upon a solid undergraduate foundation to explore advanced topics in computing, with a focus on distributed systems, AI, Image Processing and blockchain technologies. Gained in-depth knowledge through coursework and research, culminating in a thesis on decentralized voting mechanisms.",
-      logo: "/images/sjtu.png",
-      courses: [
-        "Computer Networking",
-        "Machine Learning",
-        "Digital Image Processing",
-        "Computer Vision",
-        "Cloud Computing",
-        "Blockchain Applications",
-        "WEB Search and Mining",
-        "Advanced Computer Architecture",
-        "Statistical Learning and Inference",
-        "Artificial Intelligence",
-        "Vision Information Processing and Application"
-      ],
-      honors: [
-        "Researched blockchain, networking, and distributed systems.",
-        "Built a blockchain-based digital governance prototype with faculty.",
-        "Mentored peers in algorithms and system design.",
-        "Ranked in the top 20% of the cohort."
-      ]
-    },
+    // {
+    //   degree: "Master of Science in Computer Science & Technology",
+    //   institution: "Shanghai Jiao Tong University",
+    //   institutionLink: "https://www.sjtu.edu.cn",
+    //   location: "Shanghai, China",
+    //   locationLink: "https://maps.app.goo.gl/UiFKp3Fd3773DjFw8",
+    //   period: "2020 - 2023",
+    //   gpa: "3.59 / 4.00",
+    //   description:
+    //     "Built upon a solid undergraduate foundation to explore advanced topics in computing, with a focus on distributed systems, AI, Image Processing and blockchain technologies. Gained in-depth knowledge through coursework and research, culminating in a thesis on decentralized voting mechanisms.",
+    //   logo: "/images/sjtu.png",
+    //   courses: [
+    //     "Computer Networking",
+    //     "Machine Learning",
+    //     "Digital Image Processing",
+    //     "Computer Vision",
+    //     "Cloud Computing",
+    //     "Blockchain Applications",
+    //     "WEB Search and Mining",
+    //     "Advanced Computer Architecture",
+    //     "Statistical Learning and Inference",
+    //     "Artificial Intelligence",
+    //     "Vision Information Processing and Application"
+    //   ],
+    //   honors: [
+    //     "Researched blockchain, networking, and distributed systems.",
+    //     "Built a blockchain-based digital governance prototype with faculty.",
+    //     "Mentored peers in algorithms and system design.",
+    //     "Ranked in the top 20% of the cohort."
+    //   ]
+    // },
     {
       degree: "Bachelor of Science in Computer Science & Engineering",
-      institution: "American International University - Bangladesh",
-      institutionLink: "https://www.aiub.edu",
+      institution: "Central University of Science & Technology.",
+      institutionLink: "https://cust.edu.bd",
       location: "Dhaka, Bangladesh",
-      locationLink: "https://maps.app.goo.gl/9sfpgLWeSjMzSwuu5",
-      period: "2013 - 2018",
+      locationLink: "https://maps.app.goo.gl/6HU2ehqnaTtKiMXZ6",
+      period: "2019 - 2023",
       gpa: "3.95 / 4.00",
       description:
         "Possess a strong and comprehensive foundation in core computer science principles, including software engineering methodologies, programming paradigms, algorithmic problem-solving, data structures, and advanced mathematical concepts essential for computing and system design.",
-      logo: "/images/aiub.png",
+      logo: "/images/cust.png",
       courses: [
         "Computer Science Fundamentals",
         "Discrete Mathematics",
@@ -91,18 +92,20 @@ const AcademicBackground = () => {
             <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
               {/* Institution Logo */}
               <div className="flex-shrink-0">
-                <div className="w-20 h-20 flex items-center justify-center text-white text-6xl font-bold overflow-hidden relative">
-                  <img
+                  <Image
                     src={edu.logo}
                     alt={edu.institution}
+                    width={80}
+                    height={80}
                     className="w-20 h-20 object-cover rounded-xl"
-                    loading="lazy"
                     onError={(e) => {
                       e.currentTarget.src = "/images/sakib-rahman.jpg";
                     }}
                   />
+    
+    
+                  
                 </div>
-              </div>
 
               {/* Degree & Institution Info */}
               <div className="flex flex-col items-start flex-1">
