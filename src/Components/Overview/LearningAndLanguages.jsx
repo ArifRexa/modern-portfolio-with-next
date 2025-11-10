@@ -2,18 +2,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { createClient } from '@supabase/supabase-js'; // Import Supabase client
-
-// Initialize Supabase client using environment variables
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Missing Supabase URL or Anon Key in environment variables.');
-  // Handle this error appropriately in your application
-}
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+import supabase from '@/utils/supabaseClient'; // Import the centralized Supabase client
 
 const LearningAndLanguages = () => {
   // State for dynamic data from Supabase
