@@ -225,7 +225,7 @@ const TerminalWindow = () => {
                         className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 rounded-md px-3 bg-gray-700/50 hover:bg-gray-600/50 text-gray-300 border-gray-700/50 border text-xs"
                         variants={item}
                         onClick={() => {
-                            window.open('https://github.com/arif-code', '_blank');
+                            window.open('https://github.com/arifrexa', '_blank');
                             const newCommand = {
                                 input: 'open github',
                                 output: 'Opening GitHub profile...',

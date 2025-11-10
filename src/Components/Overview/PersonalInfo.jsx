@@ -3,6 +3,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, useInView } from 'framer-motion';
 import avatar from '../../../public/images/avatar.jpg';
+import { getTodaysMeetings, getCoffeeCount } from '@/utils/activityTracker';
 
 const container = {
   hidden: { opacity: 0 },
@@ -24,6 +25,8 @@ const PersonalInfo = () => {
   const isInView = useInView(ref, { once: true, margin: '-50px' });
   const [codingTime, setCodingTime] = useState('...'); // Loading indicator
   const [commitCount, setCommitCount] = useState('...'); // Loading indicator
+  const [meetings, setMeetings] = useState(0); // Daily meetings count (0-4)
+  const [coffees, setCoffees] = useState(0); // Coffee count (0-3)
 
   useEffect(() => {
     // Fetch coding time from our API route
@@ -56,10 +59,22 @@ const PersonalInfo = () => {
       }
     };
 
+    // Set initial meetings and coffee counts using shared utility
+    setMeetings(getTodaysMeetings());
+    setCoffees(getCoffeeCount());
 
     fetchCodingTime();
     fetchCommitCount();
   }, []); // Empty dependency array means this runs once when component mounts
+
+  // Update coffee count as time passes throughout the day
+  useEffect(() => {
+    const coffeeInterval = setInterval(() => {
+      setCoffees(getCoffeeCount());
+    }, 60000); // Update every minute
+    
+    return () => clearInterval(coffeeInterval);
+  }, []);
 
   return (
     <motion.div
@@ -210,13 +225,13 @@ const PersonalInfo = () => {
           </motion.div>
           <motion.div className="text-center" variants={item}>
             <dd className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-violet-500 text-transparent bg-clip-text">
-              —
+              {meetings}
             </dd>
             <dt className="uppercase text-sm font-semibold text-gray-300">Meetings</dt>
           </motion.div>
           <motion.div className="text-center" variants={item}>
             <dd className="text-3xl font-bold bg-gradient-to-r from-green-400 to-teal-500 text-transparent bg-clip-text">
-              —
+              {coffees}
             </dd>
             <dt className="uppercase text-sm font-semibold text-gray-300">Coffees</dt>
           </motion.div>
