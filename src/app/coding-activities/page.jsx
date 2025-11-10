@@ -21,7 +21,8 @@ const CodingActivities = () => {
         setLoading(true);
         setError(null);
         
-        const response = await fetch('/api/daily-coding-time');
+        // Fetch extended data from the wakatime API
+        const response = await fetch('/api/wakatime?extended=true');
         if (!response.ok) {
           throw new Error(`Failed to fetch coding data: ${response.status}`);
         }
@@ -31,7 +32,8 @@ const CodingActivities = () => {
           throw new Error(data.error || 'Unknown error occurred');
         }
         
-        setCodingData(data);
+        // Use the extended data
+        setCodingData(data.extendedData);
       } catch (err) {
         console.error('Error fetching coding data:', err);
         setError(err.message);
