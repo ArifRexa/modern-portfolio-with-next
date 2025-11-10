@@ -103,13 +103,19 @@ const ProjectCard = ({ project, index, isInView }) => {
         </div>
         <div className="relative mt-auto">
           <button
-            className="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-9 px-4 py-2 w-full bg-gray-700/50 hover:bg-gray-600/50 text-gray-300 cursor-not-allowed opacity-50" disabled="">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-external-link w-4 h-4 mr-1"><path d="M15 3h6v6"></path><path d="m10 14 9-9"></path><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6"></path>
-            </svg> View Project<div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl">
-            </div>
-          </button><span
-            className="absolute bottom-full mb-2 w-max left-1/2 border -translate-x-1/2 bg-gray-700/50 text-gray-300 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">Private Repository</span></div>
+            className="group flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-lg text-gray-300 bg-gray-800/50 hover:bg-gray-700/70 border border-gray-700/50 hover:border-gray-600/70 transition-all duration-300 text-sm font-medium relative overflow-hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-external-link w-4 h-4">
+              <path d="M15 3h6v6"></path>
+              <path d="m10 14 9-9"></path>
+              <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6"></path>
+            </svg>
+            <span>View Project</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg pointer-events-none"></div>
+          </button>
+          <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800/90 text-gray-200 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none border border-gray-600 z-10 whitespace-nowrap">
+            Private Repository
+          </div>
+        </div>
       </div>
     </motion.div>
   );
