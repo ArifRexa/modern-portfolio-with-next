@@ -1,6 +1,7 @@
 // app/components/Contact.jsx
 'use client';
 import React, { useState } from 'react';
+import supabase from '@/utils/supabaseClient'; // Adjust path if necessary
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -23,14 +24,38 @@ const Contact = () => {
     setSubmitStatus(null);
 
     try {
-      // Replace this with your actual form submission logic (e.g., API route)
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
-      setSubmitStatus('success');
-      setFormData({ name: '', email: '', subject: '', message: '' });
+
+      const { data, error, status } = await supabase
+        .from('contact_messages') // Make sure this matches your table name exactly
+        .insert([{
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+          // 'created_at' will be set automatically by the database default
+          // 'status' will default to 'new' if you set that in the DB
+        }]);
+
+      console.log("Supabase response:"); // Debug log
+      console.log("- Data:", data); // Debug log
+      console.log("- Error:", error); // Debug log
+      console.log("- Status:", status); // Debug log
+
+      if (error) {
+        console.error("Supabase error inserting data:", error);
+        console.error("Error details:", error.message, error.code, error.hint); // More specific error log
+        setSubmitStatus('error');
+      } else {
+        console.log("Message sent successfully to Supabase! Data returned:", data);
+        setSubmitStatus('success');
+        setFormData({ name: '', email: '', subject: '', message: '' }); // Clear form on success
+      }
     } catch (error) {
+      console.error("An unexpected error occurred during submission:", error);
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
+      console.log("Finished form submission attempt."); // Debug log
     }
   };
 
@@ -202,11 +227,10 @@ const Contact = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`inline-flex items-center justify-center w-full h-10 px-4 py-2 rounded-md font-medium text-md border backdrop-blur-sm transition-colors ${
-                isSubmitting
+              className={`inline-flex items-center justify-center w-full h-10 px-4 py-2 rounded-md font-medium text-md border backdrop-blur-sm transition-colors ${isSubmitting
                   ? 'bg-blue-500/30 cursor-not-allowed text-blue-500'
                   : 'bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border-blue-500/50'
-              }`}
+                }`}
             >
               {isSubmitting ? 'Sending...' : 'Send Message'}
             </button>
@@ -219,7 +243,7 @@ const Contact = () => {
         <h3 className="text-3xl font-bold text-center text-gray-200 mb-4">Connect With Me</h3>
         <div className="flex justify-center gap-4">
           <a
-            href="https://github.com/arifrexa"
+            href="https://github.com/arifrexa      "
             target="_blank"
             rel="noopener noreferrer"
             className="group cursor-pointer rounded-xl p-4 transition-all transform hover:-translate-y-1 bg-gray-800/40 hover:bg-gray-800/70 shadow-md hover:shadow-xl"
@@ -239,7 +263,7 @@ const Contact = () => {
             </svg>
           </a>
           <a
-            href="https://www.linkedin.com/in/md-arif-rexa"
+            href="https://www.linkedin.com/in/md-arif-rexa      "
             target="_blank"
             rel="noopener noreferrer"
             className="group cursor-pointer rounded-xl p-4 transition-all transform hover:-translate-y-1 bg-gray-800/40 hover:bg-gray-800/70 shadow-md hover:shadow-xl"
