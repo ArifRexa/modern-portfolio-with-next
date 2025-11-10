@@ -201,12 +201,68 @@ const TerminalWindow = () => {
                     <motion.button
                         className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 rounded-md px-3 bg-green-500/20 hover:bg-green-500/30 text-green-400 border-green-500/50 border text-xs"
                         variants={item}
-                        onClick={() => {
+                        onClick={async () => {
                             const newCommand = {
                                 input: './download_cv.sh',
                                 output: 'Downloading resume...',
                             };
                             setCommandHistory(prev => [...prev, newCommand]);
+                            
+                            // Fetch resume from Supabase and download it
+                            // Import the Supabase client
+                            const { default: supabase } = await import('@/utils/supabaseClient');
+                            
+                            try {
+                                const { data, error } = await supabase
+                                    .from('documents')
+                                    .select('url')
+                                    .eq('name', 'Resume')
+                                    .single();
+
+                                if (error) {
+                                    throw error;
+                                }
+
+                                if (!data || !data.url) {
+                                    const errorMsg = 'Resume URL not found.';
+                                    setCommandHistory(prev => [...prev, {
+                                        input: './download_cv.sh',
+                                        output: errorMsg,
+                                    }]);
+                                    alert(errorMsg);
+                                    return;
+                                }
+
+                                let resumeUrl = data.url;
+
+                                // Detect Google Drive & convert to direct download link
+                                if (resumeUrl.includes('drive.google.com')) {
+                                    const match = resumeUrl.match(/\/d\/(.*?)\//);
+
+                                    if (match && match[1]) {
+                                        const fileId = match[1];
+                                        resumeUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+                                    }
+                                }
+
+                                // Create hidden download link
+                                const link = document.createElement('a');
+                                link.href = resumeUrl;
+                                link.setAttribute('download', 'Resume.pdf');
+                                link.target = "_blank"; // Important for Google Drive download
+
+                                document.body.appendChild(link);
+                                link.click();
+                                document.body.removeChild(link);
+                            } catch (error) {
+                                console.error('Download error:', error.message);
+                                const errorMsg = `Error downloading CV: ${error.message}`;
+                                setCommandHistory(prev => [...prev, {
+                                    input: './download_cv.sh',
+                                    output: errorMsg,
+                                }]);
+                                alert(errorMsg);
+                            }
                         }}
                     >./download_cv.sh</motion.button>
                     <motion.button
