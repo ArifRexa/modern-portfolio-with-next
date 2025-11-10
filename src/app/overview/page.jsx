@@ -52,9 +52,9 @@ const Overview = () => {
       <motion.div variants={item}>
         <RecentProjects />
       </motion.div>
-      <motion.div variants={item}>
+      {/* <motion.div variants={item}>
         <QuickInsights />
-      </motion.div>
+      </motion.div> */}
       <motion.div variants={item}>
         <LatestBlogPosts />
       </motion.div>
