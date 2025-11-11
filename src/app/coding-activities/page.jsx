@@ -22,18 +22,18 @@ const CodingActivities = () => {
       try {
         setLoading(true);
         setError(null);
-        
+
         // Fetch extended data from the wakatime API
         const response = await fetch('/api/wakatime?extended=true');
         if (!response.ok) {
           throw new Error(`Failed to fetch coding data: ${response.status}`);
         }
-        
+
         const data = await response.json();
         if (!data.success) {
           throw new Error(data.error || 'Unknown error occurred');
         }
-        
+
         // Use the extended data
         setCodingData(data.extendedData);
       } catch (err) {
@@ -50,19 +50,18 @@ const CodingActivities = () => {
   // Show loading state
   if (loading) {
     return (
-      <section className="space-y-6">
+      <section className="space-y-6 py-8">
         <div className="text-center p-2 sm:px-8 lg:px-12">
           <h1 className="relative inline-block text-3xl sm:text-4xl md:text-4xl font-extrabold tracking-tight text-gray-200">
             Coding Activities
           </h1>
           <p className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed text-gray-300">
-            Explore my coding journey across platforms and projects
+            Loading coding data...
           </p>
           <span className="block h-1 w-16 mx-auto mt-3 rounded-full bg-blue-400"></span>
         </div>
-        
-        <div className="text-center py-12">
-          <p className="text-gray-400">Loading coding data...</p>
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
         </div>
       </section>
     );
@@ -81,7 +80,7 @@ const CodingActivities = () => {
           </p>
           <span className="block h-1 w-16 mx-auto mt-3 rounded-full bg-blue-400"></span>
         </div>
-        
+
         <div className="text-center py-12">
           <p className="text-red-400">Error loading coding data: {error || 'Unknown error'}</p>
         </div>
@@ -155,44 +154,44 @@ const CodingActivities = () => {
       <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
           <h3 className="text-2xl font-bold tracking-tight text-gray-200">Weekly Activity (hours)</h3>
-          
+
           {/* Chart Type Selector */}
           <div className="flex flex-wrap gap-2">
-            <button 
+            <button
               onClick={() => setChartType('bar')}
               className={`px-3 py-1 text-sm rounded-lg transition-colors ${
-                chartType === 'bar' 
-                  ? 'bg-blue-600 text-white' 
+                chartType === 'bar'
+                  ? 'bg-blue-600 text-white'
                   : 'bg-gray-700 text-gray-200 hover:bg-gray-600'
               }`}
             >
               Bar
             </button>
-            <button 
+            <button
               onClick={() => setChartType('line')}
               className={`px-3 py-1 text-sm rounded-lg transition-colors ${
-                chartType === 'line' 
-                  ? 'bg-blue-600 text-white' 
+                chartType === 'line'
+                  ? 'bg-blue-600 text-white'
                   : 'bg-gray-700 text-gray-200 hover:bg-gray-600'
               }`}
             >
               Line
             </button>
-            <button 
+            <button
               onClick={() => setChartType('pie')}
               className={`px-3 py-1 text-sm rounded-lg transition-colors ${
-                chartType === 'pie' 
-                  ? 'bg-blue-600 text-white' 
+                chartType === 'pie'
+                  ? 'bg-blue-600 text-white'
                   : 'bg-gray-700 text-gray-200 hover:bg-gray-600'
               }`}
             >
               Pie
             </button>
-            <button 
+            <button
               onClick={() => setChartType('doughnut')}
               className={`px-3 py-1 text-sm rounded-lg transition-colors ${
-                chartType === 'doughnut' 
-                  ? 'bg-blue-600 text-white' 
+                chartType === 'doughnut'
+                  ? 'bg-blue-600 text-white'
                   : 'bg-gray-700 text-gray-200 hover:bg-gray-600'
               }`}
             >
@@ -200,7 +199,7 @@ const CodingActivities = () => {
             </button>
           </div>
         </div>
-        
+
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
             {chartType === 'bar' && (
@@ -218,21 +217,21 @@ const CodingActivities = () => {
                 }}
               >
                 <CartesianGrid stroke="none" />
-                <XAxis 
-                  dataKey="name" 
-                  stroke="#9CA3AF" 
+                <XAxis
+                  dataKey="name"
+                  stroke="#9CA3AF"
                   tick={{ fill: '#9CA3AF', fontSize: 12 }}
                   axisLine={{ stroke: '#4B5563' }}
                 />
-                <YAxis 
-                  stroke="#9CA3AF" 
+                <YAxis
+                  stroke="#9CA3AF"
                   tick={{ fill: '#9CA3AF', fontSize: 12 }}
                   axisLine={{ stroke: '#4B5563' }}
                 />
                 <Tooltip
                   wrapperStyle={{ outline: 'none' }}
-                  contentStyle={{ 
-                    backgroundColor: '#1F2937', 
+                  contentStyle={{
+                    backgroundColor: '#1F2937',
                     borderColor: '#065ae2ff',
                     borderRadius: '0.5rem',
                     color: '#F9FAFB',
@@ -242,16 +241,16 @@ const CodingActivities = () => {
                   itemStyle={{ color: '#F9FAFB' }}
                   labelStyle={{ color: '#F9FAFB', fontWeight: 'bold', marginBottom: '5px' }}
                 />
-                <Bar 
-                  dataKey="hours" 
+                <Bar
+                  dataKey="hours"
                   name="Hours"
                   radius={[4, 4, 0, 0]}
                   minPointSize={2}
                 >
                   {codingData.weekly_activity.map((entry, index) => (
-                    <Cell 
-                      key={`cell-${index}`} 
-                      fill="url(#colorGradient)" 
+                    <Cell
+                      key={`cell-${index}`}
+                      fill="url(#colorGradient)"
                       stroke="url(#colorGradient)"
                       strokeWidth={0}
                     />
@@ -265,7 +264,7 @@ const CodingActivities = () => {
                 </defs>
               </BarChart>
             )}
-            
+
             {chartType === 'line' && (
               <LineChart
                 data={codingData.weekly_activity.map((day, i) => ({
@@ -281,20 +280,20 @@ const CodingActivities = () => {
                 }}
               >
                 <CartesianGrid stroke="none" />
-                <XAxis 
-                  dataKey="name" 
-                  stroke="#9CA3AF" 
+                <XAxis
+                  dataKey="name"
+                  stroke="#9CA3AF"
                   tick={{ fill: '#9CA3AF' }}
                   axisLine={{ stroke: '#4B5563' }}
                 />
-                <YAxis 
-                  stroke="#9CA3AF" 
+                <YAxis
+                  stroke="#9CA3AF"
                   tick={{ fill: '#9CA3AF' }}
                   axisLine={{ stroke: '#4B5563' }}
                 />
                 <Tooltip
-                  contentStyle={{ 
-                    backgroundColor: '#1F2937', 
+                  contentStyle={{
+                    backgroundColor: '#1F2937',
                     borderColor: '#374151',
                     borderRadius: '0.5rem',
                     color: '#F9FAFB',
@@ -321,7 +320,7 @@ const CodingActivities = () => {
                 </defs>
               </LineChart>
             )}
-            
+
             {(chartType === 'pie' || chartType === 'doughnut') && (
               <PieChart>
                 <Pie
@@ -348,8 +347,8 @@ const CodingActivities = () => {
                   ))}
                 </Pie>
                 <Tooltip
-                  contentStyle={{ 
-                    backgroundColor: '#1F2937', 
+                  contentStyle={{
+                    backgroundColor: '#1F2937',
                     borderColor: '#374151',
                     borderRadius: '0.5rem',
                     color: '#F9FAFB',
@@ -368,11 +367,11 @@ const CodingActivities = () => {
       <div className="text-sm text-right mt-4 text-gray-400">
         Last updated: {new Date().toLocaleString()} (UTC +6)
       </div>
-      
+
       {/* Additional Link */}
       <div className="text-center mt-6">
-        <a 
-          href="/github-contributions" 
+        <a
+          href="/github-contributions"
           className="inline-block px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors border border-gray-600"
         >
           View GitHub Contributions
