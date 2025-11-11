@@ -1,6 +1,7 @@
 // app/components/CodingActivities.jsx
 'use client';
 import React, { useState, useEffect } from 'react';
+import { BarChart, Bar, LineChart, Line, PieChart, Pie, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Legend, AreaChart, Area } from 'recharts';
 
 const StatCard = ({ title, value, icon, color }) => (
   <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm flex flex-col items-center justify-center h-full">
@@ -14,6 +15,7 @@ const CodingActivities = () => {
   const [codingData, setCodingData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [chartType, setChartType] = useState('bar'); // Default to bar chart
 
   useEffect(() => {
     const fetchCodingData = async () => {
@@ -149,22 +151,216 @@ const CodingActivities = () => {
         />
       </div>
 
-      {/* Weekly Activity */}
+      {/* Weekly Activity Chart */}
       <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm">
-        <h3 className="text-2xl font-bold tracking-tight text-gray-200 mb-4">Weekly Activity (hours)</h3>
-        <div className="flex justify-between items-end h-40 gap-2">
-          {codingData.weekly_activity.map((day, i) => (
-            <div key={i} className="flex flex-col items-center gap-2 flex-1">
-              <span className="text-xs text-gray-400">{day.day}</span>
-              <div className="w-full max-w-[60px] bg-gray-800/30 rounded-t overflow-hidden">
-                <div
-                  className="w-full bg-gradient-to-t from-blue-500 to-cyan-400"
-                  style={{ height: `${(parseFloat(day.hours) / 10) * 100}%` }}
-                ></div>
-              </div>
-              <span className="text-xs text-gray-200">{day.hours}h</span>
-            </div>
-          ))}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
+          <h3 className="text-2xl font-bold tracking-tight text-gray-200">Weekly Activity (hours)</h3>
+          
+          {/* Chart Type Selector */}
+          <div className="flex flex-wrap gap-2">
+            <button 
+              onClick={() => setChartType('bar')}
+              className={`px-3 py-1 text-sm rounded-lg transition-colors ${
+                chartType === 'bar' 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-gray-700 text-gray-200 hover:bg-gray-600'
+              }`}
+            >
+              Bar
+            </button>
+            <button 
+              onClick={() => setChartType('line')}
+              className={`px-3 py-1 text-sm rounded-lg transition-colors ${
+                chartType === 'line' 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-gray-700 text-gray-200 hover:bg-gray-600'
+              }`}
+            >
+              Line
+            </button>
+            <button 
+              onClick={() => setChartType('pie')}
+              className={`px-3 py-1 text-sm rounded-lg transition-colors ${
+                chartType === 'pie' 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-gray-700 text-gray-200 hover:bg-gray-600'
+              }`}
+            >
+              Pie
+            </button>
+            <button 
+              onClick={() => setChartType('doughnut')}
+              className={`px-3 py-1 text-sm rounded-lg transition-colors ${
+                chartType === 'doughnut' 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-gray-700 text-gray-200 hover:bg-gray-600'
+              }`}
+            >
+              Donut
+            </button>
+          </div>
+        </div>
+        
+        <div className="h-64">
+          <ResponsiveContainer width="100%" height="100%">
+            {chartType === 'bar' && (
+              <BarChart
+                data={codingData.weekly_activity.map((day, i) => ({
+                  name: day.day,
+                  hours: parseFloat(day.hours),
+                  dayOrder: i
+                }))}
+                margin={{
+                  top: 20,
+                  right: 30,
+                  left: 20,
+                  bottom: 30,
+                }}
+              >
+                <CartesianGrid stroke="none" />
+                <XAxis 
+                  dataKey="name" 
+                  stroke="#9CA3AF" 
+                  tick={{ fill: '#9CA3AF', fontSize: 12 }}
+                  axisLine={{ stroke: '#4B5563' }}
+                />
+                <YAxis 
+                  stroke="#9CA3AF" 
+                  tick={{ fill: '#9CA3AF', fontSize: 12 }}
+                  axisLine={{ stroke: '#4B5563' }}
+                />
+                <Tooltip
+                  wrapperStyle={{ outline: 'none' }}
+                  contentStyle={{ 
+                    backgroundColor: '#1F2937', 
+                    borderColor: '#065ae2ff',
+                    borderRadius: '0.5rem',
+                    color: '#F9FAFB',
+                    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.1)',
+                    border: '1px solid #374151'
+                  }}
+                  itemStyle={{ color: '#F9FAFB' }}
+                  labelStyle={{ color: '#F9FAFB', fontWeight: 'bold', marginBottom: '5px' }}
+                />
+                <Bar 
+                  dataKey="hours" 
+                  name="Hours"
+                  radius={[4, 4, 0, 0]}
+                  minPointSize={2}
+                >
+                  {codingData.weekly_activity.map((entry, index) => (
+                    <Cell 
+                      key={`cell-${index}`} 
+                      fill="url(#colorGradient)" 
+                      stroke="url(#colorGradient)"
+                      strokeWidth={0}
+                    />
+                  ))}
+                </Bar>
+                <defs>
+                  <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.9}/>
+                    <stop offset="95%" stopColor="#2563EB" stopOpacity={0.7}/>
+                  </linearGradient>
+                </defs>
+              </BarChart>
+            )}
+            
+            {chartType === 'line' && (
+              <LineChart
+                data={codingData.weekly_activity.map((day, i) => ({
+                  name: day.day,
+                  hours: parseFloat(day.hours),
+                  dayOrder: i
+                }))}
+                margin={{
+                  top: 20,
+                  right: 30,
+                  left: 20,
+                  bottom: 30,
+                }}
+              >
+                <CartesianGrid stroke="none" />
+                <XAxis 
+                  dataKey="name" 
+                  stroke="#9CA3AF" 
+                  tick={{ fill: '#9CA3AF' }}
+                  axisLine={{ stroke: '#4B5563' }}
+                />
+                <YAxis 
+                  stroke="#9CA3AF" 
+                  tick={{ fill: '#9CA3AF' }}
+                  axisLine={{ stroke: '#4B5563' }}
+                />
+                <Tooltip
+                  contentStyle={{ 
+                    backgroundColor: '#1F2937', 
+                    borderColor: '#374151',
+                    borderRadius: '0.5rem',
+                    color: '#F9FAFB',
+                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                  }}
+                  itemStyle={{ color: '#F9FAFB' }}
+                  labelStyle={{ color: '#F9FAFB', fontWeight: 'bold' }}
+                />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="hours"
+                  name="Hours"
+                  stroke="url(#colorLine)"
+                  strokeWidth={3}
+                  dot={{ stroke: '#3B82F6', strokeWidth: 2, r: 4, fill: '#1F2937' }}
+                  activeDot={{ r: 6, stroke: '#3B82F6', strokeWidth: 2, fill: '#1F2937' }}
+                />
+                <defs>
+                  <linearGradient id="colorLine" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#3B82F6" stopOpacity={1}/>
+                    <stop offset="95%" stopColor="#60A5FA" stopOpacity={1}/>
+                  </linearGradient>
+                </defs>
+              </LineChart>
+            )}
+            
+            {(chartType === 'pie' || chartType === 'doughnut') && (
+              <PieChart>
+                <Pie
+                  data={codingData.weekly_activity.map((day, i) => ({
+                    name: day.day,
+                    hours: parseFloat(day.hours),
+                    dayOrder: i
+                  }))}
+                  cx="50%"
+                  cy="50%"
+                  label={({ name, percent }) => `${name}\n${(percent * 100).toFixed(0)}%`}
+                  labelLine={false}
+                  outerRadius={chartType === 'doughnut' ? 80 : '80%'}
+                  innerRadius={chartType === 'doughnut' ? '50%' : 0}
+                  dataKey="hours"
+                  nameKey="name"
+                  paddingAngle={2}
+                >
+                  {codingData.weekly_activity.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={['#6366F1', '#8B5CF6', '#EC4899', '#F43F5E', '#F97316', '#F59E0B', '#10B981'][index % 7]}
+                    />
+                  ))}
+                </Pie>
+                <Tooltip
+                  contentStyle={{ 
+                    backgroundColor: '#1F2937', 
+                    borderColor: '#374151',
+                    borderRadius: '0.5rem',
+                    color: '#F9FAFB',
+                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                  }}
+                  formatter={(value) => [`${value} hours`, 'Hours']}
+                />
+                <Legend />
+              </PieChart>
+            )}
+          </ResponsiveContainer>
         </div>
       </div>
 
