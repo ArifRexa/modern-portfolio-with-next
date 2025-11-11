@@ -6,146 +6,83 @@ const GitHubContributions = () => {
   const [githubData, setGithubData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [dateRange, setDateRange] = useState('all'); // all, year, month, week
-  const [selectedRepo, setSelectedRepo] = useState(null);
-  const [showRepoDetails, setShowRepoDetails] = useState(false);
-
-  const dateRangeOptions = [
-    { value: 'all', label: 'All Time' },
-    { value: 'year', label: 'This Year' },
-    { value: 'month', label: 'This Month' },
-    { value: 'week', label: 'This Week' },
-  ];
 
   useEffect(() => {
-    const fetchGitHubData = async () => {
+    const fetchGithubData = async () => {
       try {
-        setLoading(true);
-        setError(null);
-        
-        // Fetch comprehensive GitHub statistics from our API
-        const response = await fetch(`/api/github/stats?range=${dateRange}`);
+        const response = await fetch('/api/github-data');
         if (!response.ok) {
-          throw new Error(`Failed to fetch GitHub stats: ${response.status}`);
+          throw new Error('Failed to fetch GitHub data');
         }
         const data = await response.json();
-        
-        if (data.error) {
-          throw new Error(data.error || 'Unknown error occurred');
-        }
-        
         setGithubData(data);
       } catch (err) {
-        console.error('Error fetching GitHub data:', err);
         setError(err.message);
-        
-        // Set some fallback data if possible
-        setGithubData({
-          total_repos: 0,
-          total_commits: 0,
-          total_stars_earned: 0,
-          total_prs: 0,
-          contributed_to_last_year: 0,
-          language_usage: [],
-          top_repositories: [],
-          weekly_activity: [],
-          last_updated: new Date().toISOString()
-        });
       } finally {
         setLoading(false);
       }
     };
 
-    fetchGitHubData();
-  }, [dateRange]);
-
-  const handleRepoClick = (repo) => {
-    setSelectedRepo(repo);
-    setShowRepoDetails(true);
-  };
-
-  const closeRepoDetails = () => {
-    setShowRepoDetails(false);
-    setSelectedRepo(null);
-  };
+    fetchGithubData();
+  }, []);
 
   if (loading) {
     return (
-      <section className="space-y-6">
+      <section className="space-y-6 py-8">
         <div className="text-center p-2 sm:px-8 lg:px-12">
           <h1 className="relative inline-block text-3xl sm:text-4xl md:text-4xl font-extrabold tracking-tight text-gray-200">
             GitHub Contributions
           </h1>
           <p className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed text-gray-300">
-            Explore my GitHub contributions and projects
+            Loading GitHub data...
           </p>
           <span className="block h-1 w-16 mx-auto mt-3 rounded-full bg-blue-400"></span>
         </div>
-        
-        <div className="text-center py-12">
-          <p className="text-gray-400">Loading GitHub data...</p>
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
         </div>
       </section>
     );
   }
 
-  if (error && !githubData) {
+  if (error) {
     return (
-      <section className="space-y-6">
+      <section className="space-y-6 py-8">
         <div className="text-center p-2 sm:px-8 lg:px-12">
           <h1 className="relative inline-block text-3xl sm:text-4xl md:text-4xl font-extrabold tracking-tight text-gray-200">
             GitHub Contributions
           </h1>
           <p className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed text-gray-300">
-            Explore my GitHub contributions and projects
+            Failed to load GitHub data
           </p>
           <span className="block h-1 w-16 mx-auto mt-3 rounded-full bg-blue-400"></span>
         </div>
-        
-        <div className="text-center py-12">
-          <p className="text-red-400">Error loading GitHub data: {error}</p>
+        <div className="bg-red-900/50 border border-red-700/50 rounded-xl p-6 text-center text-red-200">
+          Error: {error}
+          <p className="mt-2 text-sm">Please check your console for more details.</p>
         </div>
       </section>
     );
   }
 
   return (
-    <section className="space-y-6">
+    <section className="space-y-6 py-8">
       {/* Header */}
       <div className="text-center p-2 sm:px-8 lg:px-12">
         <h1 className="relative inline-block text-3xl sm:text-4xl md:text-4xl font-extrabold tracking-tight text-gray-200">
           GitHub Contributions
         </h1>
         <p className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed text-gray-300">
-          Explore my GitHub contributions and projects
+          Explore my public GitHub activity and projects
         </p>
         <span className="block h-1 w-16 mx-auto mt-3 rounded-full bg-blue-400"></span>
-      </div>
-
-      {/* Date Range Filter */}
-      <div className="flex justify-center">
-        <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-3 shadow-sm">
-          <label htmlFor="date-range" className="text-gray-300 mr-2">Time Range:</label>
-          <select
-            id="date-range"
-            value={dateRange}
-            onChange={(e) => setDateRange(e.target.value)}
-            className="bg-gray-800 text-white rounded-lg px-3 py-2 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            {dateRangeOptions.map(option => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </div>
       </div>
 
       {/* Stats Overview */}
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-2 lg:gap-3 mt-6">
         <StatCard
           title="Total Repos"
-          value={githubData.total_repos}
+          value={githubData?.total_repos || 0}
           icon={
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-github w-6 h-6 mx-auto mb-2 text-purple-500">
               <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
@@ -156,7 +93,7 @@ const GitHubContributions = () => {
         />
         <StatCard
           title="Total Commits"
-          value={githubData.total_commits}
+          value={githubData?.total_commits || 0}
           icon={
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-code w-6 h-6 mx-auto mb-2 text-blue-500">
               <polyline points="16 18 22 12 16 6" />
@@ -167,7 +104,7 @@ const GitHubContributions = () => {
         />
         <StatCard
           title="Total Stars Earned"
-          value={githubData.total_stars_earned}
+          value={githubData?.total_stars_earned || 0}
           icon={
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-star w-6 h-6 mx-auto mb-2 text-yellow-500">
               <path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" />
@@ -177,7 +114,7 @@ const GitHubContributions = () => {
         />
         <StatCard
           title="Total PRs"
-          value={githubData.total_prs}
+          value={githubData?.total_prs || 0}
           icon={
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-git-pull-request w-6 h-6 mx-auto mb-2 text-green-500">
               <circle cx="18" cy="18" r="3" />
@@ -189,8 +126,8 @@ const GitHubContributions = () => {
           color="text-green-500"
         />
         <StatCard
-          title="Last Year Contributions"
-          value={githubData.contributed_to_last_year}
+          title="Contributions"
+          value={githubData?.contributed_to_last_year || 0}
           icon={
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-blocks w-6 h-6 mx-auto mb-2 text-indigo-500">
               <rect width="7" height="7" x="14" y="3" rx="1" />
@@ -201,35 +138,14 @@ const GitHubContributions = () => {
         />
       </div>
 
-      {/* Weekly Activity Graph */}
-      {githubData.weekly_activity && githubData.weekly_activity.length > 0 && (
-        <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm">
-          <h3 className="text-2xl font-bold tracking-tight text-gray-200 mb-4">
-            Weekly Activity
-          </h3>
-          <div className="flex items-end justify-between h-32">
-            {githubData.weekly_activity.map((day, index) => (
-              <div key={index} className="flex flex-col items-center">
-                <div className="text-xs text-gray-400 mb-1">{day.day}</div>
-                <div
-                  className="w-8 bg-gradient-to-t from-blue-600 to-blue-400 rounded-t-md"
-                  style={{ height: `${Math.max(day.commits * 5, 10)}px` }}
-                  title={`${day.commits} commits on ${day.day}`}
-                ></div>
-                <div className="text-xs text-gray-300 mt-1">{day.commits}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Language Usage */}
       <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm">
         <h3 className="text-2xl font-bold tracking-tight text-gray-200 mb-4">
-          Language Usage
+          Top Languages (by Repos)
         </h3>
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
-          {githubData.language_usage.map((lang, idx) => (
+          {githubData?.language_usage?.map((lang, idx) => (
             <div
               key={idx}
               className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700/40 rounded-xl p-4 lg:p-6 shadow-md flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-2 sm:space-y-0"
@@ -254,16 +170,15 @@ const GitHubContributions = () => {
           Top Repositories
         </h3>
         <div className="space-y-3">
-          {githubData.top_repositories.map((repo, idx) => (
+          {githubData?.top_repositories?.map((repo, idx) => (
             <div
               key={idx}
-              className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700/40 rounded-xl p-4 lg:p-6 shadow-md flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0 cursor-pointer hover:bg-gray-750 transition-colors"
-              onClick={() => handleRepoClick(repo)}
+              className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700/40 rounded-xl p-4 lg:p-6 shadow-md flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0"
             >
               <div>
                 <h6 className="font-semibold text-lg text-white">{repo.repo_name}</h6>
                 {repo.description && (
-                  <p className="text-sm text-gray-400 mt-1 line-clamp-1">{repo.description}</p>
+                  <p className="text-sm text-gray-400 mt-1 line-clamp-2">{repo.description}</p>
                 )}
               </div>
               <div className="flex space-x-6 text-sm">
@@ -273,67 +188,11 @@ const GitHubContributions = () => {
                   </svg>
                   {repo.stars}
                 </span>
-                {repo.language && (
-                <span className="flex items-center text-gray-400">
-                  <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.684 13.342C9.375 12.652 10.376 12.652 11.067 13.342L12 14.274l.933-.932c.691-.69 1.692-.69 2.383 0 .69.69.69 1.692 0 2.383l-2.316 2.316a1 1 0 01-1.414 0l-2.316-2.316c-.69-.69-.69-1.692 0-2.383zM12 4v8" />
-                  </svg>
-                  {repo.language}
-                </span>
-                )}
               </div>
             </div>
           ))}
         </div>
       </div>
-
-      {/* Repository Details Modal */}
-      {showRepoDetails && selectedRepo && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-900 rounded-xl border border-gray-700/50 p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-start mb-4">
-              <h3 className="text-xl font-bold text-white">{selectedRepo.repo_name}</h3>
-              <button 
-                onClick={closeRepoDetails}
-                className="text-gray-400 hover:text-white"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-            {selectedRepo.description && (
-              <p className="text-gray-300 mb-4">{selectedRepo.description}</p>
-            )}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-gray-800 p-3 rounded-lg">
-                <div className="text-sm text-gray-400">Stars</div>
-                <div className="text-lg font-bold text-yellow-400">{selectedRepo.stars}</div>
-              </div>
-              <div className="bg-gray-800 p-3 rounded-lg">
-                <div className="text-sm text-gray-400">Forks</div>
-                <div className="text-lg font-bold text-blue-400">{selectedRepo.forks}</div>
-              </div>
-              {selectedRepo.language && (
-                <div className="bg-gray-800 p-3 rounded-lg">
-                  <div className="text-sm text-gray-400">Language</div>
-                  <div className="text-lg font-bold text-green-400">{selectedRepo.language}</div>
-                </div>
-              )}
-            </div>
-            <div className="mt-4">
-              <a 
-                href={`https://github.com/arifrexa/${selectedRepo.repo_name}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors"
-              >
-                View on GitHub
-              </a>
-            </div>
-          </div>
-        </div>
-      )}
     </section>
   );
 };

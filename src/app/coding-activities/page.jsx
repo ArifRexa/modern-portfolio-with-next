@@ -368,6 +368,16 @@ const CodingActivities = () => {
       <div className="text-sm text-right mt-4 text-gray-400">
         Last updated: {new Date().toLocaleString()} (UTC +6)
       </div>
+      
+      {/* Additional Link */}
+      <div className="text-center mt-6">
+        <a 
+          href="/github-contributions" 
+          className="inline-block px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors border border-gray-600"
+        >
+          View GitHub Contributions
+        </a>
+      </div>
     </section>
   );
 };
