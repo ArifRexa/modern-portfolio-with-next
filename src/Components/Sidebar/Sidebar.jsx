@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import SidebarStats from './SidebarStats';
 import avatar from '../../../public/images/avatar.jpg';
 
 const Sidebar = ({ className = '', theme = 'dark' }) => {
@@ -188,18 +189,7 @@ const Sidebar = ({ className = '', theme = 'dark' }) => {
         </nav>
       </div>
 
-      <div className={`p-4 border-t ${borderClass}`}>
-        <div className="grid grid-cols-2 gap-2">
-          <div className={`${theme === 'dark' ? 'bg-gray-800/40' : 'bg-gray-200/40'} ${borderClass} p-2 rounded`}>
-            <p className={`text-xs ${theme === 'dark' ? 'text-gray-200' : 'text-gray-700'} uppercase tracking-wide font-semibold text-center`}>CV</p>
-            <p className={`text-sm font-bold text-blue-300 text-center`}>Downloads</p>
-          </div>
-          <div className={`${theme === 'dark' ? 'bg-gray-800/40' : 'bg-gray-200/40'} ${borderClass} p-2 rounded`}>
-            <p className={`text-xs ${theme === 'dark' ? 'text-gray-200' : 'text-gray-700'} uppercase tracking-wide font-semibold text-center`}>Visitors</p>
-            <p className={`text-sm font-bold text-green-300 text-center`}>Count</p>
-          </div>
-        </div>
-      </div>
+      <SidebarStats theme={theme} />
 
     </aside>
   );

@@ -52,6 +52,15 @@ const QuickActions = () => {
       link.click();
       document.body.removeChild(link);
 
+      // ✅ Increment download count after successful download
+      try {
+        await fetch('/api/resume-stats', { method: 'POST' });
+        console.log('Resume download count incremented');
+      } catch (statsError) {
+        console.error('Error incrementing download count:', statsError);
+        // Don't fail the download if stats update fails
+      }
+
     } catch (error) {
       console.error('Download error:', error.message);
       alert('Error downloading CV: ' + error.message);

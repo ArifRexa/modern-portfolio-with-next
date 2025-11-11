@@ -254,6 +254,15 @@ const TerminalWindow = () => {
                                 document.body.appendChild(link);
                                 link.click();
                                 document.body.removeChild(link);
+
+                                // Increment download count after successful download
+                                try {
+                                    await fetch('/api/resume-stats', { method: 'POST' });
+                                    console.log('Resume download count incremented from terminal');
+                                } catch (statsError) {
+                                    console.error('Error incrementing download count:', statsError);
+                                    // Don't fail the download if stats update fails
+                                }
                             } catch (error) {
                                 console.error('Download error:', error.message);
                                 const errorMsg = `Error downloading CV: ${error.message}`;
