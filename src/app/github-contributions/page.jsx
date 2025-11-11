@@ -1,4 +1,4 @@
-// app/components/GitHubContributions.jsx
+// app/github-contributions/page.jsx
 'use client';
 import React, { useState, useEffect } from 'react';
 
@@ -6,6 +6,16 @@ const GitHubContributions = () => {
   const [githubData, setGithubData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [dateRange, setDateRange] = useState('all'); // all, year, month, week
+  const [selectedRepo, setSelectedRepo] = useState(null);
+  const [showRepoDetails, setShowRepoDetails] = useState(false);
+
+  const dateRangeOptions = [
+    { value: 'all', label: 'All Time' },
+    { value: 'year', label: 'This Year' },
+    { value: 'month', label: 'This Month' },
+    { value: 'week', label: 'This Week' },
+  ];
 
   useEffect(() => {
     const fetchGitHubData = async () => {
@@ -13,132 +23,18 @@ const GitHubContributions = () => {
         setLoading(true);
         setError(null);
         
-        // Fetch commit data from our extended GitHub API
-        const commitResponse = await fetch('/api/github/commits?extended=true');
-        if (!commitResponse.ok) {
-          throw new Error(`Failed to fetch commit data: ${commitResponse.status}`);
+        // Fetch comprehensive GitHub statistics from our API
+        const response = await fetch(`/api/github/stats?range=${dateRange}`);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch GitHub stats: ${response.status}`);
         }
-        const commitData = await commitResponse.json();
-        if (!commitData) {
-          throw new Error('No commit data received');
-        }
+        const data = await response.json();
         
-        // Check if we have the token before making any GitHub API calls
-        const githubToken = process.env.NEXT_PUBLIC_GITHUB_TOKEN || process.env.GITHUB_TOKEN;
-        const githubUsername = process.env.NEXT_PUBLIC_GITHUB_USERNAME || 'arifrexa';
-        
-        let realData = {
-          total_repos: commitData.extendedData?.commit_stats?.monthly || 0,
-          total_commits: commitData.extendedData?.commit_stats?.monthly || 0,
-          total_stars_earned: 0,
-          total_prs: 0,
-          contributed_to_last_year: Math.min(commitData.extendedData?.commit_stats?.monthly || 20, 20),
-          language_usage: [],
-          top_repositories: []
-        };
-        
-        // Only fetch extended GitHub data if token is available
-        if (githubToken) {
-          // Get user data from GitHub API
-          const userResponse = await fetch(`https://api.github.com/users/${githubUsername}`, {
-            headers: {
-              Authorization: `Bearer ${githubToken}`,
-              Accept: 'application/vnd.github.v3+json',
-            },
-          });
-          
-          if (!userResponse.ok) {
-            console.error(`GitHub API responded with ${userResponse.status}`);
-          } else {
-            const userData = await userResponse.json();
-            
-            // Get user's repositories (public)
-            const reposResponse = await fetch(
-              `https://api.github.com/users/${githubUsername}/repos?sort=updated&direction=desc&per_page=100`,
-              {
-                headers: {
-                  Authorization: `Bearer ${githubToken}`,
-                  Accept: 'application/vnd.github.v3+json',
-                },
-              }
-            );
-            
-            if (reposResponse.ok) {
-              const reposData = await reposResponse.json();
-              
-              // Calculate total stars earned
-              const totalStars = reposData.reduce((sum, repo) => sum + repo.stargazers_count, 0);
-              
-              // Get top repositories (by stars)
-              const topRepositories = reposData
-                .sort((a, b) => b.stargazers_count - a.stargazers_count)
-                .slice(0, 10)
-                .map(repo => ({
-                  repo_name: repo.name,
-                  stars: repo.stargazers_count,
-                  description: repo.description,
-                  language: repo.language,
-                  forks: repo.forks_count,
-                }));
-              
-              // Calculate language usage from repos
-              const languageCount = {};
-              reposData.forEach(repo => {
-                if (repo.language) {
-                  languageCount[repo.language] = (languageCount[repo.language] || 0) + 1;
-                }
-              });
-              
-              // Format language usage data
-              const totalReposWithLanguage = reposData.filter(repo => repo.language).length;
-              const languageUsage = Object.entries(languageCount)
-                .map(([language, count]) => ({
-                  language,
-                  count,
-                  percentage: Math.round((count / totalReposWithLanguage) * 100)
-                }))
-                .sort((a, b) => b.percentage - a.percentage)
-                .slice(0, 6); // Top 6 languages
-              
-              // Calculate total PRs (this is harder to get, using GitHub API search)
-              let totalPrs = 0;
-              try {
-                const prResponse = await fetch(
-                  `https://api.github.com/search/issues?q=type:pr+author:${githubUsername}`,
-                  {
-                    headers: {
-                      Authorization: `Bearer ${githubToken}`,
-                      Accept: 'application/vnd.github.v3+json',
-                    },
-                  }
-                );
-                
-                if (prResponse.ok) {
-                  const prData = await prResponse.json();
-                  totalPrs = prData.total_count || 0;
-                }
-              } catch (prError) {
-                console.error('Error fetching PRs:', prError);
-                totalPrs = 0; // Set to 0 if we can't fetch
-              }
-              
-              // Update real data with GitHub API data
-              realData = {
-                ...realData,
-                total_repos: userData.public_repos || 0,
-                total_stars_earned: totalStars,
-                total_prs: totalPrs,
-                contributed_to_last_year: userData.following || 0,
-                language_usage: languageUsage,
-                top_repositories: topRepositories.slice(0, 3) // Top 3
-              };
-            }
-          }
-        } else {
-          console.warn('GITHUB_TOKEN is not configured. Using limited functionality from our own API.');
+        if (data.error) {
+          throw new Error(data.error || 'Unknown error occurred');
         }
         
-        setGithubData(realData);
+        setGithubData(data);
       } catch (err) {
         console.error('Error fetching GitHub data:', err);
         setError(err.message);
@@ -151,7 +47,9 @@ const GitHubContributions = () => {
           total_prs: 0,
           contributed_to_last_year: 0,
           language_usage: [],
-          top_repositories: []
+          top_repositories: [],
+          weekly_activity: [],
+          last_updated: new Date().toISOString()
         });
       } finally {
         setLoading(false);
@@ -159,7 +57,17 @@ const GitHubContributions = () => {
     };
 
     fetchGitHubData();
-  }, []);
+  }, [dateRange]);
+
+  const handleRepoClick = (repo) => {
+    setSelectedRepo(repo);
+    setShowRepoDetails(true);
+  };
+
+  const closeRepoDetails = () => {
+    setShowRepoDetails(false);
+    setSelectedRepo(null);
+  };
 
   if (loading) {
     return (
@@ -212,6 +120,25 @@ const GitHubContributions = () => {
           Explore my GitHub contributions and projects
         </p>
         <span className="block h-1 w-16 mx-auto mt-3 rounded-full bg-blue-400"></span>
+      </div>
+
+      {/* Date Range Filter */}
+      <div className="flex justify-center">
+        <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-3 shadow-sm">
+          <label htmlFor="date-range" className="text-gray-300 mr-2">Time Range:</label>
+          <select
+            id="date-range"
+            value={dateRange}
+            onChange={(e) => setDateRange(e.target.value)}
+            className="bg-gray-800 text-white rounded-lg px-3 py-2 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            {dateRangeOptions.map(option => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* Stats Overview */}
@@ -274,6 +201,28 @@ const GitHubContributions = () => {
         />
       </div>
 
+      {/* Weekly Activity Graph */}
+      {githubData.weekly_activity && githubData.weekly_activity.length > 0 && (
+        <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm">
+          <h3 className="text-2xl font-bold tracking-tight text-gray-200 mb-4">
+            Weekly Activity
+          </h3>
+          <div className="flex items-end justify-between h-32">
+            {githubData.weekly_activity.map((day, index) => (
+              <div key={index} className="flex flex-col items-center">
+                <div className="text-xs text-gray-400 mb-1">{day.day}</div>
+                <div
+                  className="w-8 bg-gradient-to-t from-blue-600 to-blue-400 rounded-t-md"
+                  style={{ height: `${Math.max(day.commits * 5, 10)}px` }}
+                  title={`${day.commits} commits on ${day.day}`}
+                ></div>
+                <div className="text-xs text-gray-300 mt-1">{day.commits}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Language Usage */}
       <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm">
         <h3 className="text-2xl font-bold tracking-tight text-gray-200 mb-4">
@@ -308,7 +257,8 @@ const GitHubContributions = () => {
           {githubData.top_repositories.map((repo, idx) => (
             <div
               key={idx}
-              className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700/40 rounded-xl p-4 lg:p-6 shadow-md flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0"
+              className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700/40 rounded-xl p-4 lg:p-6 shadow-md flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0 cursor-pointer hover:bg-gray-750 transition-colors"
+              onClick={() => handleRepoClick(repo)}
             >
               <div>
                 <h6 className="font-semibold text-lg text-white">{repo.repo_name}</h6>
@@ -336,6 +286,54 @@ const GitHubContributions = () => {
           ))}
         </div>
       </div>
+
+      {/* Repository Details Modal */}
+      {showRepoDetails && selectedRepo && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-900 rounded-xl border border-gray-700/50 p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-start mb-4">
+              <h3 className="text-xl font-bold text-white">{selectedRepo.repo_name}</h3>
+              <button 
+                onClick={closeRepoDetails}
+                className="text-gray-400 hover:text-white"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            {selectedRepo.description && (
+              <p className="text-gray-300 mb-4">{selectedRepo.description}</p>
+            )}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-gray-800 p-3 rounded-lg">
+                <div className="text-sm text-gray-400">Stars</div>
+                <div className="text-lg font-bold text-yellow-400">{selectedRepo.stars}</div>
+              </div>
+              <div className="bg-gray-800 p-3 rounded-lg">
+                <div className="text-sm text-gray-400">Forks</div>
+                <div className="text-lg font-bold text-blue-400">{selectedRepo.forks}</div>
+              </div>
+              {selectedRepo.language && (
+                <div className="bg-gray-800 p-3 rounded-lg">
+                  <div className="text-sm text-gray-400">Language</div>
+                  <div className="text-lg font-bold text-green-400">{selectedRepo.language}</div>
+                </div>
+              )}
+            </div>
+            <div className="mt-4">
+              <a 
+                href={`https://github.com/arifrexa/${selectedRepo.repo_name}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors"
+              >
+                View on GitHub
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
