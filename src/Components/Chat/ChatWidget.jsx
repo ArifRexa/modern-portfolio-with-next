@@ -10,6 +10,20 @@ const ChatWidget = () => {
     return null;
   }
 
+  // Add animation styles
+  if (typeof document !== 'undefined') {
+    const style = document.createElement('style');
+    style.innerHTML = `
+      @keyframes fadeInOut {
+        0% { opacity: 0; transform: translateY(10px); }
+        10% { opacity: 1; transform: translateY(0); }
+        90% { opacity: 1; transform: translateY(0); }
+        100% { opacity: 0; transform: translateY(-10px); }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
@@ -17,14 +31,14 @@ const ChatWidget = () => {
   const [username, setUsername] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [lastReadTime, setLastReadTime] = useState(() => {
+  const [lastReadMessageId, setLastReadMessageId] = useState(() => {
     if (typeof window !== 'undefined') {
-      const savedTime = localStorage.getItem('chat_last_read_time');
-      return savedTime ? new Date(savedTime) : new Date(0); // Default to epoch if no saved time
+      return localStorage.getItem('chat_last_read_message_id') || '';
     }
-    return new Date(0);
+    return '';
   });
-  const [newMessageBlink, setNewMessageBlink] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationText, setNotificationText] = useState("");
   const [sessionId] = useState(() => {
     // Generate or retrieve session ID
     if (typeof window !== 'undefined') {
@@ -66,10 +80,10 @@ const ChatWidget = () => {
         // Calculate total admin messages before update (for this session only)
         const prevAdminMessagesCount = messages.filter(msg => msg.sender_type === 'admin').length;
         
-        // Calculate unread messages (admin messages that arrived after last read)
+        // Calculate unread admin messages (messages that have ID greater than last read message ID)
         const currentUnreadCount = newMessages.filter(msg => 
           msg.sender_type === 'admin' && 
-          new Date(msg.created_at) > lastReadTime
+          (!lastReadMessageId || msg.id > lastReadMessageId)
         ).length;
         
         // Calculate total admin messages after update
@@ -78,10 +92,25 @@ const ChatWidget = () => {
         // Update unread count if chat is closed (replace instead of adding)
         if (!isChatOpen) {
           setUnreadCount(currentUnreadCount);
-          // Trigger animation if there are more admin messages than before
-          if (currentAdminMessagesCount > prevAdminMessagesCount) {
-            setNewMessageBlink(true);
-            setTimeout(() => setNewMessageBlink(false), 1000); // Remove animation after 1 second
+          // Show notification if there are new admin messages
+          if (currentUnreadCount > 0) {
+            // Get the latest admin message to show in notification
+            const latestAdminMessage = [...newMessages]
+              .filter(msg => msg.sender_type === 'admin')
+              .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))[0];
+            
+            if (latestAdminMessage) {
+              setNotificationText(latestAdminMessage.message.length > 30 
+                ? latestAdminMessage.message.substring(0, 30) + '...' 
+                : latestAdminMessage.message);
+              
+              setShowNotification(true);
+              
+              // Hide the notification after 2 seconds
+              setTimeout(() => {
+                setShowNotification(false);
+              }, 2000);
+            }
           }
         } else {
           // If chat is open, set unread count to 0
@@ -195,13 +224,22 @@ const ChatWidget = () => {
         onClick={() => {
           const willOpen = !isChatOpen;
           setIsChatOpen(willOpen);
+          
           if (willOpen) {
             // When opening chat, mark all messages as read
             setUnreadCount(0);
-            const now = new Date();
-            setLastReadTime(now);
-            localStorage.setItem('chat_last_read_time', now.toISOString());
+            setShowNotification(false); // Hide notification when chat opens
+            // Find the latest admin message ID and save it
+            const adminMessages = messages.filter(msg => msg.sender_type === 'admin');
+            if (adminMessages.length > 0) {
+              // Sort by ID to get the latest one
+              adminMessages.sort((a, b) => (b.id || 0) - (a.id || 0));
+              const latestMessageId = adminMessages[0]?.id || '';
+              setLastReadMessageId(latestMessageId);
+              localStorage.setItem('chat_last_read_message_id', latestMessageId);
+            }
           }
+          
           // Scroll to bottom when opening the chat
           if (willOpen) {
             setTimeout(() => {
@@ -211,15 +249,27 @@ const ChatWidget = () => {
         }}
         className={`fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center text-white shadow-lg transition-all duration-300 ${
           isChatOpen ? 'bg-red-500' : 'bg-blue-600 hover:bg-blue-700'
-        } ${newMessageBlink ? 'animate-pulse' : ''}`}
+        }`}
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
         </svg>
-        {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-            {unreadCount}
-          </span>
+        {/* Notification popup for new messages */}
+        {showNotification && (
+          <div 
+            className="fixed bottom-20 right-6 z-50 px-4 py-2 bg-gray-800 text-white text-sm rounded-lg shadow-lg border border-gray-700 animate-fadeInOut"
+            style={{ 
+              animation: 'fadeInOut 2s forwards',
+              pointerEvents: 'none' // Allow clicks to pass through
+            }}
+          >
+            <div className="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5H9z" />
+              </svg>
+              {notificationText}
+            </div>
+          </div>
         )}
       </button>
 
@@ -256,9 +306,10 @@ const ChatWidget = () => {
               <div className="text-center text-gray-500 py-8">No messages yet. Say hello!</div>
             ) : (
               messages.map((msg, index) => {
-                // Check if this message is a new admin message that arrived after the last read time
+                // Check if this message is a new admin message that arrived after the last read message
                 // Only show animation if chat is closed
-                const isNewMessage = !isChatOpen && msg.sender_type === 'admin' && new Date(msg.created_at) > lastReadTime;
+                const isNewMessage = !isChatOpen && msg.sender_type === 'admin' && 
+                  (!lastReadMessageId || msg.id > lastReadMessageId);
                 return (
                   <div
                     key={index}
