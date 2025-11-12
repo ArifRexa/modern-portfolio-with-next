@@ -21,11 +21,11 @@ export async function GET(request) {
     let recentMessages = [];
     
     if (isAdmin) {
-      // For admin, get all messages
+      // For admin, get all messages in ascending order (oldest first) so newest appears at bottom
       const { data: messagesData, error: messagesError } = await supabase
         .from('user_messages')
         .select('*')
-        .order('created_at', { ascending: false })
+        .order('created_at', { ascending: true })
         .limit(100); // Admin gets more messages
 
       if (messagesError) {
@@ -35,11 +35,11 @@ export async function GET(request) {
       
       recentMessages = messagesData || [];
     } else {
-      // For visitors, get all messages (could be filtered by session if needed)
+      // For visitors, get messages in ascending order (oldest first) so newest appears at bottom
       const { data: messagesData, error: messagesError } = await supabase
         .from('user_messages')
         .select('*')
-        .order('created_at', { ascending: false })
+        .order('created_at', { ascending: true })
         .limit(50);
 
       if (messagesError) {
