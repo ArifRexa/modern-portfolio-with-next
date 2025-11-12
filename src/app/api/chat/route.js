@@ -50,9 +50,17 @@ export async function GET(request) {
       recentMessages = messagesData || [];
     }
 
+    // Get unread message count for visitor (messages from admin to this session)
+    let unreadCount = 0;
+    if (!isAdmin && typeof window !== 'undefined') {
+      // This is tricky in API route since we don't have session context
+      // We'll handle unread counts on the frontend based on last read time
+    }
+
     return NextResponse.json({
       onlineUsers: onlineUsers || [],
-      messages: recentMessages
+      messages: recentMessages,
+      unreadCount: unreadCount
     });
   } catch (error) {
     console.error('Error in GET chat data:', error);

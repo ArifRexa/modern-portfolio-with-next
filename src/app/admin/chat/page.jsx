@@ -10,6 +10,7 @@ const AdminChatPage = () => {
   const [userMessages, setUserMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [lastSeenTimes, setLastSeenTimes] = useState({}); // Track last seen time for each user
   const messagesEndRef = useRef(null);
 
   // Function to fetch all data
@@ -66,6 +67,11 @@ const AdminChatPage = () => {
 
       if (!error) {
         setInputMessage('');
+        // Mark this user's messages as seen when admin sends a reply
+        setLastSeenTimes(prev => ({
+          ...prev,
+          [selectedUser.session_id]: new Date()
+        }));
         // Refresh messages
         await loadUserMessages(selectedUser.session_id);
         await fetchAllData(); // Refresh all data
@@ -80,7 +86,7 @@ const AdminChatPage = () => {
       setIsLoading(false);
     });
 
-    // Set up real-time updates
+    // Set up real-time updates (only if realtime is enabled in Supabase)
     const channel = supabase
       .channel('chat-updates')
       .on(
@@ -91,9 +97,10 @@ const AdminChatPage = () => {
           table: 'user_messages',
         },
         (payload) => {
-          fetchAllData(); // Refresh data when new message arrives
+          fetchAllData(); // Refresh all data for any new message
+          // If we have a selected user and the new message is from them, refresh their messages
           if (selectedUser && payload.new.visitor_session_id === selectedUser.session_id) {
-            loadUserMessages(selectedUser.session_id); // Refresh specific user messages
+            loadUserMessages(selectedUser.session_id);
           }
         }
       )
@@ -110,10 +117,20 @@ const AdminChatPage = () => {
       )
       .subscribe();
 
+    // Set up a periodic refresh every 5 seconds as primary update method
+    const intervalId = setInterval(() => {
+      fetchAllData();
+      // If we have a selected user, also refresh their specific messages
+      if (selectedUser) {
+        loadUserMessages(selectedUser.session_id);
+      }
+    }, 5000); // Refresh every 5 seconds for active updates
+
     return () => {
       supabase.removeChannel(channel);
+      clearInterval(intervalId);
     };
-  }, []);
+  }, [selectedUser]);
 
   useEffect(() => {
     if (selectedUser) {
@@ -146,27 +163,51 @@ const AdminChatPage = () => {
             Online Visitors ({onlineUsers.length})
           </h2>
           
-          <div className="space-y-2 max-h-96 overflow-y-auto">
+            <div className="space-y-2 max-h-96 overflow-y-auto">
             {onlineUsers.length === 0 ? (
               <p className="text-gray-500 text-sm">No visitors online</p>
             ) : (
-              onlineUsers.map((user) => (
-                <div
-                  key={user.session_id}
-                  onClick={() => loadUserMessages(user.session_id)}
-                  className={`p-3 rounded-lg cursor-pointer transition-colors ${
-                    selectedUser?.session_id === user.session_id
-                      ? 'bg-blue-700/50 border border-blue-500'
-                      : 'bg-gray-700/50 hover:bg-gray-700'
-                  }`}
-                >
-                  <div className="font-medium">{user.username}</div>
-                  <div className="text-xs text-gray-400 truncate">{user.page_viewed}</div>
-                  <div className="text-xs text-gray-500">
-                    {new Date(user.last_seen).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              onlineUsers.map((user) => {
+                // Get the last seen time for this user, default to a very old date
+                const userLastSeen = lastSeenTimes[user.session_id] || new Date(0);
+                
+                // Count unread messages for this user (messages that came after admin last saw them)
+                const unreadCount = allMessages.filter(
+                  msg => msg.visitor_session_id === user.session_id && 
+                         msg.sender_type === 'visitor' && // Only visitor messages to admin
+                         new Date(msg.created_at) > userLastSeen
+                ).length;
+                
+                return (
+                  <div
+                    key={user.session_id}
+                    onClick={() => {
+                      // Update last seen time when user is selected
+                      setLastSeenTimes(prev => ({
+                        ...prev,
+                        [user.session_id]: new Date()
+                      }));
+                      loadUserMessages(user.session_id);
+                    }}
+                    className={`p-3 rounded-lg cursor-pointer transition-colors relative ${
+                      selectedUser?.session_id === user.session_id
+                        ? 'bg-blue-700/50 border border-blue-500'
+                        : 'bg-gray-700/50 hover:bg-gray-700'
+                    }`}
+                  >
+                    <div className="font-medium">{user.username}</div>
+                    <div className="text-xs text-gray-400 truncate">{user.page_viewed}</div>
+                    <div className="text-xs text-gray-500">
+                      {new Date(user.last_seen).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </div>
+                    {unreadCount > 0 && (
+                      <span className="absolute top-2 right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                        {unreadCount}
+                      </span>
+                    )}
                   </div>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
         </div>

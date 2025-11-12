@@ -16,6 +16,8 @@ const ChatWidget = () => {
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [username, setUsername] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [lastReadTime, setLastReadTime] = useState(new Date());
   const [sessionId] = useState(() => {
     // Generate or retrieve session ID
     if (typeof window !== 'undefined') {
@@ -43,8 +45,21 @@ const ChatWidget = () => {
       const response = await fetch('/api/chat');
       if (response.ok) {
         const data = await response.json();
-        setMessages(data.messages || []);
+        const newMessages = data.messages || [];
+        
+        // Calculate unread messages (admin messages that arrived after last read)
+        const newUnreadCount = newMessages.filter(msg => 
+          msg.sender_type === 'admin' && 
+          new Date(msg.created_at) > lastReadTime
+        ).length;
+        
+        setMessages(newMessages);
         setOnlineUsers(data.onlineUsers || []);
+        
+        // Update unread count if chat is closed
+        if (!isChatOpen) {
+          setUnreadCount(prev => prev + newUnreadCount);
+        }
       }
     } catch (error) {
       console.error('Error fetching chat data:', error);
@@ -150,7 +165,14 @@ const ChatWidget = () => {
     <>
       {/* Chat Toggle Button */}
       <button
-        onClick={() => setIsChatOpen(!isChatOpen)}
+        onClick={() => {
+          setIsChatOpen(!isChatOpen);
+          if (!isChatOpen) {
+            // When opening chat, mark all messages as read
+            setUnreadCount(0);
+            setLastReadTime(new Date());
+          }
+        }}
         className={`fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center text-white shadow-lg transition-all duration-300 ${
           isChatOpen ? 'bg-red-500' : 'bg-blue-600 hover:bg-blue-700'
         }`}
@@ -158,9 +180,9 @@ const ChatWidget = () => {
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
         </svg>
-        {onlineUsers.length > 0 && (
+        {(onlineUsers.length > 0 || unreadCount > 0) && (
           <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-            {onlineUsers.length}
+            {unreadCount > 0 ? unreadCount : onlineUsers.length}
           </span>
         )}
       </button>
