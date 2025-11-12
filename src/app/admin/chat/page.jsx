@@ -10,7 +10,13 @@ const AdminChatPage = () => {
   const [userMessages, setUserMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-  const [lastSeenTimes, setLastSeenTimes] = useState({}); // Track last seen time for each user
+  const [lastSeenTimes, setLastSeenTimes] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('admin_last_seen_times');
+      return saved ? JSON.parse(saved) : {};
+    }
+    return {};
+  }); // Track last seen time for each user
   const messagesEndRef = useRef(null);
 
   // Function to fetch all data
@@ -68,10 +74,12 @@ const AdminChatPage = () => {
       if (!error) {
         setInputMessage('');
         // Mark this user's messages as seen when admin sends a reply
-        setLastSeenTimes(prev => ({
-          ...prev,
-          [selectedUser.session_id]: new Date()
-        }));
+        const newLastSeenTimes = {
+          ...lastSeenTimes,
+          [selectedUser.session_id]: new Date().toISOString()
+        };
+        setLastSeenTimes(newLastSeenTimes);
+        localStorage.setItem('admin_last_seen_times', JSON.stringify(newLastSeenTimes));
         // Refresh messages
         await loadUserMessages(selectedUser.session_id);
         await fetchAllData(); // Refresh all data
@@ -169,7 +177,7 @@ const AdminChatPage = () => {
             ) : (
               onlineUsers.map((user) => {
                 // Get the last seen time for this user, default to a very old date
-                const userLastSeen = lastSeenTimes[user.session_id] || new Date(0);
+                const userLastSeen = lastSeenTimes[user.session_id] ? new Date(lastSeenTimes[user.session_id]) : new Date(0);
                 
                 // Count unread messages for this user (messages that came after admin last saw them)
                 const unreadCount = allMessages.filter(
@@ -183,10 +191,12 @@ const AdminChatPage = () => {
                     key={user.session_id}
                     onClick={() => {
                       // Update last seen time when user is selected
-                      setLastSeenTimes(prev => ({
-                        ...prev,
-                        [user.session_id]: new Date()
-                      }));
+                      const newLastSeenTimes = {
+                        ...lastSeenTimes,
+                        [user.session_id]: new Date().toISOString()
+                      };
+                      setLastSeenTimes(newLastSeenTimes);
+                      localStorage.setItem('admin_last_seen_times', JSON.stringify(newLastSeenTimes));
                       loadUserMessages(user.session_id);
                     }}
                     className={`p-3 rounded-lg cursor-pointer transition-colors relative ${

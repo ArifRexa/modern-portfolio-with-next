@@ -17,7 +17,14 @@ const ChatWidget = () => {
   const [username, setUsername] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [lastReadTime, setLastReadTime] = useState(new Date());
+  const [lastReadTime, setLastReadTime] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedTime = localStorage.getItem('chat_last_read_time');
+      return savedTime ? new Date(savedTime) : new Date(0); // Default to epoch if no saved time
+    }
+    return new Date(0);
+  });
+  const [newMessageBlink, setNewMessageBlink] = useState(false);
   const [sessionId] = useState(() => {
     // Generate or retrieve session ID
     if (typeof window !== 'undefined') {
@@ -47,18 +54,29 @@ const ChatWidget = () => {
         const data = await response.json();
         const newMessages = data.messages || [];
         
+        setMessages(newMessages);
+        setOnlineUsers(data.onlineUsers || []);
+        
+        // Calculate total admin messages before update
+        const prevAdminMessagesCount = messages.filter(msg => msg.sender_type === 'admin').length;
+        
         // Calculate unread messages (admin messages that arrived after last read)
-        const newUnreadCount = newMessages.filter(msg => 
+        const currentUnreadCount = newMessages.filter(msg => 
           msg.sender_type === 'admin' && 
           new Date(msg.created_at) > lastReadTime
         ).length;
         
-        setMessages(newMessages);
-        setOnlineUsers(data.onlineUsers || []);
+        // Calculate total admin messages after update
+        const currentAdminMessagesCount = newMessages.filter(msg => msg.sender_type === 'admin').length;
         
-        // Update unread count if chat is closed
+        // Update unread count if chat is closed (replace instead of adding)
         if (!isChatOpen) {
-          setUnreadCount(prev => prev + newUnreadCount);
+          setUnreadCount(currentUnreadCount);
+          // Trigger animation if there are more admin messages than before
+          if (currentAdminMessagesCount > prevAdminMessagesCount) {
+            setNewMessageBlink(true);
+            setTimeout(() => setNewMessageBlink(false), 1000); // Remove animation after 1 second
+          }
         }
       }
     } catch (error) {
@@ -170,12 +188,14 @@ const ChatWidget = () => {
           if (!isChatOpen) {
             // When opening chat, mark all messages as read
             setUnreadCount(0);
-            setLastReadTime(new Date());
+            const now = new Date();
+            setLastReadTime(now);
+            localStorage.setItem('chat_last_read_time', now.toISOString());
           }
         }}
         className={`fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center text-white shadow-lg transition-all duration-300 ${
           isChatOpen ? 'bg-red-500' : 'bg-blue-600 hover:bg-blue-700'
-        }`}
+        } ${newMessageBlink ? 'animate-pulse' : ''}`}
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
@@ -219,24 +239,28 @@ const ChatWidget = () => {
             ) : messages.length === 0 ? (
               <div className="text-center text-gray-500 py-8">No messages yet. Say hello!</div>
             ) : (
-              messages.map((msg, index) => (
-                <div
-                  key={index}
-                  className={`p-3 rounded-lg max-w-[80%] ${
-                    msg.sender_type === 'admin'
-                      ? 'bg-blue-800/30 text-blue-100 self-start ml-auto'
-                      : 'bg-gray-800 text-gray-200 self-end'
-                  }`}
-                >
-                  <div className="text-xs text-gray-400 mb-1">
-                    {msg.sender_type === 'admin' ? 'Admin' : 'You'}
+              messages.map((msg, index) => {
+                // Check if this message is a new admin message that arrived after the last read time
+                const isNewMessage = msg.sender_type === 'admin' && new Date(msg.created_at) > lastReadTime;
+                return (
+                  <div
+                    key={index}
+                    className={`p-3 rounded-lg max-w-[80%] ${
+                      msg.sender_type === 'admin'
+                        ? 'bg-blue-800/30 text-blue-100 self-start ml-auto'
+                        : 'bg-gray-800 text-gray-200 self-end'
+                    } ${isNewMessage ? 'animate-pulse' : ''}`}
+                  >
+                    <div className="text-xs text-gray-400 mb-1">
+                      {msg.sender_type === 'admin' ? 'Admin' : 'You'}
+                    </div>
+                    <div className="text-sm">{msg.message}</div>
+                    <div className="text-xs text-gray-500 mt-1">
+                      {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </div>
                   </div>
-                  <div className="text-sm">{msg.message}</div>
-                  <div className="text-xs text-gray-500 mt-1">
-                    {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </div>
-                </div>
-              ))
+                );
+              })
             )}
             <div ref={messagesEndRef} />
           </div>
