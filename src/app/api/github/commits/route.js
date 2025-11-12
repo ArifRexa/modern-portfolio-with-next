@@ -55,7 +55,8 @@ export async function GET(request) {
     const commitCount = data.total_count || 0;
 
     // Save or update the commit count to Supabase (create or update the record for today)
-    if (extended) { // Only update if extended data is requested
+    // Always update regardless of extended parameter to ensure daily counts are maintained
+    try {
       // Check if a record already exists for today
       let { data: existingRecord, error: fetchError } = await supabase
         .from('daily_commit_count')
@@ -76,7 +77,7 @@ export async function GET(request) {
             commit_count: commitCount,
             updated_at: new Date().toISOString()
           })
-          .eq('id', existingRecord.id);
+          .eq('date', today); // Use date instead of id for safer updates
 
         if (error) {
           console.error('Error updating commit count:', error);
@@ -97,6 +98,8 @@ export async function GET(request) {
           console.error('Error creating commit count record:', error);
         }
       }
+    } catch (dbError) {
+      console.error('Database error in commit tracking:', dbError);
     }
 
     // If extended data is requested, fetch additional statistics
