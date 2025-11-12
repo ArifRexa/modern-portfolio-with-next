@@ -30,7 +30,11 @@ const ChatWidget = () => {
     if (typeof window !== 'undefined') {
       let id = localStorage.getItem('chat_session_id');
       if (!id) {
-        id = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        // Create a more unique session ID using timestamp and multiple random components
+        const timestamp = Date.now();
+        const random1 = Math.random().toString(36).substr(2, 5);
+        const random2 = Math.random().toString(36).substr(2, 5);
+        id = `session_${timestamp}_${random1}_${random2}`;
         localStorage.setItem('chat_session_id', id);
       }
       return id;
@@ -49,15 +53,17 @@ const ChatWidget = () => {
   // Function to fetch chat data
   const fetchChatData = async () => {
     try {
-      const response = await fetch('/api/chat');
+      // Pass the session ID to the API to get only this visitor's messages
+      const url = sessionId ? `/api/chat?visitorSessionId=${sessionId}` : '/api/chat';
+      const response = await fetch(url);
       if (response.ok) {
         const data = await response.json();
         const newMessages = data.messages || [];
-        
-        setMessages(newMessages);
         setOnlineUsers(data.onlineUsers || []);
         
-        // Calculate total admin messages before update
+        setMessages(newMessages);
+        
+        // Calculate total admin messages before update (for this session only)
         const prevAdminMessagesCount = messages.filter(msg => msg.sender_type === 'admin').length;
         
         // Calculate unread messages (admin messages that arrived after last read)
@@ -98,7 +104,7 @@ const ChatWidget = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: 'send_message',
-          sessionId,
+          sessionId, // This is the visitor's session ID
           message: inputMessage,
           senderType: 'visitor'
         })

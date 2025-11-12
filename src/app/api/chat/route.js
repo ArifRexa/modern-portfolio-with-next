@@ -35,19 +35,27 @@ export async function GET(request) {
       
       recentMessages = messagesData || [];
     } else {
-      // For visitors, get messages in ascending order (oldest first) so newest appears at bottom
-      const { data: messagesData, error: messagesError } = await supabase
-        .from('user_messages')
-        .select('*')
-        .order('created_at', { ascending: true })
-        .limit(50);
+      // For visitors, get only messages for their specific session
+      const visitorSessionId = searchParams.get('visitorSessionId');
+      if (visitorSessionId) {
+        // Get messages where visitor_session_id matches their session
+        const { data: messagesData, error: messagesError } = await supabase
+          .from('user_messages')
+          .select('*')
+          .eq('visitor_session_id', visitorSessionId)
+          .order('created_at', { ascending: true })
+          .limit(50);
 
-      if (messagesError) {
-        console.error('Error fetching visitor messages:', messagesError);
-        return NextResponse.json({ error: 'Failed to fetch messages' }, { status: 500 });
+        if (messagesError) {
+          console.error('Error fetching visitor messages:', messagesError);
+          return NextResponse.json({ error: 'Failed to fetch messages' }, { status: 500 });
+        }
+        
+        recentMessages = messagesData || [];
+      } else {
+        // If no session ID provided, return empty array
+        recentMessages = [];
       }
-      
-      recentMessages = messagesData || [];
     }
 
     // Get unread message count for visitor (messages from admin to this session)
