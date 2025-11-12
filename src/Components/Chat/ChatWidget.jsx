@@ -77,6 +77,9 @@ const ChatWidget = () => {
             setNewMessageBlink(true);
             setTimeout(() => setNewMessageBlink(false), 1000); // Remove animation after 1 second
           }
+        } else {
+          // If chat is open, set unread count to 0
+          setUnreadCount(0);
         }
       }
     } catch (error) {
@@ -184,13 +187,20 @@ const ChatWidget = () => {
       {/* Chat Toggle Button */}
       <button
         onClick={() => {
-          setIsChatOpen(!isChatOpen);
-          if (!isChatOpen) {
+          const willOpen = !isChatOpen;
+          setIsChatOpen(willOpen);
+          if (willOpen) {
             // When opening chat, mark all messages as read
             setUnreadCount(0);
             const now = new Date();
             setLastReadTime(now);
             localStorage.setItem('chat_last_read_time', now.toISOString());
+          }
+          // Scroll to bottom when opening the chat
+          if (willOpen) {
+            setTimeout(() => {
+              messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+            }, 100); // Small delay to ensure DOM is updated
           }
         }}
         className={`fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center text-white shadow-lg transition-all duration-300 ${
@@ -241,7 +251,8 @@ const ChatWidget = () => {
             ) : (
               messages.map((msg, index) => {
                 // Check if this message is a new admin message that arrived after the last read time
-                const isNewMessage = msg.sender_type === 'admin' && new Date(msg.created_at) > lastReadTime;
+                // Only show animation if chat is closed
+                const isNewMessage = !isChatOpen && msg.sender_type === 'admin' && new Date(msg.created_at) > lastReadTime;
                 return (
                   <div
                     key={index}
