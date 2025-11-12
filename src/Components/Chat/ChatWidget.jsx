@@ -180,9 +180,9 @@ const ChatWidget = () => {
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
         </svg>
-        {(onlineUsers.length > 0 || unreadCount > 0) && (
+        {unreadCount > 0 && (
           <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-            {unreadCount > 0 ? unreadCount : onlineUsers.length}
+            {unreadCount}
           </span>
         )}
       </button>
@@ -204,11 +204,11 @@ const ChatWidget = () => {
             </button>
           </div>
 
-          {/* Online Users */}
+          {/* Online Status */}
           <div className="bg-gray-850 px-4 py-2 border-b border-gray-700">
             <div className="flex items-center text-sm text-gray-400">
               <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-              {onlineUsers.length} online
+              Online
             </div>
           </div>
 
