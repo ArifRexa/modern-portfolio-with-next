@@ -1,8 +1,15 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import { usePathname } from 'next/navigation';
 
 const ChatWidget = () => {
+  const pathname = usePathname();
+
+  // Hide on admin chat page
+  if (pathname?.includes('/admin/chat')) {
+    return null;
+  }
+
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
@@ -164,7 +171,7 @@ const ChatWidget = () => {
           {/* Header */}
           <div className="bg-gray-800 px-4 py-3 rounded-t-lg flex justify-between items-center border-b border-gray-700">
             <h3 className="font-semibold text-gray-200">Live Chat</h3>
-            <button 
+            <button
               onClick={() => setIsChatOpen(false)}
               className="text-gray-400 hover:text-gray-200"
             >
@@ -191,11 +198,11 @@ const ChatWidget = () => {
               <div className="text-center text-gray-500 py-8">No messages yet. Say hello!</div>
             ) : (
               messages.map((msg, index) => (
-                <div 
-                  key={index} 
+                <div
+                  key={index}
                   className={`p-3 rounded-lg max-w-[80%] ${
-                    msg.sender_type === 'admin' 
-                      ? 'bg-blue-800/30 text-blue-100 self-start ml-auto' 
+                    msg.sender_type === 'admin'
+                      ? 'bg-blue-800/30 text-blue-100 self-start ml-auto'
                       : 'bg-gray-800 text-gray-200 self-end'
                   }`}
                 >

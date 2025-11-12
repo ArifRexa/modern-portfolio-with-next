@@ -5,6 +5,7 @@ import AestheticSpinner from "@/Components/Common/RouteProgressBar";
 import ChatWidget from "@/Components/Chat/ChatWidget";
 import { useState, useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext';
+import { usePathname } from 'next/navigation';
 
 export default function ClientLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
