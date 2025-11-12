@@ -83,6 +83,11 @@ const AdminChatPage = () => {
         // Refresh messages
         await loadUserMessages(selectedUser.session_id);
         await fetchAllData(); // Refresh all data
+        
+        // Scroll to bottom after message is sent and loaded
+        setTimeout(() => {
+          messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
       }
     } catch (error) {
       console.error('Error sending message:', error);
@@ -146,9 +151,17 @@ const AdminChatPage = () => {
     }
   }, [selectedUser]);
 
-  useEffect(() => {
+  const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [userMessages]);
+  };
+
+  // Only scroll to bottom when selected user changes or when messages are loaded for the first time
+  useEffect(() => {
+    if (selectedUser && userMessages.length > 0) {
+      // Small delay to ensure DOM has updated
+      setTimeout(scrollToBottom, 100);
+    }
+  }, [selectedUser, userMessages.length]);
 
   if (isLoading) {
     return (
@@ -190,14 +203,21 @@ const AdminChatPage = () => {
                   <div
                     key={user.session_id}
                     onClick={() => {
-                      // Update last seen time when user is selected
-                      const newLastSeenTimes = {
-                        ...lastSeenTimes,
-                        [user.session_id]: new Date().toISOString()
-                      };
-                      setLastSeenTimes(newLastSeenTimes);
-                      localStorage.setItem('admin_last_seen_times', JSON.stringify(newLastSeenTimes));
-                      loadUserMessages(user.session_id);
+                      // If clicking the same user that's already selected, deselect them
+                      if (selectedUser && selectedUser.session_id === user.session_id) {
+                        setSelectedUser(null);
+                        setUserMessages([]);
+                      } else {
+                        // Update last seen time when user is selected
+                        const newLastSeenTimes = {
+                          ...lastSeenTimes,
+                          [user.session_id]: new Date().toISOString()
+                        };
+                        setLastSeenTimes(newLastSeenTimes);
+                        localStorage.setItem('admin_last_seen_times', JSON.stringify(newLastSeenTimes));
+                        loadUserMessages(user.session_id);
+                        setSelectedUser(user);
+                      }
                     }}
                     className={`p-3 rounded-lg cursor-pointer transition-colors relative ${
                       selectedUser?.session_id === user.session_id
