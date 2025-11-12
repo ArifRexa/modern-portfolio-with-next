@@ -2,6 +2,7 @@
 import Sidebar from "@/Components/Sidebar/Sidebar";
 import Footer from "@/Components/Common/Footer";
 import AestheticSpinner from "@/Components/Common/RouteProgressBar";
+import ChatWidget from "@/Components/Chat/ChatWidget";
 import { useState, useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext';
 
@@ -74,6 +75,7 @@ export default function ClientLayout({ children }) {
           </header>
           <div className="px-5 flex-grow">
             {children}
+            <ChatWidget />
           </div>
           
           {/* Footer */}

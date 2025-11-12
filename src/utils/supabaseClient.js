@@ -9,7 +9,13 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.error('Missing Supabase URL or Anon Key in environment variables.');
 }
 
-// Create and export the Supabase client instance
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Create and export the Supabase client instance with realtime enabled
+const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  realtime: {
+    params: {
+      eventsPerSecond: 10,
+    },
+  },
+});
 
 export default supabase;
