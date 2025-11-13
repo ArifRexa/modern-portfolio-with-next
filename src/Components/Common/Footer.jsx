@@ -94,14 +94,14 @@ const Footer = () => {
                         <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Contact</h4>
                         <ul className="space-y-2">
                             <li className="text-gray-600 dark:text-gray-400">
-                                Location: Bangladesh
+                                Location: Pallabi, Mirpur, Dhaka Bangladesh.
                             </li>
                             <li>
                                 <a 
                                     href="mailto:ariful.islam.arifrexa@gmail.com" 
                                     className="text-gray-600 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors duration-300"
                                 >
-                                    Email: ariful.islam.arifrexa@gmail.com
+                                    Email: arif.reza3126@gmail.com
                                 </a>
                             </li>
                             <li>
@@ -109,7 +109,7 @@ const Footer = () => {
                                     href="tel:+8801712345678" 
                                     className="text-gray-600 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors duration-300"
                                 >
-                                    Phone: +880 1712345678
+                                    Phone: +880 1677243126
                                 </a>
                             </li>
                         </ul>
