@@ -1,9 +1,22 @@
 // app/admin/chat/page.jsx
 'use client';
 import { useState, useEffect, useRef } from 'react';
-import supabase from '@/utils/supabaseClient';
+import { createClient } from '@supabase/supabase-js';
+
+// Initialize Supabase client for client-side operations
+const supabaseClient = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+);
 
 const AdminChatPage = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [loginLoading, setLoginLoading] = useState(false);
+
+  // Auth state for the chat interface
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [allMessages, setAllMessages] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -19,7 +32,72 @@ const AdminChatPage = () => {
   }); // Track last seen time for each user
   const messagesEndRef = useRef(null);
 
-  // Function to fetch all data
+  // Check authentication status on component mount
+  useEffect(() => {
+    const checkAuth = () => {
+      const storedAuth = sessionStorage.getItem('adminAuth');
+      if (storedAuth === 'true') {
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+      }
+    };
+    
+    checkAuth();
+    
+    // Add storage event listener to handle auth changes from other tabs
+    const handleStorageChange = () => {
+      checkAuth();
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoginLoading(true);
+    setLoginError('');
+
+    try {
+      // Call the login API to verify credentials
+      const response = await fetch('/api/admin-login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Store auth status
+        sessionStorage.setItem('adminAuth', 'true');
+        setIsAuthenticated(true);
+        setLoginError('');
+      } else {
+        setLoginError(data.error || 'Invalid email or password');
+      }
+    } catch (err) {
+      setLoginError('Login failed');
+      console.error(err);
+    }
+
+    setLoginLoading(false);
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('adminAuth');
+    setIsAuthenticated(false);
+    setEmail('');
+    setPassword('');
+  };
+
+  // Function to fetch all data (only when authenticated)
   const fetchAllData = async () => {
     try {
       // Fetch data from the API with admin flag
@@ -41,7 +119,7 @@ const AdminChatPage = () => {
   // Function to load messages for a specific user
   const loadUserMessages = async (session_id) => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseClient
         .from('user_messages')
         .select('*')
         .eq('visitor_session_id', session_id)
@@ -63,7 +141,7 @@ const AdminChatPage = () => {
     if (!inputMessage.trim() || !selectedUser) return;
 
     try {
-      const { error } = await supabase
+      const { error } = await supabaseClient
         .from('user_messages')
         .insert({
           visitor_session_id: selectedUser.session_id,
@@ -95,61 +173,63 @@ const AdminChatPage = () => {
   };
 
   useEffect(() => {
-    fetchAllData().then(() => {
-      setIsLoading(false);
-    });
+    if (isAuthenticated) {
+      fetchAllData().then(() => {
+        setIsLoading(false);
+      });
 
-    // Set up real-time updates (only if realtime is enabled in Supabase)
-    const channel = supabase
-      .channel('chat-updates')
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'user_messages',
-        },
-        (payload) => {
-          fetchAllData(); // Refresh all data for any new message
-          // If we have a selected user and the new message is from them, refresh their messages
-          if (selectedUser && payload.new.visitor_session_id === selectedUser.session_id) {
-            loadUserMessages(selectedUser.session_id);
+      // Set up real-time updates (only if realtime is enabled in Supabase)
+      const channel = supabaseClient
+        .channel('chat-updates')
+        .on(
+          'postgres_changes',
+          {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'user_messages',
+          },
+          (payload) => {
+            fetchAllData(); // Refresh all data for any new message
+            // If we have a selected user and the new message is from them, refresh their messages
+            if (selectedUser && payload.new.visitor_session_id === selectedUser.session_id) {
+              loadUserMessages(selectedUser.session_id);
+            }
           }
-        }
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'online_users',
-        },
-        (payload) => {
-          fetchAllData(); // Refresh online users
-        }
-      )
-      .subscribe();
+        )
+        .on(
+          'postgres_changes',
+          {
+            event: 'UPDATE',
+            schema: 'public',
+            table: 'online_users',
+          },
+          (payload) => {
+            fetchAllData(); // Refresh online users
+          }
+        )
+        .subscribe();
 
-    // Set up a periodic refresh every 5 seconds as primary update method
-    const intervalId = setInterval(() => {
-      fetchAllData();
-      // If we have a selected user, also refresh their specific messages
-      if (selectedUser) {
-        loadUserMessages(selectedUser.session_id);
-      }
-    }, 5000); // Refresh every 5 seconds for active updates
+      // Set up a periodic refresh every 5 seconds as primary update method
+      const intervalId = setInterval(() => {
+        fetchAllData();
+        // If we have a selected user, also refresh their specific messages
+        if (selectedUser) {
+          loadUserMessages(selectedUser.session_id);
+        }
+      }, 5000); // Refresh every 5 seconds for active updates
 
-    return () => {
-      supabase.removeChannel(channel);
-      clearInterval(intervalId);
-    };
-  }, [selectedUser]);
+      return () => {
+        supabaseClient.removeChannel(channel);
+        clearInterval(intervalId);
+      };
+    }
+  }, [isAuthenticated, selectedUser]);
 
   useEffect(() => {
-    if (selectedUser) {
+    if (selectedUser && isAuthenticated) {
       loadUserMessages(selectedUser.session_id);
     }
-  }, [selectedUser]);
+  }, [selectedUser, isAuthenticated]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -163,10 +243,77 @@ const AdminChatPage = () => {
     }
   }, [selectedUser, userMessages.length]);
 
+  // Show login form if not authenticated
+  if (isAuthenticated === false) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-900 p-4">
+        <div className="w-full max-w-md bg-gray-800 rounded-lg shadow-lg p-8">
+          <h1 className="text-2xl font-bold text-center text-gray-200 mb-6">Admin Access</h1>
+          
+          <form onSubmit={handleLogin}>
+            {loginError && <div className="mb-4 text-red-500 text-sm">{loginError}</div>}
+            
+            <div className="mb-4">
+              <label htmlFor="email" className="block text-gray-300 mb-2">Email</label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full bg-gray-700 text-gray-200 px-3 py-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                required
+              />
+            </div>
+            
+            <div className="mb-4">
+              <label htmlFor="password" className="block text-gray-300 mb-2">Password</label>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full bg-gray-700 text-gray-200 px-3 py-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                required
+              />
+            </div>
+            
+            <button
+              type="submit"
+              disabled={loginLoading}
+              className={`w-full py-2 px-4 rounded-lg text-white ${
+                loginLoading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'
+              } transition-colors`}
+            >
+              {loginLoading ? 'Logging in...' : 'Login'}
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading while checking auth
+  if (isAuthenticated === null) {
+    return (
+      <div className="min-h-screen bg-gray-900 text-gray-200 p-6">
+        <div className="text-center py-12">Checking authentication...</div>
+      </div>
+    );
+  }
+
+  // Show admin chat interface if authenticated
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-900 text-gray-200 p-6">
-        <h1 className="text-2xl font-bold mb-6">Admin Chat Dashboard</h1>
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold">Admin Chat Dashboard</h1>
+          <button 
+            onClick={handleLogout}
+            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+          >
+            Logout
+          </button>
+        </div>
         <div className="text-center py-12">Loading...</div>
       </div>
     );
@@ -174,8 +321,16 @@ const AdminChatPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-200 p-6">
-      <h1 className="text-2xl font-bold mb-6">Admin Chat Dashboard</h1>
-      
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Admin Chat Dashboard</h1>
+        <button 
+          onClick={handleLogout}
+          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+        >
+          Logout
+        </button>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Online Users Panel */}
         <div className="lg:col-span-1 bg-gray-800 rounded-lg p-4">
@@ -183,7 +338,7 @@ const AdminChatPage = () => {
             <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
             Online Visitors ({onlineUsers.length})
           </h2>
-          
+
             <div className="space-y-2 max-h-96 overflow-y-auto">
             {onlineUsers.length === 0 ? (
               <p className="text-gray-500 text-sm">No visitors online</p>
@@ -191,14 +346,14 @@ const AdminChatPage = () => {
               onlineUsers.map((user) => {
                 // Get the last seen time for this user, default to a very old date
                 const userLastSeen = lastSeenTimes[user.session_id] ? new Date(lastSeenTimes[user.session_id]) : new Date(0);
-                
+
                 // Count unread messages for this user (messages that came after admin last saw them)
                 const unreadCount = allMessages.filter(
                   msg => msg.visitor_session_id === user.session_id && 
                          msg.sender_type === 'visitor' && // Only visitor messages to admin
                          new Date(msg.created_at) > userLastSeen
                 ).length;
-                
+
                 return (
                   <div
                     key={user.session_id}
@@ -254,7 +409,7 @@ const AdminChatPage = () => {
                   </span>
                 </h2>
               </div>
-              
+
               {/* Messages */}
               <div className="flex-1 p-4 overflow-y-auto max-h-96">
                 {userMessages.length === 0 ? (
@@ -283,7 +438,7 @@ const AdminChatPage = () => {
                   </div>
                 )}
               </div>
-              
+
               {/* Message Input */}
               <form onSubmit={sendMessage} className="p-4 border-t border-gray-700">
                 <div className="flex gap-2">
