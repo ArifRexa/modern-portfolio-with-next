@@ -32,6 +32,26 @@ const AdminChatPage = () => {
   }); // Track last seen time for each user
   const messagesEndRef = useRef(null);
 
+  // Function to generate a session ID that matches the ChatWidget pattern
+  const generateSessionId = () => {
+    if (typeof window !== 'undefined') {
+      // Check if there's already a session ID from the ChatWidget
+      const existingSessionId = localStorage.getItem('chat_session_id');
+      if (existingSessionId) {
+        return existingSessionId;
+      } else {
+        // Create a new session ID using the same pattern as ChatWidget
+        const timestamp = Date.now();
+        const random1 = Math.random().toString(36).substr(2, 5);
+        const random2 = Math.random().toString(36).substr(2, 5);
+        const newSessionId = `session_${timestamp}_${random1}_${random2}`;
+        localStorage.setItem('chat_session_id', newSessionId);
+        return newSessionId;
+      }
+    }
+    return null;
+  };
+
   // Check authentication status on component mount
   useEffect(() => {
     const checkAuth = () => {
@@ -42,16 +62,16 @@ const AdminChatPage = () => {
         setIsAuthenticated(false);
       }
     };
-    
+
     checkAuth();
-    
+
     // Add storage event listener to handle auth changes from other tabs
     const handleStorageChange = () => {
       checkAuth();
     };
-    
+
     window.addEventListener('storage', handleStorageChange);
-    
+
     return () => {
       window.removeEventListener('storage', handleStorageChange);
     };
@@ -105,11 +125,20 @@ const AdminChatPage = () => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const data = await response.json();
+
+      // Get the visitor's session ID to filter out
+      const visitorSessionId = localStorage.getItem('chat_session_id');
       
+      // Filter out the admin's own session from online users
+      const filteredOnlineUsers = data.onlineUsers.filter(user => {
+        // Filter out the visitor's own session (which would be the admin's session when they visited other pages)
+        return user.session_id !== visitorSessionId;
+      });
+
       // Separate online users and messages
-      setOnlineUsers(data.onlineUsers || []);
+      setOnlineUsers(filteredOnlineUsers || []);
       setAllMessages(data.messages || []);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -161,7 +190,7 @@ const AdminChatPage = () => {
         // Refresh messages
         await loadUserMessages(selectedUser.session_id);
         await fetchAllData(); // Refresh all data
-        
+
         // Scroll to bottom after message is sent and loaded
         setTimeout(() => {
           messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -174,6 +203,9 @@ const AdminChatPage = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
+      // Generate session ID to identify potential admin visitor session
+      const visitorSessionId = generateSessionId();
+      
       fetchAllData().then(() => {
         setIsLoading(false);
       });
@@ -249,10 +281,10 @@ const AdminChatPage = () => {
       <div className="min-h-screen flex items-center justify-center bg-gray-900 p-4">
         <div className="w-full max-w-md bg-gray-800 rounded-lg shadow-lg p-8">
           <h1 className="text-2xl font-bold text-center text-gray-200 mb-6">Admin Access</h1>
-          
+
           <form onSubmit={handleLogin}>
             {loginError && <div className="mb-4 text-red-500 text-sm">{loginError}</div>}
-            
+
             <div className="mb-4">
               <label htmlFor="email" className="block text-gray-300 mb-2">Email</label>
               <input
@@ -264,7 +296,7 @@ const AdminChatPage = () => {
                 required
               />
             </div>
-            
+
             <div className="mb-4">
               <label htmlFor="password" className="block text-gray-300 mb-2">Password</label>
               <input
@@ -276,7 +308,7 @@ const AdminChatPage = () => {
                 required
               />
             </div>
-            
+
             <button
               type="submit"
               disabled={loginLoading}
@@ -307,7 +339,7 @@ const AdminChatPage = () => {
       <div className="min-h-screen bg-gray-900 text-gray-200 p-6">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Admin Chat Dashboard</h1>
-          <button 
+          <button
             onClick={handleLogout}
             className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
           >
@@ -323,7 +355,7 @@ const AdminChatPage = () => {
     <div className="min-h-screen bg-gray-900 text-gray-200 p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Admin Chat Dashboard</h1>
-        <button 
+        <button
           onClick={handleLogout}
           className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
         >
@@ -349,7 +381,7 @@ const AdminChatPage = () => {
 
                 // Count unread messages for this user (messages that came after admin last saw them)
                 const unreadCount = allMessages.filter(
-                  msg => msg.visitor_session_id === user.session_id && 
+                  msg => msg.visitor_session_id === user.session_id &&
                          msg.sender_type === 'visitor' && // Only visitor messages to admin
                          new Date(msg.created_at) > userLastSeen
                 ).length;
