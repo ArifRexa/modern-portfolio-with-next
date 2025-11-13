@@ -263,17 +263,7 @@ const AdminChatPage = () => {
     }
   }, [selectedUser, isAuthenticated]);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  // Only scroll to bottom when selected user changes or when messages are loaded for the first time
-  useEffect(() => {
-    if (selectedUser && userMessages.length > 0) {
-      // Small delay to ensure DOM has updated
-      setTimeout(scrollToBottom, 100);
-    }
-  }, [selectedUser, userMessages.length]);
+  // Removed auto-scroll functionality to prevent unwanted scrolling
 
   // Show login form if not authenticated
   if (isAuthenticated === false) {
