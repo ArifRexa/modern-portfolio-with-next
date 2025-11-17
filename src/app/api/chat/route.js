@@ -6,12 +6,37 @@ export async function GET(request) {
     const { searchParams } = new URL(request.url);
     const isAdmin = searchParams.get('admin') === 'true';
 
-    // Get online users
-    const { data: onlineUsers, error } = await supabase
-      .from('online_users')
-      .select('*')
-      .eq('is_online', true)
-      .gt('last_seen', new Date(Date.now() - 5 * 60 * 1000).toISOString()); // Last 5 minutes
+    let { data: onlineUsers, error } = await supabase
+      .from('online_users');
+    
+    if (isAdmin) {
+      // For admin, get all users (both online and offline)
+      const { data: allUsers, error: usersError } = await supabase
+        .from('online_users')
+        .select('*')
+        .order('last_seen', { ascending: false }); // Order by last seen, newest first
+
+      if (usersError) {
+        console.error('Error fetching all users:', usersError);
+        return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 });
+      }
+
+      onlineUsers = allUsers || [];
+    } else {
+      // For visitors, get only online users
+      const { data: onlineData, error: onlineError } = await supabase
+        .from('online_users')
+        .select('*')
+        .eq('is_online', true)
+        .gt('last_seen', new Date(Date.now() - 5 * 60 * 1000).toISOString()); // Last 5 minutes
+
+      if (onlineError) {
+        console.error('Error fetching online users:', onlineError);
+        return NextResponse.json({ error: 'Failed to fetch online users' }, { status: 500 });
+      }
+
+      onlineUsers = onlineData || [];
+    }
 
     if (error) {
       console.error('Error fetching online users:', error);
