@@ -63,6 +63,7 @@ const AdminChatPage = () => {
     }
     return {};
   }); // Track last seen time for each user
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
   const messagesEndRef = useRef(null);
 
   // Function to generate a session ID that matches the ChatWidget pattern
@@ -148,6 +149,41 @@ const AdminChatPage = () => {
     setIsAuthenticated(false);
     setEmail('');
     setPassword('');
+  };
+
+  // Function to delete a user's entire chat history
+  const deleteUserChat = async (sessionId) => {
+    try {
+      // Delete messages for this session ID
+      const { error: messagesError } = await supabaseClient
+        .from('user_messages')
+        .delete()
+        .eq('visitor_session_id', sessionId);
+
+      if (messagesError) {
+        console.error('Error deleting messages:', messagesError);
+        return;
+      }
+
+      // Also delete user from online_users table
+      await supabaseClient
+        .from('online_users')
+        .delete()
+        .eq('session_id', sessionId);
+
+      // Refresh all data after deletion
+      await fetchAllData();
+      
+      if (selectedUser && selectedUser.session_id === sessionId) {
+        // If we deleted the currently selected user, clear selection
+        setSelectedUser(null);
+        setUserMessages([]);
+      }
+      
+      setShowDeleteConfirm(null);
+    } catch (error) {
+      console.error('Error deleting user chat:', error);
+    }
   };
 
   // Function to fetch all data (only when authenticated)
@@ -391,7 +427,8 @@ const AdminChatPage = () => {
         <div className="lg:col-span-1 bg-gray-800 rounded-lg p-4">
           <h2 className="text-lg font-semibold mb-4 flex items-center">
             <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
-            All Visitors ({allUsers.length})
+            All Visitors ({allUsers.length}) 
+            <span className="ml-2 text-sm text-gray-400">({allUsers.filter(user => isUserOnline(user.last_seen)).length} online)</span>
           </h2>
 
             <div className="space-y-2 max-h-96 overflow-y-auto">
@@ -452,6 +489,16 @@ const AdminChatPage = () => {
                         {unreadCount}
                       </span>
                     )}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent triggering the user selection
+                        setShowDeleteConfirm(user.session_id);
+                      }}
+                      className="absolute top-2 right-8 text-gray-400 hover:text-red-500 text-lg"
+                      aria-label="Delete chat"
+                    >
+                      …
+                    </button>
                   </div>
                 );
               })
@@ -538,6 +585,30 @@ const AdminChatPage = () => {
       <div className="mt-6">
         <NoteSection selectedUser={selectedUser} />
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-gray-800 p-6 rounded-lg max-w-md w-full mx-4">
+            <h3 className="text-lg font-semibold text-gray-200 mb-4">Confirm Delete</h3>
+            <p className="text-gray-400 mb-6">Are you sure you want to delete this visitor&apos;s entire chat history? This action cannot be undone.</p>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => setShowDeleteConfirm(null)}
+                className="px-4 py-2 bg-gray-600 text-gray-200 rounded hover:bg-gray-700 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => deleteUserChat(showDeleteConfirm)}
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
