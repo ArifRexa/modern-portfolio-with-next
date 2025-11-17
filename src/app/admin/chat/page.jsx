@@ -1,14 +1,9 @@
 // app/admin/chat/page.jsx
 'use client';
 import { useState, useEffect, useRef } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import supabase from '@/utils/supabaseClient';
 import NoteSection from '@/Components/Note/NoteSection';
 
-// Initialize Supabase client for client-side operations
-const supabaseClient = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
 
 // Helper function to format time ago
 const formatTimeAgo = (dateString) => {
@@ -155,7 +150,7 @@ const AdminChatPage = () => {
   const deleteUserChat = async (sessionId) => {
     try {
       // Delete messages for this session ID
-      const { error: messagesError } = await supabaseClient
+      const { error: messagesError } = await supabase
         .from('user_messages')
         .delete()
         .eq('visitor_session_id', sessionId);
@@ -166,7 +161,7 @@ const AdminChatPage = () => {
       }
 
       // Also delete user from online_users table
-      await supabaseClient
+      await supabase
         .from('online_users')
         .delete()
         .eq('session_id', sessionId);
@@ -217,7 +212,7 @@ const AdminChatPage = () => {
   // Function to load messages for a specific user
   const loadUserMessages = async (session_id) => {
     try {
-      const { data, error } = await supabaseClient
+      const { data, error } = await supabase
         .from('user_messages')
         .select('*')
         .eq('visitor_session_id', session_id)
@@ -239,7 +234,7 @@ const AdminChatPage = () => {
     if (!inputMessage.trim() || !selectedUser) return;
 
     try {
-      const { error } = await supabaseClient
+      const { error } = await supabase
         .from('user_messages')
         .insert({
           visitor_session_id: selectedUser.session_id,
@@ -280,7 +275,7 @@ const AdminChatPage = () => {
       });
 
       // Set up real-time updates (only if realtime is enabled in Supabase)
-      const channel = supabaseClient
+      const channel = supabase
         .channel('chat-updates')
         .on(
           'postgres_changes',
@@ -320,7 +315,7 @@ const AdminChatPage = () => {
       }, 5000); // Refresh every 5 seconds for active updates
 
       return () => {
-        supabaseClient.removeChannel(channel);
+        supabase.removeChannel(channel);
         clearInterval(intervalId);
       };
     }
