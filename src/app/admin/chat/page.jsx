@@ -2,6 +2,7 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import { createClient } from '@supabase/supabase-js';
+import NoteSection from '@/Components/Note/NoteSection';
 
 // Initialize Supabase client for client-side operations
 const supabaseClient = createClient(
@@ -492,6 +493,11 @@ const AdminChatPage = () => {
             </div>
           )}
         </div>
+      </div>
+      
+      {/* Independent Notes Section */}
+      <div className="mt-6">
+        <NoteSection selectedUser={selectedUser} />
       </div>
     </div>
   );
