@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import supabase from '@/utils/supabaseClient';
 import NoteSection from '@/Components/Note/NoteSection';
+import AnimatedLogoutButton from '@/Components/Common/AnimatedLogoutButton';
 
 
 // Helper function to format time ago
@@ -393,12 +394,7 @@ const AdminChatPage = () => {
       <div className="min-h-screen bg-gray-900 text-gray-200 p-6">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Admin Chat Dashboard</h1>
-          <button
-            onClick={handleLogout}
-            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
-          >
-            Logout
-          </button>
+          <AnimatedLogoutButton onClick={handleLogout} />
         </div>
         <div className="text-center py-12">Loading...</div>
       </div>
@@ -409,12 +405,7 @@ const AdminChatPage = () => {
     <div className="min-h-screen bg-gray-900 text-gray-200 p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Admin Chat Dashboard</h1>
-        <button
-          onClick={handleLogout}
-          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
-        >
-          Logout
-        </button>
+        <AnimatedLogoutButton onClick={handleLogout} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
