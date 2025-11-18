@@ -1,6 +1,7 @@
 // app/components/SubmitTestimonial.jsx
 'use client';
 import React, { useState } from 'react';
+import supabase from '@/utils/supabaseClient';
 
 const SubmitTestimonial = () => {
   const [formData, setFormData] = useState({
@@ -16,6 +17,7 @@ const SubmitTestimonial = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [charCount, setCharCount] = useState(0);
+  const [error, setError] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -44,17 +46,65 @@ const SubmitTestimonial = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (charCount < 200) {
       alert('Testimonial must be at least 200 characters long');
       return;
     }
 
     setIsSubmitting(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
+    setError('');
+
+    try {
+      // Upload avatar if provided
+      let avatarUrl = null;
+      if (formData.avatar) {
+        // Create a unique filename
+        const fileName = `testimonial-avatars/${Date.now()}-${formData.avatar.name}`;
+
+        // Upload to Supabase storage
+        const { data: uploadData, error: uploadError } = await supabase
+          .storage
+          .from('testimonial-avatars') // Adjust bucket name as needed
+          .upload(fileName, formData.avatar, {
+            cacheControl: '3600',
+            upsert: false
+          });
+
+        if (uploadError) {
+          console.error('Avatar upload error:', uploadError);
+          throw uploadError;
+        }
+
+        // Get the public URL
+        const { data: { publicUrl } } = supabase
+          .storage
+          .from('testimonial-avatars')
+          .getPublicUrl(fileName);
+
+        avatarUrl = publicUrl;
+      }
+
+      // Insert testimonial data into Supabase
+      const { data, error: insertError } = await supabase
+        .from('testimonials')
+        .insert([{
+          name: formData.name,
+          email: formData.email,
+          company: formData.company,
+          designation: formData.designation,
+          location: formData.location,
+          testimonial: formData.testimonial,
+          avatar_url: avatarUrl,
+          created_at: new Date().toISOString(),
+          is_approved: false // Assuming testimonials need approval before showing
+        }]);
+
+      if (insertError) {
+        console.error('Supabase insert error:', insertError);
+        throw insertError;
+      }
+
       setSubmitSuccess(true);
       setFormData({
         name: '',
@@ -66,7 +116,12 @@ const SubmitTestimonial = () => {
         avatar: null
       });
       setCharCount(0);
-    }, 1500);
+    } catch (err) {
+      console.error('Error submitting testimonial:', err);
+      setError(err.message || 'An error occurred while submitting your testimonial. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -95,7 +150,7 @@ const SubmitTestimonial = () => {
               </div>
               <h2 className="text-2xl font-bold text-green-400 mb-4">Thank You!</h2>
               <p className="text-gray-300 max-w-md mx-auto">
-                Your testimonial has been submitted successfully. I truly appreciate your time and feedback. 
+                Your testimonial has been submitted successfully. I truly appreciate your time and feedback.
                 Your insights will help me continue to grow and improve as a professional.
               </p>
             </div>
@@ -235,6 +290,13 @@ const SubmitTestimonial = () => {
                   <span className="text-gray-500">{charCount} / 2000</span>
                 </div>
               </div>
+
+              {/* Error Message */}
+              {error && (
+                <div className="bg-red-500/20 border border-red-500/50 text-red-200 px-4 py-3 rounded-lg">
+                  {error}
+                </div>
+              )}
 
               {/* Submit Button */}
               <div className="text-center">
