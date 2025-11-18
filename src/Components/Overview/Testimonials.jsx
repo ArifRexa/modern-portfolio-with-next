@@ -257,7 +257,7 @@ export default Testimonials;
 
 
 
-
+// Dynamic Version: Using Supabase to fetch testimonials from the database.
 
 // // app/components/Testimonials.jsx
 // 'use client';
@@ -271,6 +271,8 @@ export default Testimonials;
 //   const [currentPage, setCurrentPage] = useState(0);
 //   const [loading, setLoading] = useState(true);
 //   const [error, setError] = useState(null);
+//   const [selectedTestimonial, setSelectedTestimonial] = useState(null);
+//   const [showModal, setShowModal] = useState(false);
 
 //   const itemsPerPage = 3;
 
@@ -364,115 +366,188 @@ export default Testimonials;
 //   }
 
 //   return (
-//     <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm">
-//       <div className="flex items-center justify-between">
-//         <h3 className="text-2xl lg:text-2xl font-bold tracking-tight text-gray-200">
-//           What People Say
-//         </h3>
-//         <div className="flex items-center space-x-2">
-//           <button
-//             onClick={prev}
-//             className="w-8 h-8 rounded-lg flex items-center justify-center transition-all bg-gray-700/50 hover:bg-gray-600/50 text-gray-300"
-//             aria-label="Previous page"
-//           >
-//             <svg
-//               xmlns="http://www.w3.org/2000/svg"
-//               width="24"
-//               height="24"
-//               viewBox="0 0 24 24"
-//               fill="none"
-//               stroke="currentColor"
-//               strokeWidth="2"
-//               strokeLinecap="round"
-//               strokeLinejoin="round"
-//               className="lucide lucide-chevron-left w-4 h-4"
+//     <>
+//       <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm">
+//         <div className="flex items-center justify-between">
+//           <h3 className="text-2xl lg:text-2xl font-bold tracking-tight text-gray-200">
+//             What People Say
+//           </h3>
+//           <div className="flex items-center space-x-2">
+//             <button
+//               onClick={prev}
+//               className="w-8 h-8 rounded-lg flex items-center justify-center transition-all bg-gray-700/50 hover:bg-gray-600/50 text-gray-300"
+//               aria-label="Previous page"
 //             >
-//               <path d="m15 18-6-6 6-6"></path>
-//             </svg>
-//           </button>
-//           <button
-//             onClick={next}
-//             className="w-8 h-8 rounded-lg flex items-center justify-center transition-all bg-gray-700/50 hover:bg-gray-600/50 text-gray-300"
-//             aria-label="Next page"
-//           >
-//             <svg
-//               xmlns="http://www.w3.org/2000/svg"
-//               width="24"
-//               height="24"
-//               viewBox="0 0 24 24"
-//               fill="none"
-//               stroke="currentColor"
-//               strokeWidth="2"
-//               strokeLinecap="round"
-//               strokeLinejoin="round"
-//               className="lucide lucide-chevron-right w-4 h-4"
+//               <svg
+//                 xmlns="http://www.w3.org/2000/svg"
+//                 width="24"
+//                 height="24"
+//                 viewBox="0 0 24 24"
+//                 fill="none"
+//                 stroke="currentColor"
+//                 strokeWidth="2"
+//                 strokeLinecap="round"
+//                 strokeLinejoin="round"
+//                 className="lucide lucide-chevron-left w-4 h-4"
+//               >
+//                 <path d="m15 18-6-6 6-6"></path>
+//               </svg>
+//             </button>
+//             <button
+//               onClick={next}
+//               className="w-8 h-8 rounded-lg flex items-center justify-center transition-all bg-gray-700/50 hover:bg-gray-600/50 text-gray-300"
+//               aria-label="Next page"
 //             >
-//               <path d="m9 18 6-6-6-6"></path>
-//             </svg>
-//           </button>
+//               <svg
+//                 xmlns="http://www.w3.org/2000/svg"
+//                 width="24"
+//                 height="24"
+//                 viewBox="0 0 24 24"
+//                 fill="none"
+//                 stroke="currentColor"
+//                 strokeWidth="2"
+//                 strokeLinecap="round"
+//                 strokeLinejoin="round"
+//                 className="lucide lucide-chevron-right w-4 h-4"
+//               >
+//                 <path d="m9 18 6-6-6-6"></path>
+//               </svg>
+//             </button>
+//           </div>
+//         </div>
+
+//         <div className="relative mt-4">
+//           <AnimatePresence mode="wait">
+//             <motion.div
+//               key={currentPage}
+//               initial={{ opacity: 0, y: 20 }}
+//               animate={{ opacity: 1, y: 0 }}
+//               exit={{ opacity: 0, y: -20 }}
+//               transition={{ duration: 0.4 }}
+//             >
+//               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+//                 {currentTestimonials.map((testimonial, idx) => (
+//                   <div key={startIndex + idx}>
+//                     {testimonial ? (
+//                       <div
+//                         className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700/40 rounded-xl p-4 lg:p-4 shadow-md backdrop-blur-md min-h-56 h-full cursor-pointer transition-transform hover:scale-[1.01] hover:shadow-md duration-300 ease-in-out"
+//                         onClick={() => {
+//                           setSelectedTestimonial(testimonial);
+//                           setShowModal(true);
+//                         }}
+//                       >
+//                         <div className="flex items-center space-x-4 mb-4 relative z-10">
+//                           <Image
+//                             src={testimonial.avatar_url || "/placeholder-avatar.png"}
+//                             alt={testimonial.name}
+//                             width={48}
+//                             height={48}
+//                             unoptimized
+//                             onError={(e) => {
+//                               e.currentTarget.src = "/placeholder-avatar.png";
+//                             }}
+//                             className="w-12 h-12 rounded-full object-cover ring-2 ring-yellow-400/70 shadow-md"
+//                           />
+//                           <div className="flex-1 min-w-0">
+//                             <h4 className="font-semibold text-lg truncate text-gray-200">
+//                               {testimonial.name}
+//                             </h4>
+//                             <p className="text-sm truncate text-gray-300">
+//                               {testimonial.designation} at <span className="font-medium text-yellow-500">{testimonial.company}</span>
+//                             </p>
+//                           </div>
+//                         </div>
+//                         <p className="text-sm mb-3 line-clamp-5 leading-relaxed text-gray-200">
+//                           {testimonial.testimonial}
+//                         </p>
+//                       </div>
+//                     ) : (
+//                       <div className="invisible"> {/* Keep grid spacing */ }</div>
+//                     )}
+//                   </div>
+//                 ))}
+//               </div>
+//             </motion.div>
+//           </AnimatePresence>
+//         </div>
+
+//         {/* Page indicators (dots = number of pages) */}
+//         <div className="flex justify-center mt-4 gap-2">
+//           {Array.from({ length: totalPages }).map((_, i) => (
+//             <button
+//               key={i}
+//               onClick={() => setCurrentPage(i)}
+//               className={`w-2 h-2 rounded-full transition-all duration-200 ${
+//                 i === currentPage ? "w-6 bg-cyan-500" : "bg-gray-600 hover:bg-gray-500"
+//               }`}
+//               aria-label={`Go to page ${i + 1}`}
+//             />
+//           ))}
 //         </div>
 //       </div>
 
-//       <div className="relative mt-4">
-//         <AnimatePresence mode="wait">
-//           <motion.div
-//             key={currentPage}
-//             initial={{ opacity: 0, y: 20 }}
-//             animate={{ opacity: 1, y: 0 }}
-//             exit={{ opacity: 0, y: -20 }}
-//             transition={{ duration: 0.4 }}
-//           >
-//             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-//               {currentTestimonials.map((testimonial, idx) => (
-//                 <div key={startIndex + idx}>
-//                   {testimonial ? (
-//                     <div className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700/40 rounded-xl p-4 lg:p-4 shadow-md backdrop-blur-md min-h-56 h-full cursor-pointer transition-transform hover:scale-[1.01] hover:shadow-md duration-300 ease-in-out">
-//                       <div className="flex items-center space-x-4 mb-4 relative z-10">
-//                         <img
-//                           src={testimonial.avatar_url || "/placeholder-avatar.png"}
-//                           onError={(e) => {
-//                             e.currentTarget.src = "/placeholder-avatar.png";
-//                           }}
-//                           alt={testimonial.name}
-//                           className="w-12 h-12 rounded-full object-cover ring-2 ring-yellow-400/70 shadow-md"
-//                         />
-//                         <div className="flex-1 min-w-0">
-//                           <h4 className="font-semibold text-lg truncate text-gray-200">
-//                             {testimonial.name}
-//                           </h4>
-//                           <p className="text-sm truncate text-gray-300">
-//                             {testimonial.designation} at <span className="font-medium text-yellow-500">{testimonial.company}</span>
-//                           </p>
-//                         </div>
-//                       </div>
-//                       <p className="text-sm mb-3 line-clamp-5 leading-relaxed text-gray-200">
-//                         {testimonial.testimonial}
-//                       </p>
-//                     </div>
-//                   ) : (
-//                     <div className="invisible"> {/* Keep grid spacing */ }</div>
-//                   )}
-//                 </div>
-//               ))}
-//             </div>
-//           </motion.div>
-//         </AnimatePresence>
-//       </div>
+//       {/* Testimonial Detail Modal */}
+//       {showModal && selectedTestimonial && (
+//         <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
+//           <div className="bg-gray-900 rounded-xl border border-gray-700/50 w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 relative">
+//             <button
+//               onClick={() => setShowModal(false)}
+//               className="absolute top-4 right-4 text-gray-400 hover:text-gray-200 transition-colors"
+//               aria-label="Close testimonial"
+//             >
+//               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+//                 <path d="M18 6 6 18"></path>
+//                 <path d="m6 6 12 12"></path>
+//               </svg>
+//             </button>
 
-//       {/* Page indicators (dots = number of pages) */}
-//       <div className="flex justify-center mt-4 gap-2">
-//         {Array.from({ length: totalPages }).map((_, i) => (
-//           <button
-//             key={i}
-//             onClick={() => setCurrentPage(i)}
-//             className={`w-2 h-2 rounded-full transition-all duration-200 ${
-//               i === currentPage ? "w-6 bg-cyan-500" : "bg-gray-600 hover:bg-gray-500"
-//             }`}
-//             aria-label={`Go to page ${i + 1}`}
-//           />
-//         ))}
-//       </div>
-//     </div>
+//             <div className="flex items-start space-x-4">
+//               <Image
+//                 src={selectedTestimonial.avatar_url || "/placeholder-avatar.png"}
+//                 alt={selectedTestimonial.name}
+//                 width={64}
+//                 height={64}
+//                 unoptimized
+//                 onError={(e) => {
+//                   e.currentTarget.src = "/placeholder-avatar.png";
+//                 }}
+//                 className="w-16 h-16 rounded-full object-cover ring-2 ring-yellow-400/70 shadow-md"
+//               />
+//               <div>
+//                 <h3 className="text-xl font-bold text-gray-200">{selectedTestimonial.name}</h3>
+//                 <p className="text-gray-400">
+//                   {selectedTestimonial.designation} at <span className="font-medium text-yellow-500">{selectedTestimonial.company}</span>
+//                 </p>
+//                 {selectedTestimonial.location && (
+//                   <p className="text-sm text-gray-500">
+//                     {selectedTestimonial.location}
+//                   </p>
+//                 )}
+//               </div>
+//             </div>
+
+//             <div className="mt-6">
+//               <p className="text-gray-300 leading-relaxed">
+//                 {selectedTestimonial.testimonial}
+//               </p>
+//             </div>
+
+//             <div className="mt-6 text-sm text-gray-500">
+//               <p>Submitted on: {new Date(selectedTestimonial.created_at).toLocaleDateString()}</p>
+//             </div>
+
+//             <div className="mt-6 flex justify-end">
+//               <button
+//                 onClick={() => setShowModal(false)}
+//                 className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded-lg transition-colors"
+//               >
+//                 Close
+//               </button>
+//             </div>
+//           </div>
+//         </div>
+//       )}
+//     </>
 //   );
 // };
 
