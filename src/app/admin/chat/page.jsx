@@ -61,6 +61,7 @@ const AdminChatPage = () => {
   }); // Track last seen time for each user
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
   const messagesEndRef = useRef(null);
+  const messagesContainerRef = useRef(null);
 
   // Function to generate a session ID that matches the ChatWidget pattern
   const generateSessionId = () => {
@@ -195,7 +196,7 @@ const AdminChatPage = () => {
 
       // Get the visitor's session ID to filter out
       const visitorSessionId = localStorage.getItem('chat_session_id');
-      
+
       // Filter out the admin's own session from all users
       const filteredAllUsers = data.onlineUsers.filter(user => {
         // Filter out the visitor's own session (which would be the admin's session when they visited other pages)
@@ -224,6 +225,13 @@ const AdminChatPage = () => {
       setUserMessages(data || []);
       const user = allUsers.find(u => u.session_id === session_id);
       setSelectedUser(user);
+
+      // Scroll to bottom after messages are loaded
+      setTimeout(() => {
+        if (messagesContainerRef.current) {
+          messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+        }
+      }, 100);
     } catch (error) {
       console.error('Error loading user messages:', error);
     }
@@ -258,7 +266,9 @@ const AdminChatPage = () => {
 
         // Scroll to bottom after message is sent and loaded
         setTimeout(() => {
-          messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+          if (messagesContainerRef.current) {
+            messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+          }
         }, 100);
       }
     } catch (error) {
@@ -506,7 +516,7 @@ const AdminChatPage = () => {
               </div>
 
               {/* Messages */}
-              <div className="flex-1 p-4 overflow-y-auto max-h-96">
+              <div ref={messagesContainerRef} className="flex-1 p-4 overflow-y-auto max-h-96">
                 {userMessages.length === 0 ? (
                   <div className="text-center text-gray-500 py-8">No messages yet</div>
                 ) : (
