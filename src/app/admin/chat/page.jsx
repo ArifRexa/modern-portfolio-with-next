@@ -1,6 +1,7 @@
 // app/admin/chat/page.jsx
 'use client';
 import { useState, useEffect, useRef } from 'react';
+import { useTheme } from '@/context/ThemeContext';
 import supabase from '@/utils/supabaseClient';
 import NoteSection from '@/Components/Note/NoteSection';
 import AnimatedLogoutButton from '@/Components/Common/AnimatedLogoutButton';
@@ -170,13 +171,13 @@ const AdminChatPage = () => {
 
       // Refresh all data after deletion
       await fetchAllData();
-      
+
       if (selectedUser && selectedUser.session_id === sessionId) {
         // If we deleted the currently selected user, clear selection
         setSelectedUser(null);
         setUserMessages([]);
       }
-      
+
       setShowDeleteConfirm(null);
     } catch (error) {
       console.error('Error deleting user chat:', error);
@@ -280,7 +281,7 @@ const AdminChatPage = () => {
     if (isAuthenticated) {
       // Generate session ID to identify potential admin visitor session
       const visitorSessionId = generateSessionId();
-      
+
       fetchAllData().then(() => {
         setIsLoading(false);
       });
@@ -423,7 +424,7 @@ const AdminChatPage = () => {
         <div className="lg:col-span-1 bg-gray-800 rounded-lg p-4">
           <h2 className="text-lg font-semibold mb-4 flex items-center">
             <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
-            All Visitors ({allUsers.length}) 
+            All Visitors ({allUsers.length})
             <span className="ml-2 text-sm text-gray-400">({allUsers.filter(user => isUserOnline(user.last_seen)).length} online)</span>
           </h2>
 
@@ -576,7 +577,7 @@ const AdminChatPage = () => {
           )}
         </div>
       </div>
-      
+
       {/* Independent Notes Section */}
       <div className="mt-6">
         <NoteSection selectedUser={selectedUser} />

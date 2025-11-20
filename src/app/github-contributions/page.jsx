@@ -1,8 +1,10 @@
 // app/github-contributions/page.jsx
 'use client';
 import React, { useState, useEffect } from 'react';
+import { useTheme } from '@/context/ThemeContext';
 
 const GitHubContributions = () => {
+  const { theme } = useTheme();
   const [githubData, setGithubData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -30,10 +32,10 @@ const GitHubContributions = () => {
     return (
       <section className="space-y-6 py-8">
         <div className="text-center p-2 sm:px-8 lg:px-12">
-          <h1 className="relative inline-block text-3xl sm:text-4xl md:text-4xl font-extrabold tracking-tight text-gray-200">
+          <h1 className={`relative inline-block text-3xl sm:text-4xl md:text-4xl font-extrabold tracking-tight ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
             GitHub Contributions
           </h1>
-          <p className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed text-gray-300">
+          <p className={`max-w-2xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
             Loading GitHub data...
           </p>
           <span className="block h-1 w-16 mx-auto mt-3 rounded-full bg-blue-400"></span>
@@ -49,15 +51,15 @@ const GitHubContributions = () => {
     return (
       <section className="space-y-6 py-8">
         <div className="text-center p-2 sm:px-8 lg:px-12">
-          <h1 className="relative inline-block text-3xl sm:text-4xl md:text-4xl font-extrabold tracking-tight text-gray-200">
+          <h1 className={`relative inline-block text-3xl sm:text-4xl md:text-4xl font-extrabold tracking-tight ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
             GitHub Contributions
           </h1>
-          <p className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed text-gray-300">
+          <p className={`max-w-2xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
             Failed to load GitHub data
           </p>
           <span className="block h-1 w-16 mx-auto mt-3 rounded-full bg-blue-400"></span>
         </div>
-        <div className="bg-red-900/50 border border-red-700/50 rounded-xl p-6 text-center text-red-200">
+        <div className={`${theme === 'dark' ? 'bg-red-900/50 border-red-700/50' : 'bg-red-100/50 border-red-300/50'} border rounded-xl p-6 text-center ${theme === 'dark' ? 'text-red-200' : 'text-red-700'}`}>
           Error: {error}
           <p className="mt-2 text-sm">Please check your console for more details.</p>
         </div>
@@ -69,10 +71,10 @@ const GitHubContributions = () => {
     <section className="space-y-6 py-8">
       {/* Header */}
       <div className="text-center p-2 sm:px-8 lg:px-12">
-        <h1 className="relative inline-block text-3xl sm:text-4xl md:text-4xl font-extrabold tracking-tight text-gray-200">
+        <h1 className={`relative inline-block text-3xl sm:text-4xl md:text-4xl font-extrabold tracking-tight ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
           GitHub Contributions
         </h1>
-        <p className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed text-gray-300">
+        <p className={`max-w-2xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
           Explore my public GitHub activity and projects
         </p>
         <span className="block h-1 w-16 mx-auto mt-3 rounded-full bg-blue-400"></span>
@@ -90,6 +92,7 @@ const GitHubContributions = () => {
             </svg>
           }
           color="text-purple-500"
+          theme={theme}
         />
         <StatCard
           title="Total Commits"
@@ -101,6 +104,7 @@ const GitHubContributions = () => {
             </svg>
           }
           color="text-blue-500"
+          theme={theme}
         />
         <StatCard
           title="Total Stars Earned"
@@ -111,6 +115,7 @@ const GitHubContributions = () => {
             </svg>
           }
           color="text-yellow-500"
+          theme={theme}
         />
         <StatCard
           title="Total PRs"
@@ -124,6 +129,7 @@ const GitHubContributions = () => {
             </svg>
           }
           color="text-green-500"
+          theme={theme}
         />
         <StatCard
           title="Contributions"
@@ -135,23 +141,24 @@ const GitHubContributions = () => {
             </svg>
           }
           color="text-indigo-500"
+          theme={theme}
         />
       </div>
 
 
       {/* Language Usage */}
-      <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm">
-        <h3 className="text-2xl font-bold tracking-tight text-gray-200 mb-4">
+      <div className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300/50'} p-4 lg:p-6 shadow-sm`}>
+        <h3 className={`text-2xl font-bold tracking-tight ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'} mb-4`}>
           Top Languages (by Repos)
         </h3>
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
           {githubData?.language_usage?.map((lang, idx) => (
             <div
               key={idx}
-              className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700/40 rounded-xl p-4 lg:p-6 shadow-md flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-2 sm:space-y-0"
+              className={`${theme === 'dark' ? 'bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700/40' : 'bg-gradient-to-br from-gray-200 to-gray-300 border-gray-300/40'} border rounded-xl p-4 lg:p-6 shadow-md flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-2 sm:space-y-0`}
             >
               <div className="flex-1">
-                <div className="font-semibold text-lg text-white">{lang.language}</div>
+                <div className={`font-semibold text-lg ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{lang.language}</div>
               </div>
               <div className="w-full sm:w-28 h-3 bg-gray-300 rounded-full overflow-hidden">
                 <div
@@ -165,20 +172,20 @@ const GitHubContributions = () => {
       </div>
 
       {/* Top Repositories */}
-      <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm">
-        <h3 className="text-2xl font-bold tracking-tight text-gray-200 mb-4">
+      <div className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300/50'} p-4 lg:p-6 shadow-sm`}>
+        <h3 className={`text-2xl font-bold tracking-tight ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'} mb-4`}>
           Top Repositories
         </h3>
         <div className="space-y-3">
           {githubData?.top_repositories?.map((repo, idx) => (
             <div
               key={idx}
-              className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700/40 rounded-xl p-4 lg:p-6 shadow-md flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0"
+              className={`${theme === 'dark' ? 'bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700/40' : 'bg-gradient-to-br from-gray-200 to-gray-300 border-gray-300/40'} border rounded-xl p-4 lg:p-6 shadow-md flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0`}
             >
               <div>
-                <h6 className="font-semibold text-lg text-white">{repo.repo_name}</h6>
+                <h6 className={`font-semibold text-lg ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{repo.repo_name}</h6>
                 {repo.description && (
-                  <p className="text-sm text-gray-400 mt-1 line-clamp-2">{repo.description}</p>
+                  <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'} mt-1 line-clamp-2`}>{repo.description}</p>
                 )}
               </div>
               <div className="flex space-x-6 text-sm">
@@ -198,11 +205,11 @@ const GitHubContributions = () => {
 };
 
 // Helper component for stat cards
-const StatCard = ({ title, value, icon, color }) => (
-  <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm h-full flex flex-col items-center">
+const StatCard = ({ title, value, icon, color, theme }) => (
+  <div className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300/50'} p-4 lg:p-6 shadow-sm h-full flex flex-col items-center`}>
     {icon}
     <div className={`text-3xl font-bold ${color}`}>{value}</div>
-    <div className="text-sm font-semibold text-gray-400 text-center mt-1">{title}</div>
+    <div className={`text-sm font-semibold ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'} text-center mt-1`}>{title}</div>
   </div>
 );
 

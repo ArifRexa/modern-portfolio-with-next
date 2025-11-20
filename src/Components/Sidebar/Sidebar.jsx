@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import SidebarStats from './SidebarStats';
-import avatar from '../../../public/images/avatar.jpg';
+import arif from '../../../public/images/arif.jpeg';
 
 const Sidebar = ({ className = '', theme = 'dark' }) => {
   const pathname = usePathname();
@@ -28,7 +28,7 @@ const Sidebar = ({ className = '', theme = 'dark' }) => {
     <aside className={`fixed left-0 top-0 h-screen w-80 z-50 backdrop-blur-md border ${borderClass} shadow-sm transform transition-transform duration-300 lg:translate-x-0 -translate-x-full ${className} lg:static lg:sticky lg:top-0 lg:h-screen lg:overflow-hidden ${sidebarBgClass}`}>
       <div className="p-6">
         <div className="flex items-center space-x-4 mb-6">
-          <Image src={avatar} alt="Profile Picture" className="w-16 h-16 rounded-xl object-cover" />
+          <Image src={arif} alt="Profile Picture" className="w-16 h-16 rounded-xl object-cover" />
           <div>
             <h3 className={`text-lg font-bold ${textClass}`}>Ariful Islam</h3>
             <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Software Engineer</p>

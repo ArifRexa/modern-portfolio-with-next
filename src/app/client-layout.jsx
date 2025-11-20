@@ -41,7 +41,7 @@ export default function ClientLayout({ children }) {
 
         <Sidebar className={sidebarOpen ? 'translate-x-0' : '-translate-x-full'} theme={theme} />
 
-        <main className={`flex-1 min-h-screen flex flex-col transition-all duration-300 ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} ${sidebarOpen ? 'opacity-50 lg:opacity-100' : ''}`}>
+        <main className={`flex-1 min-h-screen flex flex-col px-10 transition-all duration-300 ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} ${sidebarOpen ? 'opacity-50 lg:opacity-100' : ''}`}>
           {/* Header with theme toggle */}
           <header className="text-center py-6">
             <div className="flex items-center justify-between px-4">

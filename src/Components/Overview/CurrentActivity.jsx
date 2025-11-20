@@ -1,7 +1,9 @@
 'use client';
 import React, { useState, useEffect, useMemo } from 'react';
+import { useTheme } from '@/context/ThemeContext';
 
 const CurrentActivity = () => {
+  const { theme } = useTheme();
     const [currentActivity, setCurrentActivity] = useState({
         activity: "Lunch Break",
         emoji: "🍽️",
@@ -104,7 +106,7 @@ const CurrentActivity = () => {
     }, [initialSchedule]);
 
     return (
-        <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm">
+        <div className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} p-4 lg:p-6 shadow-sm`}>
             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                 <div className="flex items-center space-x-4">
                     <div className="relative">
@@ -114,7 +116,7 @@ const CurrentActivity = () => {
                         <div className="absolute bottom-0.5 -right-0.5 w-4 h-4 bg-green-400 rounded-full border-2 border-white animate-pulse"></div>
                     </div>
                     <div className="text-center md:text-left">
-                        <h3 className="text-xl font-semibold text-gray-200">Currently: {currentActivity.activity}</h3>
+                        <h3 className={`text-xl font-semibold ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>Currently: {currentActivity.activity}</h3>
                         <div className="flex flex-wrap justify-center md:justify-start items-center gap-4 mt-2 text-sm text-gray-300">
                             <span className="flex items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-map-pin w-4 h-4 mr-2">
@@ -140,8 +142,8 @@ const CurrentActivity = () => {
                     </div>
                 </div>
                 <div className="w-full md:w-auto flex flex-col items-center gap-4">
-                    <p className="text-sm text-gray-400">
-                        Next: <span className="text-gray-400 font-medium">{upcomingActivity.activity}</span> • {upcomingActivity.time}
+                    <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+                        Next: <span className={`text-gray-400 font-medium ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>{upcomingActivity.activity}</span> • {upcomingActivity.time}
                     </p>
                     <a href="/real-time-activity"
                         className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-10 px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 border-green-500/50 border backdrop-blur-sm w-full md:w-auto">

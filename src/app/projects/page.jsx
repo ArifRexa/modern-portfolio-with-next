@@ -1,11 +1,13 @@
 // app/components/ProjectsPortfolio.jsx
 'use client';
 import React from 'react';
+import { useTheme } from '@/context/ThemeContext';
 
 const ProjectsPortfolio = () => {
+  const { theme } = useTheme();
   const projects = [
     {
-      title: "Aws Iam User Management",
+      title: "AWS IAM User Management",
       description:
         "AWS IAM User Management Tool is a Python-based command-line utility for managing AWS IAM users efficiently. It allows administrators to automate common IAM tasks such as creating users, attaching policies, generating access keys, and cleaning up unused credentials.",
       features: [
@@ -24,7 +26,7 @@ const ProjectsPortfolio = () => {
       githubUrl: "https://github.com/rsakib15/aws-iam-user-management"
     },
     {
-      title: "Linkedin Auto Apply",
+      title: "LinkedIn Auto Apply",
       description:
         "Automate your LinkedIn job applications with ease! This Python-based bot uses Selenium to search for jobs and automatically apply to positions with Easy Apply. Designed to save time and streamline your job hunt while mimicking human-like behavior to reduce detection risk.",
       features: [
@@ -248,44 +250,49 @@ const ProjectsPortfolio = () => {
     <section className="space-y-6">
       {/* Header */}
       <div className="text-center p-2 sm:px-8 lg:px-12">
-        <h1 className="relative inline-block text-3xl sm:text-4xl md:text-4xl font-extrabold tracking-tight text-gray-200">
+        <h1 className={`relative inline-block text-3xl sm:text-4xl md:text-4xl font-extrabold tracking-tight ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
           Projects & Portfolio
         </h1>
-        <p className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed text-gray-300">
+        <p className={`max-w-2xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
           Showcasing my technical expertise through innovative solutions
         </p>
-        <span className="block h-1 w-16 mx-auto mt-3 rounded-full bg-blue-400"></span>
+        <span className={`block h-1 w-16 mx-auto mt-3 rounded-full bg-blue-400`}></span>
       </div>
 
       {/* Projects Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mt-6">
         {projects.map((project, index) => (
-          <div key={index} className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm flex flex-col h-full">
-            <div className="flex flex-col flex-grow">
+          <div
+            key={index}
+            className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} p-4 lg:p-6 shadow-sm flex flex-col h-full overflow-hidden group`}
+          >
+            {/* 3D Glass Effect */}
+            <div className={`absolute inset-0 ${theme === 'dark' ? 'bg-gradient-to-br from-blue-500/10 to-purple-500/10' : 'bg-gradient-to-br from-blue-400/10 to-purple-400/10'} rounded-xl transform -rotate-1 scale-105 opacity-60 group-hover:opacity-100 transition-all duration-300 z-0`}></div>
+            <div className="relative z-10 flex flex-col flex-grow">
               {/* Title & Status */}
-              <div className="flex items-center justify-between mb-2">
-                <h4 className="text-xl lg:text-2xl font-semibold truncate text-gray-200">
+              <div className="flex items-center justify-between mb-2 z-10">
+                <h4 className={`text-xl lg:text-2xl font-semibold truncate ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
                   {project.title}
                 </h4>
                 <div className="relative group/status">
                   <div className="w-3 h-3 rounded-full bg-blue-500"></div>
-                  <div className="absolute top-4 right-0 text-sm px-3 py-1.5 rounded-lg opacity-0 group-hover/status:opacity-100 transition-all duration-300 ease-out transform scale-95 group-hover/status:scale-100 font-semibold bg-gradient-to-r from-blue-800 via-blue-800 to-blue-900 text-blue-100 shadow-md">
+                  <div className={`absolute top-4 right-0 text-sm px-3 py-1.5 rounded-lg opacity-0 group-hover/status:opacity-100 transition-all duration-300 ease-out transform scale-95 group-hover/status:scale-100 font-semibold ${theme === 'dark' ? 'bg-gradient-to-r from-blue-800 via-blue-800 to-blue-900 text-blue-100' : 'bg-gradient-to-r from-blue-200 via-blue-300 to-blue-400 text-blue-900'} shadow-md`}>
                     {project.status}
                   </div>
                 </div>
               </div>
 
               {/* Description */}
-              <p className="text-sm md:text-base mb-4 line-clamp-8 lg:line-clamp-6 text-gray-300">
+              <p className={`text-sm md:text-base mb-4 line-clamp-8 lg:line-clamp-6 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                 {project.description}
               </p>
 
               {/* Features */}
-              <div className="mb-4">
-                <h4 className="text-base lg:text-lg font-semibold mb-2 text-gray-200">Key Features</h4>
+              <div className="mb-4 z-10">
+                <h4 className={`text-base lg:text-lg font-semibold mb-2 ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>Key Features</h4>
                 <ul className="space-y-1">
                   {project.features.map((feature, i) => (
-                    <li key={i} className="text-sm lg:text-base flex items-start text-gray-300">
+                    <li key={i} className={`text-sm lg:text-base flex items-start ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -296,7 +303,7 @@ const ProjectsPortfolio = () => {
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        className="lucide lucide-chevron-right w-3 h-3 mr-2 mt-1 text-green-400 flex-shrink-0"
+                        className={`lucide lucide-chevron-right w-3 h-3 mr-2 mt-1 ${theme === 'dark' ? 'text-green-400' : 'text-green-600'} flex-shrink-0`}
                       >
                         <path d="m9 18 6-6-6-6" />
                       </svg>
@@ -307,15 +314,15 @@ const ProjectsPortfolio = () => {
               </div>
 
               {/* Topics */}
-              <div className="mb-4">
+              <div className="mb-4 z-10">
                 <div className="flex flex-row w-full items-center mb-2">
-                  <h4 className="text-base lg:text-lg font-semibold text-gray-200">Topics</h4>
+                  <h4 className={`text-base lg:text-lg font-semibold ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>Topics</h4>
                 </div>
                 <div className="flex flex-wrap gap-1">
                   {project.topics.map((topic, i) => (
                     <div
                       key={i}
-                      className="inline-flex items-center border font-semibold px-3 py-1 text-xs sm:text-sm rounded-md bg-gray-700/50 text-gray-300 border-gray-700/50 hover:bg-gray-600/50 hover:text-gray-100"
+                      className={`inline-flex items-center border font-semibold px-3 py-1 text-xs sm:text-sm rounded-md ${theme === 'dark' ? 'bg-gray-700/50 text-gray-300 border-gray-700/50 hover:bg-gray-600/50 hover:text-gray-100' : 'bg-gray-200/50 text-gray-700 border-gray-300 hover:bg-gray-300/50 hover:text-gray-900'}`}
                     >
                       {topic}
                     </div>
@@ -324,12 +331,12 @@ const ProjectsPortfolio = () => {
               </div>
 
               {/* Footer: Status, Date, GitHub */}
-              <div className="flex justify-between items-center flex-wrap gap-2 mt-auto pt-2">
+              <div className="flex justify-between items-center flex-wrap gap-2 mt-auto pt-2 z-10">
                 <div className="flex flex-wrap gap-2 text-xs lg:text-sm font-medium">
-                  <div className="px-2.5 py-0.5 w-fit flex items-center text-xs lg:text-sm font-bold border backdrop-blur-sm rounded-full shadow-sm bg-green-500/20 text-green-300 border-green-400/40">
+                  <div className={`px-2.5 py-0.5 w-fit flex items-center text-xs lg:text-sm font-bold border backdrop-blur-sm rounded-full shadow-sm ${theme === 'dark' ? 'bg-green-500/20 text-green-300 border-green-400/40' : 'bg-green-500/30 text-green-700 border-green-500/40'}`}>
                     {project.status}
                   </div>
-                  <div className="px-2.5 py-0.5 w-fit flex items-center text-xs lg:text-sm font-bold border backdrop-blur-sm rounded-full shadow-sm bg-purple-500/20 text-purple-300 border-purple-400/40">
+                  <div className={`px-2.5 py-0.5 w-fit flex items-center text-xs lg:text-sm font-bold border backdrop-blur-sm rounded-full shadow-sm ${theme === 'dark' ? 'bg-purple-500/20 text-purple-300 border-purple-400/40' : 'bg-purple-500/30 text-purple-700 border-purple-500/40'}`}>
                     {project.date}
                   </div>
                 </div>
@@ -338,7 +345,7 @@ const ProjectsPortfolio = () => {
                     href={project.githubUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium h-10 text-xs px-3 py-1 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border-blue-400/40 border"
+                    className={`inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium h-10 text-xs px-3 py-1 ${theme === 'dark' ? 'bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border-blue-400/40 border' : 'bg-blue-500/30 hover:bg-blue-500/40 text-blue-700 border-blue-500/40 border'}`}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

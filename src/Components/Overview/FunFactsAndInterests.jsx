@@ -1,8 +1,11 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useTheme } from '@/context/ThemeContext';
 
 const FunFactsAndInterests = () => {
+  const { theme } = useTheme();
+
   // Hardcoded fun facts from your data
   const funFactsData = [
     {
@@ -173,23 +176,23 @@ const FunFactsAndInterests = () => {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
       {/* Fun Facts */}
       <div>
-        <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm h-full w-full">
+        <div className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} p-4 lg:p-6 shadow-sm h-full w-full`}>
           <div className="flex items-center justify-between">
-            <h3 className="text-2xl lg:text-2xl font-bold tracking-tight text-gray-200">
+            <h3 className={`text-2xl lg:text-2xl font-bold tracking-tight ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
               Fun Facts
             </h3>
             <div className="flex items-center space-x-2">
-              <button 
+              <button
                 onClick={goToPrevFact}
-                className="w-8 h-8 rounded-lg flex items-center justify-center transition-all bg-gray-700/50 hover:bg-gray-600/50 text-gray-300"
+                className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-gray-700/50 hover:bg-gray-600/50 text-gray-300' : 'bg-gray-300 hover:bg-gray-400 text-gray-700'}`}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-left w-4 h-4">
                   <path d="m15 18-6-6 6-6"></path>
                 </svg>
               </button>
-              <button 
+              <button
                 onClick={goToNextFact}
-                className="w-8 h-8 rounded-lg flex items-center justify-center transition-all bg-gray-700/50 hover:bg-gray-600/50 text-gray-300"
+                className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-gray-700/50 hover:bg-gray-600/50 text-gray-300' : 'bg-gray-300 hover:bg-gray-400 text-gray-700'}`}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-right w-4 h-4">
                   <path d="m9 18 6-6-6-6"></path>
@@ -200,34 +203,34 @@ const FunFactsAndInterests = () => {
 
           <div className="relative min-h-[130px] mt-4">
             <motion.div
-              key={currentFactIndex} 
+              key={currentFactIndex}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5 }}
-              className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700/40 rounded-xl p-4 lg:p-4 shadow-md backdrop-blur-md h-full cursor-pointer"
+              className={`bg-gradient-to-br ${theme === 'dark' ? 'from-gray-800 to-gray-900 border-gray-700/40' : 'from-gray-200 to-gray-100 border-gray-300'} rounded-xl p-4 lg:p-4 shadow-md backdrop-blur-md h-full cursor-pointer`}
             >
-              <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium mb-2 ${color.bg} ${color.text}`}>
+              <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium mb-2 ${color.bg} ${theme === 'dark' ? color.text : 'text-gray-800'}`}>
                 {funFact.category}
               </div>
               <div className="flex items-start justify-between mb-2">
                 <div className="flex-1">
-                  <h4 className={`text-base font-extrabold leading-tight mb-1 ${color.text}`}>
+                  <h4 className={`text-base font-extrabold leading-tight mb-1 ${theme === 'dark' ? color.text : 'text-gray-900'}`}>
                     {funFact.title}
                   </h4>
-                  <p className="text-gray-300 text-sm leading-relaxed">
+                  <p className={`${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'} text-sm leading-relaxed`}>
                     {funFact.description}
                   </p>
                 </div>
                 <div className="ml-3 flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`lucide lucide-trending-up w-4 h-4 ${color.strong}`}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`lucide lucide-trending-up w-4 h-4 ${theme === 'dark' ? color.strong : 'text-gray-700'}`}>
                     <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
                     <polyline points="16 7 22 7 22 13"></polyline>
                   </svg>
                 </div>
               </div>
-              <div className="mt-3 pt-3 border-t border-gray-700/50">
-                <p className={`text-sm font-medium ${color.strong}`}>
+              <div className={`mt-3 pt-3 border-t ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'}`}>
+                <p className={`text-sm font-medium ${theme === 'dark' ? color.strong : 'text-gray-800'}`}>
                   {funFact.impact}
                 </p>
               </div>
@@ -240,7 +243,7 @@ const FunFactsAndInterests = () => {
                 key={i}
                 onClick={() => handleFactDotClick(i)}
                 className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  i === currentFactIndex ? 'w-6 bg-blue-400 shadow-lg scale-125' : 'bg-gray-600 hover:bg-gray-500'
+                  i === currentFactIndex ? 'w-6 bg-blue-400 shadow-lg scale-125' : `${theme === 'dark' ? 'bg-gray-600 hover:bg-gray-500' : 'bg-gray-400 hover:bg-gray-500'}`
                 }`}
               />
             ))}
@@ -250,23 +253,23 @@ const FunFactsAndInterests = () => {
 
       {/* Interests */}
       <div>
-        <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm h-full w-full">
+        <div className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} p-4 lg:p-6 shadow-sm h-full w-full`}>
           <div className="flex items-center justify-between">
-            <h3 className="text-2xl lg:text-2xl font-bold tracking-tight text-gray-200">
+            <h3 className={`text-2xl lg:text-2xl font-bold tracking-tight ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
               Interests
             </h3>
             <div className="flex items-center space-x-2">
-              <button 
+              <button
                 onClick={goToPrevInterest}
-                className="w-8 h-8 rounded-lg flex items-center justify-center transition-all bg-gray-700/50 hover:bg-gray-600/50 text-gray-300"
+                className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-gray-700/50 hover:bg-gray-600/50 text-gray-300' : 'bg-gray-300 hover:bg-gray-400 text-gray-700'}`}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-left w-4 h-4">
                   <path d="m15 18-6-6 6-6"></path>
                 </svg>
               </button>
-              <button 
+              <button
                 onClick={goToNextInterest}
-                className="w-8 h-8 rounded-lg flex items-center justify-center transition-all bg-gray-700/50 hover:bg-gray-600/50 text-gray-300"
+                className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-gray-700/50 hover:bg-gray-600/50 text-gray-300' : 'bg-gray-300 hover:bg-gray-400 text-gray-700'}`}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-right w-4 h-4">
                   <path d="m9 18 6-6-6-6"></path>
@@ -278,12 +281,12 @@ const FunFactsAndInterests = () => {
           <div className="relative overflow-hidden rounded-xl flex-1 flex items-center mt-4">
             <div className="w-full">
               <motion.div
-                key={currentInterestIndex} 
+                key={currentInterestIndex}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.5 }}
-                className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700/40 rounded-xl p-4 lg:p-4 shadow-md backdrop-blur-md h-full cursor-pointer"
+                className={`bg-gradient-to-br ${theme === 'dark' ? 'from-gray-800 to-gray-900 border-gray-700/40' : 'from-gray-200 to-gray-100 border-gray-300'} rounded-xl p-4 lg:p-4 shadow-md backdrop-blur-md h-full cursor-pointer`}
               >
                 <div className="relative z-10">
                   <div className="flex items-start gap-4">
@@ -293,10 +296,10 @@ const FunFactsAndInterests = () => {
                       </svg>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-pink-300 text-base lg:text-lg font-extrabold leading-tight mb-1">
+                      <h4 className={`text-pink-300 text-base lg:text-lg font-extrabold leading-tight mb-1 ${theme === 'dark' ? 'text-pink-300' : 'text-pink-400'}`}>
                         {currentInterest.title}
                       </h4>
-                      <p className="text-sm mb-2 text-gray-300">
+                      <p className={`text-sm mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                         {currentInterest.subtitle}
                       </p>
                     </div>
@@ -312,7 +315,7 @@ const FunFactsAndInterests = () => {
                 key={i}
                 onClick={() => handleInterestDotClick(i)}
                 className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  i === currentInterestIndex ? 'w-6 bg-blue-500 shadow-lg scale-125' : 'bg-gray-600 hover:bg-gray-500'
+                  i === currentInterestIndex ? 'w-6 bg-blue-500 shadow-lg scale-125' : `${theme === 'dark' ? 'bg-gray-600 hover:bg-gray-500' : 'bg-gray-400 hover:bg-gray-500'}`
                 }`}
               />
             ))}

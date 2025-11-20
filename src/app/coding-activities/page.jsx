@@ -2,16 +2,22 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Legend, AreaChart, Area } from 'recharts';
+import { useTheme } from '@/context/ThemeContext';
 
-const StatCard = ({ title, value, icon, color }) => (
-  <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm flex flex-col items-center justify-center h-full">
-    <div className={`${color} w-6 h-6 mb-2`}>{icon}</div>
-    <div className="text-2xl font-bold">{value}</div>
-    <div className="text-sm font-semibold text-gray-400">{title}</div>
+const StatCard = ({ title, value, icon, color, theme }) => (
+  <div className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} p-4 lg:p-6 shadow-sm flex flex-col items-center justify-center h-full relative overflow-hidden group`}>
+    {/* 3D Glass Effect */}
+    <div className={`absolute inset-0 ${theme === 'dark' ? 'bg-gradient-to-br from-blue-500/10 to-purple-500/10' : 'bg-gradient-to-br from-blue-400/10 to-purple-400/10'} rounded-xl transform -rotate-1 scale-105 opacity-60 group-hover:opacity-100 transition-all duration-300 z-0`}></div>
+    <div className="relative z-10">
+      <div className={`w-6 h-6 mb-2 ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>{icon}</div>
+      <div className={`text-2xl font-bold ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>{value}</div>
+      <div className={`text-sm font-semibold ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>{title}</div>
+    </div>
   </div>
 );
 
 const CodingActivities = () => {
+  const { theme } = useTheme();
   const [codingData, setCodingData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -92,13 +98,13 @@ const CodingActivities = () => {
     <section className="space-y-6">
       {/* Header */}
       <div className="text-center p-2 sm:px-8 lg:px-12">
-        <h1 className="relative inline-block text-3xl sm:text-4xl md:text-4xl font-extrabold tracking-tight text-gray-200">
+        <h1 className={`relative inline-block text-3xl sm:text-4xl md:text-4xl font-extrabold tracking-tight ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
           Coding Activities
         </h1>
-        <p className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed text-gray-300">
+        <p className={`max-w-2xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
           Explore my coding journey across platforms and projects
         </p>
-        <span className="block h-1 w-16 mx-auto mt-3 rounded-full bg-blue-400"></span>
+        <span className={`block h-1 w-16 mx-auto mt-3 rounded-full bg-blue-400`}></span>
       </div>
 
       {/* Summary Stats */}
@@ -112,6 +118,7 @@ const CodingActivities = () => {
             </svg>
           }
           color="text-yellow-500"
+          theme={theme}
         />
         <StatCard
           title="Weekly Coding Time"
@@ -126,6 +133,7 @@ const CodingActivities = () => {
             </svg>
           }
           color="text-green-500"
+          theme={theme}
         />
         <StatCard
           title="Total Coding Time"
@@ -137,6 +145,7 @@ const CodingActivities = () => {
             </svg>
           }
           color="text-blue-500"
+          theme={theme}
         />
         <StatCard
           title="Avg. Daily Time"
@@ -147,13 +156,14 @@ const CodingActivities = () => {
             </svg>
           }
           color="text-purple-500"
+          theme={theme}
         />
       </div>
 
       {/* Weekly Activity Chart */}
-      <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm">
+      <div className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} p-4 lg:p-6 shadow-sm`}>
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
-          <h3 className="text-2xl font-bold tracking-tight text-gray-200">Weekly Activity (hours)</h3>
+          <h3 className={`text-2xl font-bold tracking-tight ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>Weekly Activity (hours)</h3>
 
           {/* Chart Type Selector */}
           <div className="flex flex-wrap gap-2">
@@ -161,8 +171,8 @@ const CodingActivities = () => {
               onClick={() => setChartType('bar')}
               className={`px-3 py-1 text-sm rounded-lg transition-colors ${
                 chartType === 'bar'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-700 text-gray-200 hover:bg-gray-600'
+                  ? `${theme === 'dark' ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white'}`
+                  : `${theme === 'dark' ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' : 'bg-gray-300 text-gray-700 hover:bg-gray-400'}`
               }`}
             >
               Bar
@@ -171,8 +181,8 @@ const CodingActivities = () => {
               onClick={() => setChartType('line')}
               className={`px-3 py-1 text-sm rounded-lg transition-colors ${
                 chartType === 'line'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-700 text-gray-200 hover:bg-gray-600'
+                  ? `${theme === 'dark' ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white'}`
+                  : `${theme === 'dark' ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' : 'bg-gray-300 text-gray-700 hover:bg-gray-400'}`
               }`}
             >
               Line
@@ -181,8 +191,8 @@ const CodingActivities = () => {
               onClick={() => setChartType('pie')}
               className={`px-3 py-1 text-sm rounded-lg transition-colors ${
                 chartType === 'pie'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-700 text-gray-200 hover:bg-gray-600'
+                  ? `${theme === 'dark' ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white'}`
+                  : `${theme === 'dark' ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' : 'bg-gray-300 text-gray-700 hover:bg-gray-400'}`
               }`}
             >
               Pie
@@ -191,8 +201,8 @@ const CodingActivities = () => {
               onClick={() => setChartType('doughnut')}
               className={`px-3 py-1 text-sm rounded-lg transition-colors ${
                 chartType === 'doughnut'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-700 text-gray-200 hover:bg-gray-600'
+                  ? `${theme === 'dark' ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white'}`
+                  : `${theme === 'dark' ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' : 'bg-gray-300 text-gray-700 hover:bg-gray-400'}`
               }`}
             >
               Donut
@@ -219,27 +229,27 @@ const CodingActivities = () => {
                 <CartesianGrid stroke="none" />
                 <XAxis
                   dataKey="name"
-                  stroke="#9CA3AF"
-                  tick={{ fill: '#9CA3AF', fontSize: 12 }}
-                  axisLine={{ stroke: '#4B5563' }}
+                  stroke={theme === 'dark' ? '#9CA3AF' : '#6B7280'}
+                  tick={{ fill: theme === 'dark' ? '#9CA3AF' : '#6B7280', fontSize: 12 }}
+                  axisLine={{ stroke: theme === 'dark' ? '#4B5563' : '#D1D5DB' }}
                 />
                 <YAxis
-                  stroke="#9CA3AF"
-                  tick={{ fill: '#9CA3AF', fontSize: 12 }}
-                  axisLine={{ stroke: '#4B5563' }}
+                  stroke={theme === 'dark' ? '#9CA3AF' : '#6B7280'}
+                  tick={{ fill: theme === 'dark' ? '#9CA3AF' : '#6B7280', fontSize: 12 }}
+                  axisLine={{ stroke: theme === 'dark' ? '#4B5563' : '#D1D5DB' }}
                 />
                 <Tooltip
                   wrapperStyle={{ outline: 'none' }}
                   contentStyle={{
-                    backgroundColor: '#1F2937',
-                    borderColor: '#065ae2ff',
+                    backgroundColor: theme === 'dark' ? '#1F2937' : '#F9FAFB',
+                    borderColor: theme === 'dark' ? '#065ae2ff' : '#E5E7EB',
                     borderRadius: '0.5rem',
-                    color: '#F9FAFB',
+                    color: theme === 'dark' ? '#F9FAFB' : '#1F2937',
                     boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.1)',
-                    border: '1px solid #374151'
+                    border: `1px solid ${theme === 'dark' ? '#374151' : '#D1D5DB'}`
                   }}
-                  itemStyle={{ color: '#F9FAFB' }}
-                  labelStyle={{ color: '#F9FAFB', fontWeight: 'bold', marginBottom: '5px' }}
+                  itemStyle={{ color: theme === 'dark' ? '#F9FAFB' : '#1F2937' }}
+                  labelStyle={{ color: theme === 'dark' ? '#F9FAFB' : '#1F2937', fontWeight: 'bold', marginBottom: '5px' }}
                 />
                 <Bar
                   dataKey="hours"
@@ -282,25 +292,25 @@ const CodingActivities = () => {
                 <CartesianGrid stroke="none" />
                 <XAxis
                   dataKey="name"
-                  stroke="#9CA3AF"
-                  tick={{ fill: '#9CA3AF' }}
-                  axisLine={{ stroke: '#4B5563' }}
+                  stroke={theme === 'dark' ? '#9CA3AF' : '#6B7280'}
+                  tick={{ fill: theme === 'dark' ? '#9CA3AF' : '#6B7280' }}
+                  axisLine={{ stroke: theme === 'dark' ? '#4B5563' : '#D1D5DB' }}
                 />
                 <YAxis
-                  stroke="#9CA3AF"
-                  tick={{ fill: '#9CA3AF' }}
-                  axisLine={{ stroke: '#4B5563' }}
+                  stroke={theme === 'dark' ? '#9CA3AF' : '#6B7280'}
+                  tick={{ fill: theme === 'dark' ? '#9CA3AF' : '#6B7280' }}
+                  axisLine={{ stroke: theme === 'dark' ? '#4B5563' : '#D1D5DB' }}
                 />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#1F2937',
-                    borderColor: '#374151',
+                    backgroundColor: theme === 'dark' ? '#1F2937' : '#F9FAFB',
+                    borderColor: theme === 'dark' ? '#374151' : '#E5E7EB',
                     borderRadius: '0.5rem',
-                    color: '#F9FAFB',
+                    color: theme === 'dark' ? '#F9FAFB' : '#1F2937',
                     boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
                   }}
-                  itemStyle={{ color: '#F9FAFB' }}
-                  labelStyle={{ color: '#F9FAFB', fontWeight: 'bold' }}
+                  itemStyle={{ color: theme === 'dark' ? '#F9FAFB' : '#1F2937' }}
+                  labelStyle={{ color: theme === 'dark' ? '#F9FAFB' : '#1F2937', fontWeight: 'bold' }}
                 />
                 <Legend />
                 <Line
@@ -309,13 +319,13 @@ const CodingActivities = () => {
                   name="Hours"
                   stroke="url(#colorLine)"
                   strokeWidth={3}
-                  dot={{ stroke: '#3B82F6', strokeWidth: 2, r: 4, fill: '#1F2937' }}
-                  activeDot={{ r: 6, stroke: '#3B82F6', strokeWidth: 2, fill: '#1F2937' }}
+                  dot={{ stroke: theme === 'dark' ? '#3B82F6' : '#2563EB', strokeWidth: 2, r: 4, fill: theme === 'dark' ? '#1F2937' : '#F9FAFB' }}
+                  activeDot={{ r: 6, stroke: theme === 'dark' ? '#3B82F6' : '#2563EB', strokeWidth: 2, fill: theme === 'dark' ? '#1F2937' : '#F9FAFB' }}
                 />
                 <defs>
                   <linearGradient id="colorLine" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#3B82F6" stopOpacity={1}/>
-                    <stop offset="95%" stopColor="#60A5FA" stopOpacity={1}/>
+                    <stop offset="5%" stopColor={theme === 'dark' ? '#3B82F6' : '#2563EB'} stopOpacity={1}/>
+                    <stop offset="95%" stopColor={theme === 'dark' ? '#60A5FA' : '#3B82F6'} stopOpacity={1}/>
                   </linearGradient>
                 </defs>
               </LineChart>
@@ -342,16 +352,24 @@ const CodingActivities = () => {
                   {codingData.weekly_activity.map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={['#6366F1', '#8B5CF6', '#EC4899', '#F43F5E', '#F97316', '#F59E0B', '#10B981'][index % 7]}
+                      fill={[
+                        theme === 'dark' ? '#6366F1' : '#4F46E5',
+                        theme === 'dark' ? '#8B5CF6' : '#7C3AED',
+                        theme === 'dark' ? '#EC4899' : '#DB2777',
+                        theme === 'dark' ? '#F43F5E' : '#DC2626',
+                        theme === 'dark' ? '#F97316' : '#EA580C',
+                        theme === 'dark' ? '#F59E0B' : '#D97706',
+                        theme === 'dark' ? '#10B981' : '#059669'
+                      ][index % 7]}
                     />
                   ))}
                 </Pie>
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#1F2937',
-                    borderColor: '#374151',
+                    backgroundColor: theme === 'dark' ? '#1F2937' : '#F9FAFB',
+                    borderColor: theme === 'dark' ? '#374151' : '#E5E7EB',
                     borderRadius: '0.5rem',
-                    color: '#F9FAFB',
+                    color: theme === 'dark' ? '#F9FAFB' : '#1F2937',
                     boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
                   }}
                   formatter={(value) => [`${value} hours`, 'Hours']}

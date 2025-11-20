@@ -1,8 +1,10 @@
 // app/components/GetInTouch.jsx (or wherever your component is located)
 'use client';
 import React from 'react';
+import { useTheme } from '@/context/ThemeContext';
 
 const GetInTouch = () => {
+  const { theme } = useTheme();
   // Define the email address
   const emailAddress = "arif.reza3126@gmail.com"; // Replace with your actual email
 
@@ -14,10 +16,10 @@ const GetInTouch = () => {
   const mailtoLink = `mailto:${emailAddress}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
 
   return (
-    <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm">
-      <div className="text-center mx-auto text-gray-900">
-        <h3 className="text-2xl font-bold mb-2 text-gray-200">Get In Touch</h3>
-        <p className="text-base mb-6 text-gray-400">
+    <div className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} p-4 lg:p-6 shadow-sm`}>
+      <div className="text-center mx-auto">
+        <h3 className={`text-2xl font-bold mb-2 ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>Get In Touch</h3>
+        <p className={`text-base mb-6 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
           I&apos;m always interested in new opportunities and collaborations. Feel free to reach out if you&apos;d like
           to work together!
         </p>

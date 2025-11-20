@@ -2,8 +2,10 @@
 'use client';
 import React from 'react';
 import Image from 'next/image';
+import { useTheme } from '@/context/ThemeContext';
 
 const AcademicBackground = () => {
+  const { theme } = useTheme();
   const educationData = [
     // {
     //   degree: "Master of Science in Computer Science & Technology",
@@ -73,13 +75,13 @@ const AcademicBackground = () => {
     <section className="space-y-6">
       {/* Section Header */}
       <div className="text-center p-2 sm:px-8 lg:px-12">
-        <h1 className="relative inline-block text-3xl sm:text-4xl md:text-4xl font-extrabold tracking-tight text-gray-200">
+        <h1 className={`relative inline-block text-3xl sm:text-4xl md:text-4xl font-extrabold tracking-tight ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
           Academic Background
         </h1>
-        <p className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed text-gray-300">
+        <p className={`max-w-2xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
           My academic journey and qualifications
         </p>
-        <span className="block h-1 w-16 mx-auto mt-3 rounded-full bg-blue-400"></span>
+        <span className={`block h-1 w-16 mx-auto mt-3 rounded-full bg-blue-400`}></span>
       </div>
 
       {/* Education Entries */}
@@ -87,35 +89,34 @@ const AcademicBackground = () => {
         {educationData.map((edu, idx) => (
           <div
             key={idx}
-            className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm"
+            className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} p-4 lg:p-6 shadow-sm`}
           >
             <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
               {/* Institution Logo */}
               <div className="flex-shrink-0">
+                <div className={`w-20 h-20 ${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-200'} rounded-xl overflow-hidden`}>
                   <Image
                     src={edu.logo}
                     alt={edu.institution}
                     width={80}
                     height={80}
-                    className="w-20 h-20 object-cover rounded-xl"
+                    className="w-full h-full object-cover"
                     onError={(e) => {
                       e.currentTarget.src = "/images/sakib-rahman.jpg";
                     }}
                   />
-    
-    
-                  
                 </div>
+              </div>
 
               {/* Degree & Institution Info */}
               <div className="flex flex-col items-start flex-1">
-                <h3 className="text-xl sm:text-2xl font-bold text-gray-200">{edu.degree}</h3>
+                <h3 className={`text-xl sm:text-2xl font-bold ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>{edu.degree}</h3>
                 <div className="flex flex-col sm:flex-row sm:space-x-4 items-start text-center lg:text-left mt-1">
                   <a
                     href={edu.institutionLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center font-medium text-gray-300 hover:underline"
+                    className={`flex items-center font-medium ${theme === 'dark' ? 'text-gray-300 hover:text-gray-100' : 'text-gray-600 hover:text-gray-800'} hover:underline`}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -147,7 +148,7 @@ const AcademicBackground = () => {
                     href={edu.locationLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center font-medium text-gray-300 hover:underline"
+                    className={`flex items-center font-medium ${theme === 'dark' ? 'text-gray-300 hover:text-gray-100' : 'text-gray-600 hover:text-gray-800'} hover:underline`}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -167,7 +168,7 @@ const AcademicBackground = () => {
                     {edu.location}
                   </a>
                 </div>
-                <div className="flex items-center font-medium text-gray-200 mt-1">
+                <div className={`flex items-center font-medium ${theme === 'dark' ? 'text-gray-200' : 'text-gray-700'} mt-1`}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -190,7 +191,7 @@ const AcademicBackground = () => {
 
                 {/* GPA Tag - mobile */}
                 <div className="flex flex-wrap gap-2 justify-center lg:hidden mt-2">
-                  <div className="py-0.5 px-3 text-sm font-medium border backdrop-blur-sm rounded-full bg-blue-500/20 text-blue-400 border-blue-500/50">
+                  <div className={`py-0.5 px-3 text-sm font-medium border backdrop-blur-sm rounded-full ${theme === 'dark' ? 'bg-blue-500/20 text-blue-400 border-blue-500/50' : 'bg-blue-500/30 text-blue-500 border-blue-500/60'}`}>
                     CGPA: {edu.gpa}
                   </div>
                 </div>
@@ -198,21 +199,21 @@ const AcademicBackground = () => {
 
               {/* GPA Tag - desktop */}
               <div className="hidden lg:flex flex-wrap gap-2 justify-end mt-0">
-                <div className="py-0.5 px-3 text-sm font-medium border backdrop-blur-sm rounded-full bg-blue-500/20 text-blue-400 border-blue-500/50">
+                <div className={`py-0.5 px-3 text-sm font-medium border backdrop-blur-sm rounded-full ${theme === 'dark' ? 'bg-blue-500/20 text-blue-400 border-blue-500/50' : 'bg-blue-500/30 text-blue-500 border-blue-500/60'}`}>
                   CGPA: {edu.gpa}
                 </div>
               </div>
             </div>
 
-            <p className="mt-4 mb-4 text-sm sm:text-base text-gray-200">{edu.description}</p>
+            <p className={`mt-4 mb-4 text-sm sm:text-base ${theme === 'dark' ? 'text-gray-200' : 'text-gray-700'}`}>{edu.description}</p>
 
             {/* Courses & Honors */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h4 className="text-lg font-semibold mb-4 text-gray-200">Key Courses</h4>
+                <h4 className={`text-lg font-semibold mb-4 ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>Key Courses</h4>
                 <ul className="space-y-1">
                   {edu.courses.map((course, i) => (
-                    <li key={i} className="flex items-start text-gray-300">
+                    <li key={i} className={`flex items-start ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -223,7 +224,7 @@ const AcademicBackground = () => {
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        className="lucide lucide-chevron-right w-4 h-4 mr-2 mt-1 text-blue-400 flex-shrink-0"
+                        className={`lucide lucide-chevron-right w-4 h-4 mr-2 mt-1 ${theme === 'dark' ? 'text-blue-400' : 'text-blue-600'} flex-shrink-0`}
                       >
                         <path d="m9 18 6-6-6-6"></path>
                       </svg>
@@ -233,10 +234,10 @@ const AcademicBackground = () => {
                 </ul>
               </div>
               <div>
-                <h4 className="text-lg font-semibold mb-4 text-gray-200">Honors & Recognition</h4>
+                <h4 className={`text-lg font-semibold mb-4 ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>Honors & Recognition</h4>
                 <ul className="space-y-1">
                   {edu.honors.map((honor, i) => (
-                    <li key={i} className="flex items-start text-gray-300">
+                    <li key={i} className={`flex items-start ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -247,7 +248,7 @@ const AcademicBackground = () => {
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        className="lucide lucide-star w-4 h-4 mr-2 mt-1 text-yellow-400 flex-shrink-0"
+                        className={`lucide lucide-star w-4 h-4 mr-2 mt-1 ${theme === 'dark' ? 'text-yellow-400' : 'text-yellow-500'} flex-shrink-0`}
                       >
                         <path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"></path>
                       </svg>

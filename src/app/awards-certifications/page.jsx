@@ -1,8 +1,10 @@
 // app/components/AwardsCertifications.jsx
 'use client';
 import React from 'react';
+import { useTheme } from '@/context/ThemeContext';
 
 const AwardsCertifications = () => {
+  const { theme } = useTheme();
   const awardsData = [
     {
       title: "MIT Solve Award",
@@ -10,7 +12,7 @@ const AwardsCertifications = () => {
       year: "2020",
       event: "Youth Employment",
       description:
-        "The Shujog app, winner of the MIT Solve Innovation for Women Prize 2020, connects unemployed youth in Bangladesh to online work opportunities while promoting women’s participation in the workforce. Recognized by the Vodafone Americas Foundation, the app addresses critical challenges such as youth unemployment and low female workforce participation in rural areas. The award provided access to MIT Solve’s global network, mentorship, and resources, enabling the expansion of digital job opportunities for women and young people through technology. MIT Solve, an initiative of the Massachusetts Institute of Technology (MIT), supports tech-based social innovations tackling global challenges by providing funding, mentorship, and a nine-month program to help innovators scale their impact. Solve Link: https://solve.mit.edu/solutions/24075"
+        "The Shujog app, winner of the MIT Solve Innovation for Women Prize 2020, connects unemployed youth in Bangladesh to online work opportunities while promoting women's participation in the workforce. Recognized by the Vodafone Americas Foundation, the app addresses critical challenges such as youth unemployment and low female workforce participation in rural areas. The award provided access to MIT Solve's global network, mentorship, and resources, enabling the expansion of digital job opportunities for women and young people through technology. MIT Solve, an initiative of the Massachusetts Institute of Technology (MIT), supports tech-based social innovations tackling global challenges by providing funding, mentorship, and a nine-month program to help innovators scale their impact. Solve Link: https://solve.mit.edu/solutions/24075"
     },
     {
       title: "HCI Prototyping Contest – 2nd Place",
@@ -50,7 +52,7 @@ const AwardsCertifications = () => {
       year: "2016",
       event: "Competitive Programming",
       description:
-        "Participated in the ACM National Collegiate Programming Contest (NCPC) 2016, representing the American International University-Bangladesh (AIUB) in one of the country’s most prestigious collegiate programming competitions. Engaged in team-based, real-time problem-solving challenges that tested advanced algorithms, data structures, and computational thinking under strict time constraints. This experience enhanced technical proficiency, teamwork, and strategic problem-solving skills, while providing exposure to high-level competitive programming at a national scale."
+        "Participated in the ACM National Collegiate Programming Contest (NCPC) 2016, representing the American International University-Bangladesh (AIUB) in one of the country's most prestigious collegiate programming competitions. Engaged in team-based, real-time problem-solving challenges that tested advanced algorithms, data structures, and computational thinking under strict time constraints. This experience enhanced technical proficiency, teamwork, and strategic problem-solving skills, while providing exposure to high-level competitive programming at a national scale."
     },
     {
       title: "AIUB Intra-University Programming Contest – 3rd Place",
@@ -74,10 +76,10 @@ const AwardsCertifications = () => {
     <section className="space-y-6">
       {/* Header */}
       <div className="text-center p-2 sm:px-8 lg:px-12">
-        <h1 className="relative inline-block text-3xl sm:text-4xl md:text-4xl font-extrabold tracking-tight text-gray-200">
+        <h1 className={`relative inline-block text-3xl sm:text-4xl md:text-4xl font-extrabold tracking-tight ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
           Awards & Certifications
         </h1>
-        <p className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed text-gray-300">
+        <p className={`max-w-2xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
           Recognition for excellence in technology & innovation
         </p>
         <span className="block h-1 w-16 mx-auto mt-3 rounded-full bg-blue-400"></span>
@@ -88,24 +90,24 @@ const AwardsCertifications = () => {
         {awardsData.map((award, index) => (
           <div
             key={index}
-            className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm h-full"
+            className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300/50'} p-4 lg:p-6 shadow-sm h-full`}
             style={{ opacity: 1, transform: 'none' }}
           >
             <div className="flex-1">
-              <h3 className="text-xl lg:text-2xl font-bold text-gray-200">{award.title}</h3>
+              <h3 className={`text-xl lg:text-2xl font-bold ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>{award.title}</h3>
               <div className="flex flex-col mb-2">
-                <div className="flex items-center text-base lg:text-lg text-amber-200">
+                <div className={`flex items-center text-base lg:text-lg ${theme === 'dark' ? 'text-amber-200' : 'text-amber-600'}`}>
                   {award.issuer}
                 </div>
               </div>
-              <p className="text-sm lg:text-base mb-4 text-gray-300">{award.description}</p>
+              <p className={`text-sm lg:text-base mb-4 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>{award.description}</p>
               <div className="flex justify-between items-center flex-wrap gap-1 mt-auto">
-                <div className="font-medium text-gray-300">
+                <div className={`${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                   <div className="flex space-x-2">
-                    <div className="px-2.5 py-0.5 w-fit flex items-center text-xs lg:text-sm font-bold border backdrop-blur-sm rounded-full shadow-sm bg-indigo-500/20 text-indigo-300 border-indigo-400/40">
+                    <div className={`px-2.5 py-0.5 w-fit flex items-center text-xs lg:text-sm font-bold border backdrop-blur-sm rounded-full shadow-sm ${theme === 'dark' ? 'bg-indigo-500/20 text-indigo-300 border-indigo-400/40' : 'bg-indigo-500/30 text-indigo-700 border-indigo-500/40'}`}>
                       {award.year}
                     </div>
-                    <div className="px-2.5 py-0.5 w-fit flex items-center text-xs lg:text-sm font-bold border backdrop-blur-sm rounded-full shadow-sm bg-purple-500/20 text-purple-300 border-purple-400/40">
+                    <div className={`px-2.5 py-0.5 w-fit flex items-center text-xs lg:text-sm font-bold border backdrop-blur-sm rounded-full shadow-sm ${theme === 'dark' ? 'bg-purple-500/20 text-purple-300 border-purple-400/40' : 'bg-purple-500/30 text-purple-700 border-purple-500/40'}`}>
                       {award.event}
                     </div>
                   </div>

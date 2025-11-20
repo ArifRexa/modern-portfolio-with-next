@@ -2,8 +2,10 @@
 'use client';
 import React, { useState } from 'react';
 import supabase from '@/utils/supabaseClient'; // Import the centralized Supabase client
+import { useTheme } from '@/context/ThemeContext';
 
 const QuickActions = () => {
+  const { theme } = useTheme();
   const [isDownloading, setIsDownloading] = useState(false);
 
   const handleDownloadCV = async () => {
@@ -73,7 +75,7 @@ const QuickActions = () => {
     <div className="grid grid-cols-2 md:grid-cols-4 gap-2 lg:gap-4">
 
       {/* ✅ Download CV */}
-      <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm text-center h-full">
+      <div className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} p-4 lg:p-6 shadow-sm text-center h-full`}>
         <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center mx-auto mb-2">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
             strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
@@ -85,8 +87,8 @@ const QuickActions = () => {
             <path d="M16 17H8" />
           </svg>
         </div>
-        <h3 className="text-lg font-bold text-gray-200">Download CV</h3>
-        <p className="text-sm mb-4 text-gray-400">Get my resume in PDF format</p>
+        <h3 className={`text-lg font-bold ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>Download CV</h3>
+        <p className={`text-sm mb-4 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Get my resume in PDF format</p>
 
         <button
           onClick={handleDownloadCV}
@@ -102,7 +104,7 @@ const QuickActions = () => {
       </div>
 
       {/* GitHub Profile */}
-      <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm text-center h-full">
+      <div className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} p-4 lg:p-6 shadow-sm text-center h-full`}>
         <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-teal-600 rounded-xl flex items-center justify-center mx-auto mb-2">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
             strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
@@ -111,17 +113,17 @@ const QuickActions = () => {
             <path d="M9 18c-4.51 2-5-2-7-2" />
           </svg>
         </div>
-        <h3 className="text-lg font-bold text-gray-200">GitHub Profile</h3>
-        <p className="text-sm mb-4 text-gray-400">Explore my projects & contributions</p>
+        <h3 className={`text-lg font-bold ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>GitHub Profile</h3>
+        <p className={`text-sm mb-4 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Explore my projects & contributions</p>
         <a target="_blank" href="https://github.com/arifrexa" rel="noopener noreferrer">
-          <button className="h-10 px-4 py-2 w-full bg-green-500/20 hover:bg-green-500/30 text-green-400 border-green-500/50 border rounded-md">
+          <button className={`h-10 px-4 py-2 w-full ${theme === 'dark' ? 'bg-green-500/20 hover:bg-green-500/30 text-green-400 border-green-500/50' : 'bg-green-500/20 hover:bg-green-500/30 text-green-400 border-green-500/40'} border rounded-md`}>
             View GitHub
           </button>
         </a>
       </div>
 
       {/* LinkedIn */}
-      <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm text-center h-full">
+      <div className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} p-4 lg:p-6 shadow-sm text-center h-full`}>
         <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-2">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
             strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
@@ -131,17 +133,17 @@ const QuickActions = () => {
             <circle cx="4" cy="4" r="2" />
           </svg>
         </div>
-        <h3 className="text-lg font-bold text-gray-200">LinkedIn</h3>
-        <p className="text-sm mb-4 text-gray-400">Connect & grow our network together</p>
+        <h3 className={`text-lg font-bold ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>LinkedIn</h3>
+        <p className={`text-sm mb-4 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Connect & grow our network together</p>
         <a target="_blank" href="https://www.linkedin.com/in/md-arif-rexa/" rel="noopener noreferrer">
-          <button className="h-10 px-4 py-2 w-full bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border-blue-500/50 border rounded-md">
+          <button className={`h-10 px-4 py-2 w-full ${theme === 'dark' ? 'bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border-blue-500/50' : 'bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border-blue-500/40'} border rounded-md`}>
             View LinkedIn
           </button>
         </a>
       </div>
 
       {/* Submit Feedback */}
-      <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm text-center h-full">
+      <div className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} p-4 lg:p-6 shadow-sm text-center h-full`}>
         <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center mx-auto mb-2">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
             strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
@@ -149,10 +151,10 @@ const QuickActions = () => {
             <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
           </svg>
         </div>
-        <h3 className="text-lg font-bold text-gray-200">Submit Feedback</h3>
-        <p className="text-sm mb-4 text-gray-400">Share your feedback about me</p>
+        <h3 className={`text-lg font-bold ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>Submit Feedback</h3>
+        <p className={`text-sm mb-4 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Share your feedback about me</p>
         <a href="/submit-testimonial">
-          <button className="h-10 px-4 py-2 w-full bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 border-purple-500/50 border rounded-md">
+          <button className={`h-10 px-4 py-2 w-full ${theme === 'dark' ? 'bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 border-purple-500/50' : 'bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 border-purple-500/40'} border rounded-md`}>
             Submit Testimonial
           </button>
         </a>

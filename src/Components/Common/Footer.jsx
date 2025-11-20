@@ -1,18 +1,20 @@
 'use client';
 
 import Link from "next/link";
+import { useTheme } from '../../context/ThemeContext';
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
+    const { theme } = useTheme();
 
     return (
-        <footer className="py-12 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 mt-16">
+        <footer className={`py-12 ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'} ${theme === 'dark' ? 'border-gray-800' : 'border-gray-200'} border-t mt-16 rounded-xl`}>
             <div className="container mx-auto px-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {/* Brand Info */}
                     <div className="flex flex-col">
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Ariful Islam</h3>
-                        <p className="text-gray-600 dark:text-gray-400 mb-4">
+                        <h3 className={`text-xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'} mb-4`}>Ariful Islam</h3>
+                        <p className={`text-gray-600 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'} mb-4`}>
                             Full Stack Developer passionate about creating beautiful and functional web experiences.
                         </p>
                         <div className="flex space-x-4">
@@ -20,7 +22,7 @@ const Footer = () => {
                                 href="https://github.com/arifrexa"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-gray-500 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors duration-300"
+                                className={`${theme === 'dark' ? 'text-gray-400 hover:text-indigo-400' : 'text-gray-500 hover:text-indigo-600'} transition-colors duration-300`}
                                 aria-label="GitHub"
                             >
                                 <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -31,7 +33,7 @@ const Footer = () => {
                                 href="https://linkedin.com/in/md-arif-rexa"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-gray-500 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors duration-300"
+                                className={`${theme === 'dark' ? 'text-gray-400 hover:text-indigo-400' : 'text-gray-500 hover:text-indigo-600'} transition-colors duration-300`}
                                 aria-label="LinkedIn"
                             >
                                 <svg className="w-6 h-6 mt-1" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -40,7 +42,7 @@ const Footer = () => {
                             </a>
                             <a
                                 href="mailto:arif.reza3126@gmail.com"
-                                className="text-gray-500 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors duration-300"
+                                className={`${theme === 'dark' ? 'text-gray-400 hover:text-indigo-400' : 'text-gray-500 hover:text-indigo-600'} transition-colors duration-300`}
                                 aria-label="Email"
                             >
                                 <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -52,36 +54,36 @@ const Footer = () => {
 
                     {/* Quick Links */}
                     <div className="flex flex-col">
-                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Links</h4>
+                        <h4 className={`text-lg font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'} mb-4`}>Quick Links</h4>
                         <ul className="space-y-2">
                             <li>
-                                <Link 
-                                    href="/" 
-                                    className="text-gray-600 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors duration-300"
+                                <Link
+                                    href="/"
+                                    className={`${theme === 'dark' ? 'text-gray-400 hover:text-indigo-400' : 'text-gray-600 hover:text-indigo-600'} transition-colors duration-300`}
                                 >
                                     Home
                                 </Link>
                             </li>
                             <li>
-                                <Link 
-                                    href="/about" 
-                                    className="text-gray-600 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors duration-300"
+                                <Link
+                                    href="/about"
+                                    className={`${theme === 'dark' ? 'text-gray-400 hover:text-indigo-400' : 'text-gray-600 hover:text-indigo-600'} transition-colors duration-300`}
                                 >
                                     About
                                 </Link>
                             </li>
                             <li>
                                 <Link
-                                    href="/projects" 
-                                    className="text-gray-600 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors duration-300"
+                                    href="/projects"
+                                    className={`${theme === 'dark' ? 'text-gray-400 hover:text-indigo-400' : 'text-gray-600 hover:text-indigo-600'} transition-colors duration-300`}
                                 >
                                     Projects
                                 </Link>
                             </li>
                             <li>
-                                <Link 
-                                    href="/contact" 
-                                    className="text-gray-600 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors duration-300"
+                                <Link
+                                    href="/contact"
+                                    className={`${theme === 'dark' ? 'text-gray-400 hover:text-indigo-400' : 'text-gray-600 hover:text-indigo-600'} transition-colors duration-300`}
                                 >
                                     Contact
                                 </Link>
@@ -91,23 +93,23 @@ const Footer = () => {
 
                     {/* Contact Info */}
                     <div className="flex flex-col">
-                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Contact</h4>
+                        <h4 className={`text-lg font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'} mb-4`}>Contact</h4>
                         <ul className="space-y-2">
-                            <li className="text-gray-600 dark:text-gray-400">
+                            <li className={`${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
                                 Location: Pallabi, Mirpur, Dhaka Bangladesh.
                             </li>
                             <li>
-                                <a 
-                                    href="mailto:ariful.islam.arifrexa@gmail.com" 
-                                    className="text-gray-600 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors duration-300"
+                                <a
+                                    href="mailto:ariful.islam.arifrexa@gmail.com"
+                                    className={`${theme === 'dark' ? 'text-gray-400 hover:text-indigo-400' : 'text-gray-600 hover:text-indigo-600'} transition-colors duration-300`}
                                 >
                                     Email: arif.reza3126@gmail.com
                                 </a>
                             </li>
                             <li>
-                                <a 
-                                    href="tel:+8801712345678" 
-                                    className="text-gray-600 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors duration-300"
+                                <a
+                                    href="tel:+8801712345678"
+                                    className={`${theme === 'dark' ? 'text-gray-400 hover:text-indigo-400' : 'text-gray-600 hover:text-indigo-600'} transition-colors duration-300`}
                                 >
                                     Phone: +880 1677243126
                                 </a>
@@ -117,11 +119,11 @@ const Footer = () => {
                 </div>
 
                 {/* Bottom Section */}
-                <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col md:flex-row justify-between items-center">
-                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 md:mb-0">
+                <div className={`mt-12 pt-8 ${theme === 'dark' ? 'border-gray-800' : 'border-gray-200'} border-t flex flex-col md:flex-row justify-between items-center`}>
+                    <p className={`text-gray-600 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'} text-sm mb-4 md:mb-0`}>
                         © {currentYear} Ariful Islam. All rights reserved.
                     </p>
-                    <p className="text-gray-600 dark:text-gray-400 text-sm">
+                    <p className={`text-gray-600 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'} text-sm`}>
                         Built with Next.js, Tailwind CSS, and ❤️
                     </p>
                 </div>

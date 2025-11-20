@@ -4,8 +4,11 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import supabase from '@/utils/supabaseClient';
+import avatarPlaceholder from '../../../public/images/avatar-image.png';
+import { useTheme } from '@/context/ThemeContext';
 
 const Testimonials = () => {
+  const { theme } = useTheme();
   const testimonialsData = [
     {
       name: "Rashedul Islam",
@@ -80,15 +83,15 @@ const Testimonials = () => {
   }
 
   return (
-    <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm">
+    <div className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} p-4 lg:p-6 shadow-sm`}>
       <div className="flex items-center justify-between">
-        <h3 className="text-2xl lg:text-2xl font-bold tracking-tight text-gray-200">
+        <h3 className={`text-2xl lg:text-2xl font-bold tracking-tight ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
           What People Say
         </h3>
         <div className="flex items-center space-x-2">
           <button
             onClick={prev}
-            className="w-8 h-8 rounded-lg flex items-center justify-center transition-all bg-gray-700/50 hover:bg-gray-600/50 text-gray-300"
+            className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-gray-700/50 hover:bg-gray-600/50 text-gray-300' : 'bg-gray-300 hover:bg-gray-400 text-gray-700'}`}
             aria-label="Previous page"
           >
             <svg
@@ -108,7 +111,7 @@ const Testimonials = () => {
           </button>
           <button
             onClick={next}
-            className="w-8 h-8 rounded-lg flex items-center justify-center transition-all bg-gray-700/50 hover:bg-gray-600/50 text-gray-300"
+            className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-gray-700/50 hover:bg-gray-600/50 text-gray-300' : 'bg-gray-300 hover:bg-gray-400 text-gray-700'}`}
             aria-label="Next page"
           >
             <svg
@@ -142,26 +145,32 @@ const Testimonials = () => {
               {currentTestimonials.map((testimonial, idx) => (
                 <div key={startIndex + idx}>
                   {testimonial ? (
-                    <div className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700/40 rounded-xl p-4 lg:p-4 shadow-md backdrop-blur-md min-h-56 h-full cursor-pointer transition-transform hover:scale-[1.01] hover:shadow-md duration-300 ease-in-out">
+                    <div className={`bg-gradient-to-br ${theme === 'dark' ? 'from-gray-800 to-gray-900 border-gray-700/40' : 'from-gray-200 to-gray-50 border-gray-300'} rounded-xl p-4 lg:p-4 shadow-md backdrop-blur-md min-h-56 h-full cursor-pointer transition-transform hover:scale-[1.01] hover:shadow-md duration-300 ease-in-out`}>
                       <div className="flex items-center space-x-4 mb-4 relative z-10">
-                        <img
-                          src={testimonial.avatar}
-                          onError={(e) => {
-                            e.currentTarget.src = "/placeholder-avatar.png";
-                          }}
+                        <Image
+                          src={testimonial.avatar || avatarPlaceholder}
                           alt={testimonial.name}
+                          width={48}
+                          height={48}
+                          unoptimized
+                          onError={(e) => {
+                            // fallback to local placeholder image
+                            // avatarPlaceholder is imported StaticImageData, use its src if available
+                            // @ts-ignore
+                            e.currentTarget.src = (avatarPlaceholder && avatarPlaceholder.src) ? avatarPlaceholder.src : String(avatarPlaceholder);
+                          }}
                           className="w-12 h-12 rounded-full object-cover ring-2 ring-yellow-400/70 shadow-md"
                         />
                         <div className="flex-1 min-w-0">
-                          <h4 className="font-semibold text-lg truncate text-gray-200">
+                          <h4 className={`font-semibold text-lg truncate ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
                             {testimonial.name}
                           </h4>
-                          <p className="text-sm truncate text-gray-300">
+                          <p className={`text-sm truncate ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                             {testimonial.role}
                           </p>
                         </div>
                       </div>
-                      <p className="text-sm mb-3 line-clamp-5 leading-relaxed text-gray-200">
+                      <p className={`text-sm mb-3 line-clamp-5 leading-relaxed ${theme === 'dark' ? 'text-gray-200' : 'text-gray-600'}`}>
                         {testimonial.content}
                       </p>
                     </div>

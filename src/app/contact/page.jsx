@@ -2,8 +2,10 @@
 'use client';
 import React, { useState } from 'react';
 import supabase from '@/utils/supabaseClient'; // Adjust path if necessary
+import { useTheme } from '@/context/ThemeContext';
 
 const Contact = () => {
+  const { theme } = useTheme();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -63,10 +65,10 @@ const Contact = () => {
     <section className="space-y-6">
       {/* Header */}
       <div className="text-center p-2 sm:px-8 lg:px-12">
-        <h1 className="relative inline-block text-3xl sm:text-4xl md:text-4xl font-extrabold tracking-tight text-gray-200">
+        <h1 className={`relative inline-block text-3xl sm:text-4xl md:text-4xl font-extrabold tracking-tight ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
           Get in Touch
         </h1>
-        <p className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed text-gray-300">
+        <p className={`max-w-2xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
           Let&apos;s discuss opportunities and collaborations
         </p>
         <span className="block h-1 w-16 mx-auto mt-3 rounded-full bg-blue-400"></span>
@@ -74,9 +76,9 @@ const Contact = () => {
 
       <div className="grid lg:grid-cols-2 gap-4">
         {/* Contact Info */}
-        <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm h-full">
+        <div className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} p-4 lg:p-6 shadow-sm h-full`}>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-2xl font-bold tracking-tight text-gray-200">Contact Information</h3>
+            <h3 className={`text-2xl font-bold tracking-tight ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>Contact Information</h3>
           </div>
 
           <div className="space-y-4">
@@ -88,8 +90,8 @@ const Contact = () => {
                 </svg>
               </div>
               <div>
-                <h4 className="font-semibold text-white">Email</h4>
-                <p className="text-gray-300">arif.reza3126@gmail.com</p>
+                <h4 className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Email</h4>
+                <p className={`${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>arif.reza3126@gmail.com</p>
               </div>
             </div>
 
@@ -101,8 +103,8 @@ const Contact = () => {
                 </svg>
               </div>
               <div>
-                <h4 className="font-semibold text-white">GitHub</h4>
-                <p className="text-gray-300">github.com/arifrexa</p>
+                <h4 className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>GitHub</h4>
+                <p className={`${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>github.com/arifrexa</p>
               </div>
             </div>
 
@@ -114,8 +116,8 @@ const Contact = () => {
                 </svg>
               </div>
               <div>
-                <h4 className="font-semibold text-white">Location</h4>
-                <p className="text-gray-300">Dhaka, Bangladesh</p>
+                <h4 className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Location</h4>
+                <p className={`${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Dhaka, Bangladesh</p>
               </div>
             </div>
 
@@ -127,17 +129,17 @@ const Contact = () => {
                 </svg>
               </div>
               <div>
-                <h4 className="font-semibold text-white">Availability</h4>
-                <p className="text-gray-300">Open to opportunities</p>
+                <h4 className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Availability</h4>
+                <p className={`${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Open to opportunities</p>
               </div>
             </div>
           </div>
 
           {/* Quick Actions */}
-          <div className="mt-8 pt-8 border-t border-gray-700/50">
-            <h3 className="text-2xl font-bold tracking-tight text-gray-200 mb-4">Quick Actions</h3>
+          <div className={`mt-8 pt-8 ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} border-t`}>
+            <h3 className={`text-2xl font-bold tracking-tight ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'} mb-4`}>Quick Actions</h3>
             <div className="grid grid-cols-2 gap-2">
-              <button className="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium h-10 px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border-blue-500/50 border transition-colors">
+              <button className={`inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium h-10 px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border-blue-500/50 border transition-colors`}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-file-text w-4 h-4">
                   <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
                   <path d="M14 2v4a2 2 0 0 0 2 2h4" />
@@ -165,64 +167,64 @@ const Contact = () => {
         </div>
 
         {/* Contact Form */}
-        <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm h-full">
+        <div className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} p-4 lg:p-6 shadow-sm h-full`}>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-2xl font-bold tracking-tight text-gray-200">Send a Message</h3>
+            <h3 className={`text-2xl font-bold tracking-tight ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>Send a Message</h3>
           </div>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-2 text-white">Name</label>
+              <label className={`block text-sm font-medium mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Name</label>
               <input
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-lg border bg-gray-800/30 border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm"
+                className={`w-full px-4 py-3 rounded-lg border ${theme === 'dark' ? 'bg-gray-800/30 border-gray-700/50 text-white placeholder-gray-400' : 'bg-gray-200/30 border-gray-300 text-gray-800 placeholder-gray-600'} focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm`}
                 placeholder="Your full name"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2 text-white">Email</label>
+              <label className={`block text-sm font-medium mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Email</label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-lg border bg-gray-800/30 border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm"
+                className={`w-full px-4 py-3 rounded-lg border ${theme === 'dark' ? 'bg-gray-800/30 border-gray-700/50 text-white placeholder-gray-400' : 'bg-gray-200/30 border-gray-300 text-gray-800 placeholder-gray-600'} focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm`}
                 placeholder="your.email@example.com"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2 text-white">Subject</label>
+              <label className={`block text-sm font-medium mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Subject</label>
               <input
                 type="text"
                 name="subject"
                 value={formData.subject}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-lg border bg-gray-800/30 border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm"
+                className={`w-full px-4 py-3 rounded-lg border ${theme === 'dark' ? 'bg-gray-800/30 border-gray-700/50 text-white placeholder-gray-400' : 'bg-gray-200/30 border-gray-300 text-gray-800 placeholder-gray-600'} focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm`}
                 placeholder="What's this about?"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2 text-white">Message</label>
+              <label className={`block text-sm font-medium mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Message</label>
               <textarea
                 name="message"
                 value={formData.message}
                 onChange={handleChange}
                 rows="6"
-                className="w-full px-4 py-3 rounded-lg border bg-gray-800/30 border-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm resize-none"
+                className={`w-full px-4 py-3 rounded-lg border ${theme === 'dark' ? 'bg-gray-800/30 border-gray-700/50 text-white placeholder-gray-400' : 'bg-gray-200/30 border-gray-300 text-gray-800 placeholder-gray-600'} focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm resize-none`}
                 placeholder="Tell me about your project or opportunity..."
                 required
               />
             </div>
             {submitStatus === 'success' && (
-              <p className="text-green-400 text-sm">Message sent successfully!</p>
+              <p className={`text-green-400 text-sm ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`}>Message sent successfully!</p>
             )}
             {submitStatus === 'error' && (
-              <p className="text-red-400 text-sm">Failed to send. Please try again.</p>
+              <p className={`text-red-400 text-sm ${theme === 'dark' ? 'text-red-400' : 'text-red-600'}`}>Failed to send. Please try again.</p>
             )}
             <button
               type="submit"
@@ -239,14 +241,14 @@ const Contact = () => {
       </div>
 
       {/* Social Links */}
-      <div className="bg-gray-900 backdrop-blur-md rounded-xl border border-gray-700/50 p-4 lg:p-6 shadow-sm">
-        <h3 className="text-3xl font-bold text-center text-gray-200 mb-4">Connect With Me</h3>
+      <div className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} p-4 lg:p-6 shadow-sm`}>
+        <h3 className={`text-3xl font-bold text-center ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'} mb-4`}>Connect With Me</h3>
         <div className="flex justify-center gap-4">
           <a
             href="https://github.com/arifrexa      "
             target="_blank"
             rel="noopener noreferrer"
-            className="group cursor-pointer rounded-xl p-4 transition-all transform hover:-translate-y-1 bg-gray-800/40 hover:bg-gray-800/70 shadow-md hover:shadow-xl"
+            className={`group cursor-pointer rounded-xl p-4 transition-all transform hover:-translate-y-1 ${theme === 'dark' ? 'bg-gray-800/40 hover:bg-gray-800/70' : 'bg-gray-200/40 hover:bg-gray-300/70'} shadow-md hover:shadow-xl`}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-github w-10 h-10 transition-transform duration-300 group-hover:scale-110 text-white">
               <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
@@ -255,7 +257,7 @@ const Contact = () => {
           </a>
           <a
             href="mailto:arif.reza3126@gmail.com"
-            className="group cursor-pointer rounded-xl p-4 transition-all transform hover:-translate-y-1 bg-gray-800/40 hover:bg-gray-800/70 shadow-md hover:shadow-xl"
+            className={`group cursor-pointer rounded-xl p-4 transition-all transform hover:-translate-y-1 ${theme === 'dark' ? 'bg-gray-800/40 hover:bg-gray-800/70' : 'bg-gray-200/40 hover:bg-gray-300/70'} shadow-md hover:shadow-xl`}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-mail w-10 h-10 transition-transform duration-300 group-hover:scale-110 text-white">
               <rect width="20" height="16" x="2" y="4" rx="2" />
@@ -266,7 +268,7 @@ const Contact = () => {
             href="https://www.linkedin.com/in/md-arif-rexa      "
             target="_blank"
             rel="noopener noreferrer"
-            className="group cursor-pointer rounded-xl p-4 transition-all transform hover:-translate-y-1 bg-gray-800/40 hover:bg-gray-800/70 shadow-md hover:shadow-xl"
+            className={`group cursor-pointer rounded-xl p-4 transition-all transform hover:-translate-y-1 ${theme === 'dark' ? 'bg-gray-800/40 hover:bg-gray-800/70' : 'bg-gray-200/40 hover:bg-gray-300/70'} shadow-md hover:shadow-xl`}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-linkedin w-10 h-10 transition-transform duration-300 group-hover:scale-110 text-white">
               <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />

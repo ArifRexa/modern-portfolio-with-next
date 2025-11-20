@@ -1,6 +1,7 @@
 'use client';
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useInView } from 'framer-motion';
+import { useTheme } from '@/context/ThemeContext';
 
 const container = {
   hidden: { opacity: 0 },
@@ -18,6 +19,7 @@ const item = {
 };
 
 const TerminalWindow = () => {
+    const { theme } = useTheme();
     const ref = useRef(null);
     const terminalRef = useRef(null);
     const isInView = useInView(ref, { once: true, margin: "-50px" });
@@ -28,8 +30,8 @@ const TerminalWindow = () => {
     const [username, setUsername] = useState('Ariful Islam');
     const [showCursor, setShowCursor] = useState(true);
     const hasRun = useRef(false); // Ref to track if the simulation has already run
-    
-    
+
+
     // Initialize demo sequence and simulate typing inside the effect to avoid changing deps
     useEffect(() => {
         // In StrictMode, this effect runs twice, but we use ref to prevent double execution
@@ -132,29 +134,29 @@ const TerminalWindow = () => {
     }, [commandHistory]);
 
     return (
-        <motion.div 
+        <motion.div
           ref={ref}
           initial="hidden"
           animate={isInView ? "show" : "hidden"}
           variants={container}
-          className="w-full mx-auto bg-gray-900 border-gray-700/50 backdrop-blur-md rounded-xl border overflow-hidden shadow-sm"
+          className={`w-full mx-auto ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} backdrop-blur-md rounded-xl border overflow-hidden shadow-sm`}
         >
-            <motion.div className="bg-gray-800/30 border-gray-700/50 px-4 py-3 flex items-center justify-between border-b" variants={item}>
+            <motion.div className={`${theme === 'dark' ? 'bg-gray-800/30' : 'bg-gray-200/30'} ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} px-4 py-3 flex items-center justify-between border-b`} variants={item}>
                 <div className="flex items-center space-x-2">
-                    <motion.div 
-                      className="w-3 h-3 bg-red-500 rounded-full" 
+                    <motion.div
+                      className="w-3 h-3 bg-red-500 rounded-full"
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       transition={{ duration: 0.2, delay: 0.1 }}
                     ></motion.div>
-                    <motion.div 
-                      className="w-3 h-3 bg-yellow-500 rounded-full" 
+                    <motion.div
+                      className="w-3 h-3 bg-yellow-500 rounded-full"
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       transition={{ duration: 0.2, delay: 0.2 }}
                     ></motion.div>
-                    <motion.div 
-                      className="w-3 h-3 bg-green-500 rounded-full" 
+                    <motion.div
+                      className="w-3 h-3 bg-green-500 rounded-full"
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       transition={{ duration: 0.2, delay: 0.3 }}
@@ -169,7 +171,7 @@ const TerminalWindow = () => {
             <motion.div className="p-4 lg:p-6" variants={item}>
                 <motion.div
                     ref={terminalRef}
-                    className="font-mono text-xs md:text-sm leading-relaxed h-130 md:h-120 mb-4 w-full overflow-y-auto border rounded-md px-4 py-4 text-green-400 bg-black/30 border-gray-700/50"
+                    className={`font-mono text-xs md:text-sm leading-relaxed h-130 md:h-120 mb-4 w-full overflow-y-auto border rounded-md px-4 py-4 text-green-400 ${theme === 'dark' ? 'bg-black/30' : 'bg-white/30'} ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'}`}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5, duration: 0.5 }}
@@ -186,7 +188,7 @@ const TerminalWindow = () => {
                             </div>
                         ))}
                     </>
-                    
+
                     {/* Current input - starts with $ and then shows the prompt */}
                     <div className="flex items-center">
                         <span className="text-green-400">$ {username}@macbook:~$ </span>
@@ -207,11 +209,11 @@ const TerminalWindow = () => {
                                 output: 'Downloading resume...',
                             };
                             setCommandHistory(prev => [...prev, newCommand]);
-                            
+
                             // Fetch resume from Supabase and download it
                             // Import the Supabase client
                             const { default: supabase } = await import('@/utils/supabaseClient');
-                            
+
                             try {
                                 const { data, error } = await supabase
                                     .from('documents')
@@ -275,7 +277,7 @@ const TerminalWindow = () => {
                         }}
                     >./download_cv.sh</motion.button>
                     <motion.button
-                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 rounded-md px-3 bg-gray-700/50 hover:bg-gray-600/50 text-gray-300 border-gray-700/50 border text-xs"
+                        className={`inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 rounded-md px-3 ${theme === 'dark' ? 'bg-gray-700/50 hover:bg-gray-600/50 text-gray-300' : 'bg-gray-300/50 hover:bg-gray-400/50 text-gray-700'} ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} border text-xs`}
                         variants={item}
                         onClick={() => {
                             navigator.clipboard.writeText('arif.reza3126@gmail.com');
@@ -287,7 +289,7 @@ const TerminalWindow = () => {
                         }}
                     >copy email</motion.button>
                     <motion.button
-                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 rounded-md px-3 bg-gray-700/50 hover:bg-gray-600/50 text-gray-300 border-gray-700/50 border text-xs"
+                        className={`inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 rounded-md px-3 ${theme === 'dark' ? 'bg-gray-700/50 hover:bg-gray-600/50 text-gray-300' : 'bg-gray-300/50 hover:bg-gray-400/50 text-gray-700'} ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} border text-xs`}
                         variants={item}
                         onClick={() => {
                             window.open('https://github.com/arifrexa', '_blank');
@@ -300,36 +302,36 @@ const TerminalWindow = () => {
                     >open github</motion.button>
                 </motion.div>
                 <motion.div
-                    className="rounded-xl p-4 mt-4 border shadow-sm transition-colors duration-300 bg-gray-700/30 border-gray-600/30"
+                    className={`rounded-xl p-4 mt-4 border shadow-sm transition-colors duration-300 ${theme === 'dark' ? 'bg-gray-700/30' : 'bg-gray-300/30'} ${theme === 'dark' ? 'border-gray-600/30' : 'border-gray-400/30'}`}
                     variants={item}
                 >
                     <motion.div
                         className="grid grid-cols-1 md:grid-cols-2 gap-1 text-xs lg:text-sm font-mono leading-tight"
                         variants={container}
                     >
-                        <motion.div variants={item}><span className="font-bold text-gray-300">OS:</span> <span
-                            className="text-gray-400 font-medium">macOS Sonoma</span></motion.div>
-                        <motion.div variants={item}><span className="font-bold text-gray-300">Shell:</span> <span
-                            className="text-gray-400 font-medium">zsh 5.9 + Oh My Zsh</span>
+                        <motion.div variants={item}><span className={`font-bold ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>OS:</span> <span
+                            className={`${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'} font-medium`}>macOS Sonoma</span></motion.div>
+                        <motion.div variants={item}><span className={`font-bold ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Shell:</span> <span
+                            className={`${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'} font-medium`}>zsh 5.9 + Oh My Zsh</span>
                         </motion.div>
-                        <motion.div variants={item}><span className="font-bold text-gray-300">Terminal:</span>
-                            <span className="text-gray-400 font-medium">iTerm2 +
+                        <motion.div variants={item}><span className={`font-bold ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Terminal:</span>
+                            <span className={`${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'} font-medium`}>iTerm2 +
                                 Powerlevel10k</span>
                         </motion.div>
-                        <motion.div variants={item}><span className="font-bold text-gray-300">Editor:</span> <span
-                            className="text-gray-400 font-medium">VS Code, Vim</span></motion.div>
-                        <motion.div variants={item}><span className="font-bold text-gray-300">Font:</span> <span
-                            className="text-gray-400 font-medium">JetBrains Mono</span></motion.div>
-                        <motion.div variants={item}><span className="font-bold text-gray-300">Theme:</span> <span
-                            className="text-gray-400 font-medium">Dracula + One Dark Pro</span>
+                        <motion.div variants={item}><span className={`font-bold ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Editor:</span> <span
+                            className={`${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'} font-medium`}>VS Code, Vim</span></motion.div>
+                        <motion.div variants={item}><span className={`font-bold ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Font:</span> <span
+                            className={`${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'} font-medium`}>JetBrains Mono</span></motion.div>
+                        <motion.div variants={item}><span className={`font-bold ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Theme:</span> <span
+                            className={`${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'} font-medium`}>Dracula + One Dark Pro</span>
                         </motion.div>
-                        <motion.div variants={item}><span className="font-bold text-gray-300">CLI Tools:</span>
-                            <span className="text-gray-400 font-medium">fzf, bat, ripgrep,
+                        <motion.div variants={item}><span className={`font-bold ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>CLI Tools:</span>
+                            <span className={`${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'} font-medium`}>fzf, bat, ripgrep,
                                 lsd</span>
                         </motion.div>
-                        <motion.div variants={item}><span className="font-bold text-gray-300">Package
+                        <motion.div variants={item}><span className={`font-bold ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Package
                             Manager:</span> <span
-                                className="text-gray-400 font-medium">Homebrew, pipx</span></motion.div>
+                                className={`${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'} font-medium`}>Homebrew, pipx</span></motion.div>
                     </motion.div>
                 </motion.div>
             </motion.div>
