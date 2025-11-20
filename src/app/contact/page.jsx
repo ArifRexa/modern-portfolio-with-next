@@ -152,7 +152,7 @@ const Contact = () => {
               <button
                 onClick={(e) => {
                   e.preventDefault();
-                  window.location.href = 'mailto:rsakib13@gmail.com';
+                  window.location.href = 'mailto:arif.reza3126@gmail.com';
                 }}
                 className="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium h-10 px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 border-green-500/50 border transition-colors"
               >
