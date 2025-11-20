@@ -2,6 +2,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '@/context/ThemeContext';
+import ContributionGraph from '@/Components/Github/ContributionGraph';
 
 const GitHubContributions = () => {
   const { theme } = useTheme();
@@ -170,6 +171,8 @@ const GitHubContributions = () => {
           ))}
         </div>
       </div>
+
+      <ContributionGraph />
 
       {/* Top Repositories */}
       <div className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300/50'} p-4 lg:p-6 shadow-sm`}>
