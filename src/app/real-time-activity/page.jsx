@@ -79,18 +79,78 @@ const RealTimeActivity = () => {
         fetchCommitCount();
     }, []); // Empty dependency array ensures this runs only once on mount
 
-    const [codingActivity] = useState([
+    const [codingActivity, setCodingActivity] = useState([
         { period: "Night (12AM-6AM)", hours: "0.00", percent: 0, height: "0px" },
-        { period: "Morning (6AM-12PM)", hours: "0.00", percent: 0.09, height: "0px" },
-        { period: "Afternoon (12PM-6PM)", hours: "0.92", percent: 99.91, height: "45px" },
+        { period: "Morning (6AM-12PM)", hours: "0.00", percent: 0, height: "0px" },
+        { period: "Afternoon (12PM-6PM)", hours: "0.00", percent: 0, height: "0px" },
         { period: "Evening (6PM-12AM)", hours: "0.00", percent: 0, height: "0px" },
     ]);
 
+    // Fetch dynamic coding activity data from the database
+    useEffect(() => {
+        const fetchCodingActivity = async () => {
+            try {
+                const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+                const response = await fetch(`/api/daily-coding-breakdown?date=${today}`);
+                if (!response.ok) throw new Error('Failed to fetch coding activity breakdown');
+                const data = await response.json();
+
+                if (data.success && data.codingBreakdown) {
+                    const breakdown = data.codingBreakdown;
+                    // Calculate max value for percentage calculations
+                    const maxHours = Math.max(
+                        breakdown.night_time || 0,
+                        breakdown.morning_time || 0,
+                        breakdown.afternoon_time || 0,
+                        breakdown.evening_time || 0
+                    );
+
+                    // Format data for the UI
+                    const formattedData = [
+                        {
+                            period: "Night (12AM-6AM)",
+                            hours: (breakdown.night_time || 0).toFixed(2),
+                            percent: maxHours > 0 ? parseFloat((((breakdown.night_time || 0) / maxHours) * 100).toFixed(2)) : 0,
+                            height: maxHours > 0 ? `${Math.round(((breakdown.night_time || 0) / maxHours) * 180)}px` : '0px'
+                        },
+                        {
+                            period: "Morning (6AM-12PM)",
+                            hours: (breakdown.morning_time || 0).toFixed(2),
+                            percent: maxHours > 0 ? parseFloat((((breakdown.morning_time || 0) / maxHours) * 100).toFixed(2)) : 0,
+                            height: maxHours > 0 ? `${Math.round(((breakdown.morning_time || 0) / maxHours) * 180)}px` : '0px'
+                        },
+                        {
+                            period: "Afternoon (12PM-6PM)",
+                            hours: (breakdown.afternoon_time || 0).toFixed(2),
+                            percent: maxHours > 0 ? parseFloat((((breakdown.afternoon_time || 0) / maxHours) * 100).toFixed(2)) : 0,
+                            height: maxHours > 0 ? `${Math.round(((breakdown.afternoon_time || 0) / maxHours) * 180)}px` : '0px'
+                        },
+                        {
+                            period: "Evening (6PM-12AM)",
+                            hours: (breakdown.evening_time || 0).toFixed(2),
+                            percent: maxHours > 0 ? parseFloat((((breakdown.evening_time || 0) / maxHours) * 100).toFixed(2)) : 0,
+                            height: maxHours > 0 ? `${Math.round(((breakdown.evening_time || 0) / maxHours) * 180)}px` : '0px'
+                        }
+                    ];
+
+                    setCodingActivity(formattedData);
+                }
+            } catch (error) {
+                console.error('Error fetching coding activity:', error);
+                // Keep default values on error
+            }
+        };
+
+        fetchCodingActivity();
+    }, []);
+
     const [activeDevices] = useState([
+        // { name: "MacBook Pro", type: "laptop", status: "active" },
+        // { name: "Xiaomi Note 13 Pro", type: "smartphone", status: "active" },
         { name: "MacBook Pro", type: "laptop", status: "active" },
-        { name: "Acer Nitro 5", type: "laptop", status: "active" },
-        { name: "iPhone 12 Pro", type: "smartphone", status: "active" },
-        { name: "Xiaomi Note 13 Pro", type: "smartphone", status: "active" },
+        { name: "Windows", type: "laptop", status: "active" },
+        { name: "Linux", type: "laptop", status: "active" },
+        { name: "Honor X9C", type: "smartphone", status: "active" }
     ]);
 
     const [healthData] = useState({
@@ -194,6 +254,22 @@ const RealTimeActivity = () => {
                 <path d="M12 18h.01"></path>
             </svg>
         );
+    };
+
+    // Function to convert decimal hours to hours and minutes format (e.g., 4.70h -> 4h 42m)
+    const convertToHoursAndMinutes = (decimalHours) => {
+        const hours = Math.floor(parseFloat(decimalHours) || 0);
+        const minutes = Math.round(((parseFloat(decimalHours) || 0) - hours) * 60);
+
+        if (hours > 0 && minutes > 0) {
+            return `${hours}h ${minutes}m`;
+        } else if (hours > 0) {
+            return `${hours}h`;
+        } else if (minutes > 0) {
+            return `${minutes}m`;
+        } else {
+            return '0m';
+        }
     };
 
     return (
@@ -349,19 +425,19 @@ const RealTimeActivity = () => {
                         className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300/50'} p-4 lg:p-6 shadow-sm`}
                         style={{ opacity: 1, transform: 'none' }}
                     >
-                        <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-4">
                                 <h3 className={`text-2xl lg:text-2xl font-bold tracking-tight ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>Today&apos;s Coding Activity</h3>
                             </div>
                         </div>
                         <div className="rounded-lg transition-all duration-300">
-                            <div className="flex justify-between items-end h-42 gap-2">
+                            <div className="flex justify-between items-end h-65 gap-2">
                                 {codingActivity.map((period, index) => (
                                     <div key={index} className="flex-1 flex flex-col items-center gap-1 group">
                                         <span className={`text-xs font-semibold order-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>{period.period.split(' ')[0]}</span>
                                         <span className={`text-xs font-semibold order-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>{`(${period.period.split('(')[1].split(')')[0]})`}</span>
                                         <div className="w-full flex flex-col items-center relative">
-                                            <span className={`text-xs font-semibold mb-1 ${theme === 'dark' ? 'text-gray-200' : 'text-gray-700'}`}>{period.hours}h</span>
+                                            <span className={`text-xs font-semibold mb-1 ${theme === 'dark' ? 'text-gray-200' : 'text-gray-700'}`}>{convertToHoursAndMinutes(period.hours)}</span>
                                             <div className={`w-full max-w-[80px] h-[180px] rounded-t-md ${theme === 'dark' ? 'bg-gray-800/30' : 'bg-gray-300/30'} overflow-hidden transition-all duration-300 group-hover:shadow-md flex items-end`}>
                                                 <div
                                                     className={`w-full rounded-t-md bg-gradient-to-t from-teal-500 to-cyan-400 group-hover:opacity-90 transition-all duration-300`}
