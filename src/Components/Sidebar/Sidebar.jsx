@@ -127,6 +127,8 @@ const Sidebar = ({ className = '', theme = 'dark' }) => {
             </svg>
             <span className="font-medium">GitHub Contributions</span>
           </Link>
+
+{/* 
           <Link
             href="/competitive-programming"
             className={`w-full flex items-center space-x-3 py-2 lg:py-2.5 px-4 rounded-xl transition-colors duration-300 border ${isActiveRoute('/competitive-programming') ? navItemActiveClass : `${theme === 'dark' ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-800/30 border-transparent' : 'text-gray-600 hover:text-gray-800 hover:bg-gray-300/30 border-transparent'} text-left`}`}>
@@ -143,6 +145,9 @@ const Sidebar = ({ className = '', theme = 'dark' }) => {
             </svg>
             <span className="font-medium">Competitive Programming</span>
           </Link>
+ */}
+
+
           <Link
             href="/awards-certifications"
             className={`w-full flex items-center space-x-3 py-2 lg:py-2.5 px-4 rounded-xl transition-colors duration-300 border ${isActiveRoute('/awards-certifications') ? navItemActiveClass : `${theme === 'dark' ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-800/30 border-transparent' : 'text-gray-600 hover:text-gray-800 hover:bg-gray-300/30 border-transparent'} text-left`}`}>
