@@ -1,193 +1,143 @@
 // src/app/api/wakatime/route.js
-import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
+import dayjs from "dayjs";
 
-// Determine time period based on Dhaka time (Asia/Dhaka)
-function getCurrentTimePeriod() {
-  // Convert to Dhaka timezone safely
-  const dhakaString = new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" });
-  const dhakaTime = new Date(dhakaString);
-  const hour = dhakaTime.getHours();
-
-  console.log(`[DEBUG_TIME] Dhaka Local Time: ${dhakaTime.toString()}`);
-  console.log(`[DEBUG_TIME] Dhaka Hour: ${hour}`);
-
-  if (hour >= 0 && hour < 6) return "night";      
-  if (hour >= 6 && hour < 12) return "morning";    
-  if (hour >= 12 && hour < 18) return "afternoon"; 
-  return "evening";                                
-}
-
-
+export const dynamic = "force-dynamic";
 
 // Convert WakaTime text (e.g., "5 hrs 30 mins") to numeric hours
 function parseWakaTimeToHours(timeText) {
   let numericHours = 0;
-  if (timeText && typeof timeText === 'string') {
+  if (timeText && typeof timeText === "string") {
     const hoursMatch = timeText.match(/(\d+(?:\.\d+)?)\s*(?:hr|hrs|h)/i);
     const minsMatch = timeText.match(/(\d+)\s*(?:min|mins|m)/i);
     const hours = hoursMatch ? parseFloat(hoursMatch[1]) : 0;
     const mins = minsMatch ? parseInt(minsMatch[1]) : 0;
-    numericHours = hours + (mins / 60);
+    numericHours = hours + mins / 60;
   }
   return numericHours;
 }
 
+// Convert numeric hours (e.g., 3.5) to formatted string "3h 30m"
+function formatHoursToTime(hours) {
+  const h = Math.floor(hours);
+  const m = Math.round((hours - h) * 60);
+  return `${h}h ${m}m`;
+}
+
+// Determine time period based on Dhaka time (Asia/Dhaka)
+function getCurrentTimePeriod() {
+  const dhakaString = new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" });
+  const dhakaTime = new Date(dhakaString);
+  const hour = dhakaTime.getHours();
+
+  if (hour >= 0 && hour < 6) return "night";
+  if (hour >= 6 && hour < 12) return "morning";
+  if (hour >= 12 && hour < 18) return "afternoon";
+  return "evening";
+}
+
 export async function GET(request) {
   const url = new URL(request.url);
-  const extended = url.searchParams.get('extended');
+  const extended = url.searchParams.get("extended");
 
   try {
     const apiKey = process.env.WAKA_TIME_API_KEY;
-    if (!apiKey) {
-      return NextResponse.json({ error: 'WAKA_TIME_API_KEY is not configured' }, { status: 500 });
-    }
+    if (!apiKey) return NextResponse.json({ error: "WAKA_TIME_API_KEY is not configured" }, { status: 500 });
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    if (!supabaseUrl || !supabaseAnonKey) {
-      return NextResponse.json({ error: 'Supabase URL or Anon Key is not configured' }, { status: 500 });
-    }
-    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+    if (!supabaseUrl || !supabaseAnonKey)
+      return NextResponse.json({ error: "Supabase URL or Anon Key is not configured" }, { status: 500 });
 
-    const encodedKey = Buffer.from(`${apiKey}:`).toString('base64');
-    const wakaUrl = 'https://wakatime.com/api/v1/users/current/summaries?start=today&end=today';
-    const response = await fetch(wakaUrl, {
-      headers: { Authorization: `Basic ${encodedKey}` },
-      next: { revalidate: 100 }, // Cache for 100 seconds
-    });
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+    const encodedKey = Buffer.from(`${apiKey}:`).toString("base64");
+
+    // Fetch today's WakaTime summary
+    const wakaUrl = "https://wakatime.com/api/v1/users/current/summaries?start=today&end=today";
+    const response = await fetch(wakaUrl, { headers: { Authorization: `Basic ${encodedKey}` } });
 
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(`WakaTime API responded with status ${response.status}: ${errorText}`);
     }
+
     const data = await response.json();
-
-    const codingTimeText = data.data[0]?.grand_total?.text || '0 mins';
+    const codingTimeText = data.data[0]?.grand_total?.text || "0 mins";
     const numericHoursToday = parseWakaTimeToHours(codingTimeText);
-    console.log(`[DEBUG_API] WakaTime reported total for today: ${codingTimeText} (${numericHoursToday} hours)`); // Log WakaTime data
 
-    const currentTimePeriod = getCurrentTimePeriod(); // This should now log debug info
-    console.log(`[DEBUG_ROUTE] Function getCurrentTimePeriod returned: ${currentTimePeriod}`); // Log returned period
-
-    // Prepare update object for the specific time period
+    const currentTimePeriod = getCurrentTimePeriod();
     const timePeriodUpdate = { [`${currentTimePeriod}_time`]: numericHoursToday };
-    console.log(`[DEBUG_ROUTE] timePeriodUpdate Object:`, timePeriodUpdate); // Log the update object
 
-    if (numericHoursToday > 0 || extended) {
-      const today = new Date();
-      const dateStr = today.toISOString().split('T')[0];
-      console.log(`[DEBUG_ROUTE] Processing for Date: ${dateStr}`); // Log the date being processed
+    const todayStr = dayjs().format("YYYY-MM-DD");
 
-      // Fetch existing record to check if it exists
-      let { data: existingRecord, error: fetchError } = await supabase
-        .from('daily_coding_time')
-        .select('*')
-        .eq('date', dateStr)
-        .single();
+    // Fetch existing record for today
+    let { data: todayRecord, error: fetchError } = await supabase
+      .from("daily_coding_time")
+      .select("*")
+      .eq("date", todayStr)
+      .single();
 
-      if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116 = No rows found
-        console.error('[ERROR] Supabase fetch error:', fetchError);
-        throw new Error(`Supabase fetch error: ${fetchError.message}`);
-      }
+    if (fetchError && fetchError.code !== "PGRST116") throw new Error(fetchError.message);
 
-      // Use the value from WakaTime as the total for the day
-      const newTotalCodingTime = numericHoursToday;
+    const newTotalCodingTime = numericHoursToday;
 
-      if (existingRecord) {
-        console.log(`[DEBUG_ROUTE] Updating existing record for ${dateStr}. Setting ${currentTimePeriod}_time to ${numericHoursToday}, total coding_time to ${newTotalCodingTime}`);
-        // Update existing record: specific period column and total time
-        const { error } = await supabase
-          .from('daily_coding_time')
-          .update({
-            ...timePeriodUpdate, // This spreads { afternoon_time: X } or whatever period it is
-            coding_time: newTotalCodingTime,
-            updated_at: new Date().toISOString()
-          })
-          .eq('date', dateStr);
-
-        if (error) {
-          console.error('[ERROR] Supabase update error:', error);
-          throw new Error(`Supabase update error: ${error.message}`);
-        } else {
-          console.log(`[DEBUG_ROUTE] Successfully updated record for ${dateStr}. Supabase query used column: ${currentTimePeriod}_time`);
-        }
-      } else {
-        console.log(`[DEBUG_ROUTE] Inserting new record for ${dateStr}. Setting ${currentTimePeriod}_time to ${numericHoursToday}, total coding_time to ${newTotalCodingTime}`);
-        // Insert new record: date, specific period column, and total time
-        const { error } = await supabase
-          .from('daily_coding_time')
-          .insert([{
-            date: dateStr,
-            coding_time: newTotalCodingTime,
-            ...timePeriodUpdate, // This spreads { afternoon_time: X } or whatever period it is
-            created_at: new Date().toISOString()
-          }]);
-
-        if (error) {
-          console.error('[ERROR] Supabase insert error:', error);
-          throw new Error(`Supabase insert error: ${error.message}`);
-        } else {
-          console.log(`[DEBUG_ROUTE] Successfully inserted record for ${dateStr}. Supabase query used column: ${currentTimePeriod}_time`);
-        }
-      }
+    if (todayRecord) {
+      // Update existing record
+      await supabase.from("daily_coding_time").update({
+        ...timePeriodUpdate,
+        coding_time: newTotalCodingTime,
+        updated_at: new Date().toISOString(),
+      }).eq("date", todayStr);
+    } else {
+      // Insert new record
+      await supabase.from("daily_coding_time").insert([{
+        date: todayStr,
+        coding_time: newTotalCodingTime,
+        ...timePeriodUpdate,
+        created_at: new Date().toISOString(),
+      }]);
     }
 
-    // Handle extended data request (existing logic, fetching from updated table)
     if (extended) {
-      const endDate = new Date();
-      const startDate = new Date();
-      startDate.setDate(endDate.getDate() - 7);
-      const endDateStr = endDate.toISOString().split('T')[0];
-      const startDateStr = startDate.toISOString().split('T')[0];
-
+      // Fetch last 7 days data
+      const endDate = dayjs();
+      const startDate = dayjs().subtract(6, "day"); // last 7 days including today
       const { data: weekData, error: weekError } = await supabase
-        .from('daily_coding_time')
-        .select('*')
-        .gte('date', startDateStr)
-        .lte('date', endDateStr)
-        .order('date', { ascending: true });
+        .from("daily_coding_time")
+        .select("*")
+        .gte("date", startDate.format("YYYY-MM-DD"))
+        .lte("date", endDate.format("YYYY-MM-DD"))
+        .order("date", { ascending: true });
 
-      if (weekError) console.error('Error fetching weekly data:', weekError);
+      if (weekError) console.error("Error fetching weekly data:", weekError);
 
-      const monthStartDate = new Date();
-      monthStartDate.setDate(monthStartDate.getDate() - 30);
-      const monthStartStr = monthStartDate.toISOString().split('T')[0];
+      const monthlyStart = dayjs().subtract(30, "day");
       const { data: monthData, error: monthError } = await supabase
-        .from('daily_coding_time')
-        .select('*')
-        .gte('date', monthStartStr)
-        .lte('date', endDateStr);
+        .from("daily_coding_time")
+        .select("*")
+        .gte("date", monthlyStart.format("YYYY-MM-DD"))
+        .lte("date", endDate.format("YYYY-MM-DD"));
 
-      if (monthError) console.error('Error fetching monthly data:', monthError);
+      if (monthError) console.error("Error fetching monthly data:", monthError);
 
       const monthlyTotal = monthData?.reduce((sum, record) => sum + (record.coding_time || 0), 0) || 0;
       const avgDaily = monthData && monthData.length > 0 ? monthlyTotal / monthData.length : 0;
 
-      const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
       const weeklyActivity = [];
       for (let i = 6; i >= 0; i--) {
-        const date = new Date();
-        date.setDate(date.getDate() - i);
-        const dateStr = date.toISOString().split('T')[0];
-        const dayAbbr = daysOfWeek[date.getDay()];
+        const date = dayjs().subtract(i, "day");
+        const dateStr = date.format("YYYY-MM-DD");
+        const dayAbbr = daysOfWeek[date.day()];
         const dayRecord = weekData?.find(record => record.date === dateStr);
         const hours = dayRecord ? parseFloat(dayRecord.coding_time) : 0;
-        weeklyActivity.push({ day: dayAbbr, hours: hours.toFixed(2) });
+        weeklyActivity.push({ 
+          day: dayAbbr, 
+          hours: hours.toFixed(2),
+          formatted: formatHoursToTime(hours)
+        });
       }
-
-      const formatTime = (hours) => {
-        const totalMinutes = hours * 60;
-        const h = Math.floor(totalMinutes / 60);
-        const m = Math.round(totalMinutes % 60);
-        return `${h}h ${m}m`;
-      };
-
-      const todayFormatted = formatTime(numericHoursToday);
-      const weeklyTotal = weekData?.reduce((sum, record) => sum + (record.coding_time || 0), 0) || 0;
-      const weeklyFormatted = formatTime(weeklyTotal);
-      const monthlyFormatted = formatTime(monthlyTotal);
-      const avgFormatted = formatTime(avgDaily);
 
       return NextResponse.json({
         codingTime: codingTimeText,
@@ -196,33 +146,35 @@ export async function GET(request) {
         timestamp: new Date().toISOString(),
         extendedData: {
           coding_time: {
-            today: todayFormatted,
-            weekly: weeklyFormatted,
-            monthly: monthlyFormatted,
-            average: avgFormatted,
-            today_numeric: numericHoursToday
+            today: formatHoursToTime(numericHoursToday),
+            weekly: formatHoursToTime(weekData?.reduce((sum, r) => sum + (r.coding_time || 0), 0) || 0),
+            monthly: formatHoursToTime(monthlyTotal),
+            average: formatHoursToTime(avgDaily),
+            today_numeric: numericHoursToday,
           },
           weekly_activity: weeklyActivity,
-          last_updated: new Date().toISOString()
-        }
+          last_updated: new Date().toISOString(),
+        },
       });
     }
 
+    // Normal response without extended
     return NextResponse.json({
       codingTime: codingTimeText,
       numericHours: numericHoursToday,
+      formatted: formatHoursToTime(numericHoursToday),
       success: true,
       timestamp: new Date().toISOString(),
     });
-
   } catch (error) {
-    console.error('Error in WakaTime API route:', error);
+    console.error("Error in WakaTime API route:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch or update WakaTime data', message: error.message },
+      { error: "Failed to fetch or update WakaTime data", message: error.message },
       { status: 500 }
     );
   }
 }
+
 
 
 
