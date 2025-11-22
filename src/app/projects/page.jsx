@@ -6,25 +6,25 @@ import { useTheme } from '@/context/ThemeContext';
 const ProjectsPortfolio = () => {
   const { theme } = useTheme();
   const projects = [
-    {
-      title: "AWS IAM User Management",
-      description:
-        "AWS IAM User Management Tool is a Python-based command-line utility for managing AWS IAM users efficiently. It allows administrators to automate common IAM tasks such as creating users, attaching policies, generating access keys, and cleaning up unused credentials.",
-      features: [
-        "Automated IAM Setup: Creates users (Alice, Bob, Charlie, Dana), groups (Developer, DBAdmin, Auditor), and policies for S3, EC2, RDS, and CloudTrail access.",
-        "Policy Validation: Checks for overly permissive policies (e.g., Action: *, Resource: *).",
-        "Cleanup Script: Safely deletes all created IAM resources.",
-        "Unit Tests: Uses pytest and moto to test setup logic without AWS API calls.",
-        "Configurable: Uses config.yaml for customizable team and permission settings."
-      ],
-      topics: [
-        "access-management", "aws", "aws-cli", "aws-iam", "aws-tools",
-        "boto3", "devops", "iam", "identity-and-access-management", "user-management"
-      ],
-      status: "Completed",
-      date: "Jul 2, 2025",
-      githubUrl: "https://github.com/rsakib15/aws-iam-user-management"
-    },
+    // {
+    //   title: "AWS IAM User Management",
+    //   description:
+    //     "AWS IAM User Management Tool is a Python-based command-line utility for managing AWS IAM users efficiently. It allows administrators to automate common IAM tasks such as creating users, attaching policies, generating access keys, and cleaning up unused credentials.",
+    //   features: [
+    //     "Automated IAM Setup: Creates users (Alice, Bob, Charlie, Dana), groups (Developer, DBAdmin, Auditor), and policies for S3, EC2, RDS, and CloudTrail access.",
+    //     "Policy Validation: Checks for overly permissive policies (e.g., Action: *, Resource: *).",
+    //     "Cleanup Script: Safely deletes all created IAM resources.",
+    //     "Unit Tests: Uses pytest and moto to test setup logic without AWS API calls.",
+    //     "Configurable: Uses config.yaml for customizable team and permission settings."
+    //   ],
+    //   topics: [
+    //     "access-management", "aws", "aws-cli", "aws-iam", "aws-tools",
+    //     "boto3", "devops", "iam", "identity-and-access-management", "user-management"
+    //   ],
+    //   status: "Completed",
+    //   date: "Jul 2, 2025",
+    //   githubUrl: "https://github.com/rsakib15/aws-iam-user-management"
+    // },
     {
       title: "LinkedIn Auto Apply",
       description:
@@ -44,29 +44,29 @@ const ProjectsPortfolio = () => {
       date: "Jun 10, 2024",
       githubUrl: "https://github.com/rsakib15/linkedin-auto-apply"
     },
-    {
-      title: "Chinese License Plate Recognition",
-      description:
-        "Implementation of Chinese license plate character segmentation and recognition system",
-      features: [
-        "Implementation of both traditional and deep learning methods for license plate recognition.",
-        "Preprocessing of dataset images using OpenCV for color conversion, noise removal, and perspective transformation.",
-        "License plate detection using morphological operations, contours, and aspect ratio filtering.",
-        "Perspective transformation to obtain front-view license plate images.",
-        "Character segmentation and template matching for traditional recognition.",
-        "Background checking for different plate colors (blue, yellow, green, white).",
-        "CNN-based deep learning model trained on individual character images for high accuracy.",
-        "Use of CCPD dataset with bounding box and character-level annotations for deep learning.",
-        "High accuracy achieved: 99.75% on 2000 images and 99.94% on 60,000 images."
-      ],
-      topics: [
-        "computer-vision", "convolutional-neural-networks", "image-processing",
-        "license-plate-detection", "license-plate-recognition", "opencv"
-      ],
-      status: "Completed",
-      date: "Nov 29, 2022",
-      githubUrl: "https://github.com/rsakib15/Chinese-License-Plate-Recognition"
-    },
+    // {
+    //   title: "Chinese License Plate Recognition",
+    //   description:
+    //     "Implementation of Chinese license plate character segmentation and recognition system",
+    //   features: [
+    //     "Implementation of both traditional and deep learning methods for license plate recognition.",
+    //     "Preprocessing of dataset images using OpenCV for color conversion, noise removal, and perspective transformation.",
+    //     "License plate detection using morphological operations, contours, and aspect ratio filtering.",
+    //     "Perspective transformation to obtain front-view license plate images.",
+    //     "Character segmentation and template matching for traditional recognition.",
+    //     "Background checking for different plate colors (blue, yellow, green, white).",
+    //     "CNN-based deep learning model trained on individual character images for high accuracy.",
+    //     "Use of CCPD dataset with bounding box and character-level annotations for deep learning.",
+    //     "High accuracy achieved: 99.75% on 2000 images and 99.94% on 60,000 images."
+    //   ],
+    //   topics: [
+    //     "computer-vision", "convolutional-neural-networks", "image-processing",
+    //     "license-plate-detection", "license-plate-recognition", "opencv"
+    //   ],
+    //   status: "Completed",
+    //   date: "Nov 29, 2022",
+    //   githubUrl: "https://github.com/rsakib15/Chinese-License-Plate-Recognition"
+    // },
     {
       title: "WikiSearch",
       description:
@@ -86,91 +86,91 @@ const ProjectsPortfolio = () => {
       date: "Apr 30, 2021",
       githubUrl: "https://github.com/rsakib15/WikiSearch"
     },
-    {
-      title: "One Shot Learning",
-      description:
-        "One-shot Image Classification leverages deep learning to classify images with very few examples per class, using Siamese Neural Networks and One-shot Learning techniques.",
-      features: [
-        "Supports One-shot Learning for image classification",
-        "Uses Siamese Neural Network for similarity comparison",
-        "Handles small labeled datasets efficiently",
-        "N-way testing for model validation",
-        "Triplet Loss implementation for improved embeddings"
-      ],
-      topics: [
-        "computer-vision", "deep-learning", "few-shot-learning", "image-classification",
-        "one-shot-learning", "siamese-neural-network"
-      ],
-      status: "Completed",
-      date: "Apr 27, 2021",
-      githubUrl: "https://github.com/rsakib15/One-Shot-Learning"
-    },
-    {
-      title: "Image Stitcher",
-      description:
-        "Python project for computing image homography, drawing correspondences, warping and blending images, and generating realistic billboard overlays using OpenCV and NumPy.",
-      features: [
-        "Interactive point selection for computing homography",
-        "Compute homography matrix from source and destination points",
-        "Draw correspondences between images",
-        "Warp and blend images seamlessly using computed homography",
-        "Replace billboard content realistically with a custom image"
-      ],
-      topics: [
-        "computer-vision", "image-stitching", "opencv", "python"
-      ],
-      status: "Completed",
-      date: "Apr 22, 2021",
-      githubUrl: "https://github.com/rsakib15/Image-Stitcher"
-    },
-    {
-      title: "Harris Corner Detector",
-      description:
-        "Implementing Harris Corner Detector and Scale-Invariant Feature Transform (SIFT) for keypoint detection, feature description, and image matching under transformations like rotation, scaling, and translation.",
-      features: [
-        "Custom implementation of Harris Corner Detector",
-        "Corner response calculation with Gaussian smoothing and Sobel filters",
-        "Keypoint orientation and scale estimation",
-        "Feature matching using Euclidean distance and DMatch"
-      ],
-      topics: [
-        "computer-vision", "feature-detection", "harris-corners", "opencv", "sift"
-      ],
-      status: "Completed",
-      date: "Apr 1, 2021",
-      githubUrl: "https://github.com/rsakib15/Harris-Corner-Detector"
-    },
-    {
-      title: "DIP Super Resolution",
-      description:
-        "An efficient deep learning approach for Single Image Super-Resolution (SISR) that leverages dense projection networks with up- and down-sampling stages, iterative error feedback, and deep concatenation.",
-      features: [
-        "Designed and implemented Dense Projection Network (DPCNN)",
-        "Applied Iterative Error Feedback to progressively correct reconstruction errors",
-        "Achieved state-of-the-art performance, outperforming SRCNN, FSRCNN, VDSR, DRRN, and EDSR"
-      ],
-      topics: [
-        "computer-vision", "deep-learning", "image-super-resolution", "pytorch"
-      ],
-      status: "Completed",
-      date: "Dec 19, 2020",
-      githubUrl: "https://github.com/rsakib15/DIP-Super-Resolution"
-    },
-    {
-      title: "LC4 Binary Interpreter",
-      description:
-        "C-based LC4 interpreter and disassembler that executes LC4 binaries, manages memory, and converts object files into readable assembly for educational use in computer architecture.",
-      features: [
-        "Binary Interpreter: Executes LC4 machine code instructions",
-        "Disassembler: Converts LC4 binary into human-readable assembly",
-        "Memory Management: Simulated LC4 memory system",
-        "Loader Module: Loads .obj files into memory"
-      ],
-      topics: ["assembly", "c-language", "lc4", "pennsim"],
-      status: "Completed",
-      date: "Aug 19, 2020",
-      githubUrl: "https://github.com/rsakib15/LC4-Binary-Interpreter"
-    },
+    // {
+    //   title: "One Shot Learning",
+    //   description:
+    //     "One-shot Image Classification leverages deep learning to classify images with very few examples per class, using Siamese Neural Networks and One-shot Learning techniques.",
+    //   features: [
+    //     "Supports One-shot Learning for image classification",
+    //     "Uses Siamese Neural Network for similarity comparison",
+    //     "Handles small labeled datasets efficiently",
+    //     "N-way testing for model validation",
+    //     "Triplet Loss implementation for improved embeddings"
+    //   ],
+    //   topics: [
+    //     "computer-vision", "deep-learning", "few-shot-learning", "image-classification",
+    //     "one-shot-learning", "siamese-neural-network"
+    //   ],
+    //   status: "Completed",
+    //   date: "Apr 27, 2021",
+    //   githubUrl: "https://github.com/rsakib15/One-Shot-Learning"
+    // },
+    // {
+    //   title: "Image Stitcher",
+    //   description:
+    //     "Python project for computing image homography, drawing correspondences, warping and blending images, and generating realistic billboard overlays using OpenCV and NumPy.",
+    //   features: [
+    //     "Interactive point selection for computing homography",
+    //     "Compute homography matrix from source and destination points",
+    //     "Draw correspondences between images",
+    //     "Warp and blend images seamlessly using computed homography",
+    //     "Replace billboard content realistically with a custom image"
+    //   ],
+    //   topics: [
+    //     "computer-vision", "image-stitching", "opencv", "python"
+    //   ],
+    //   status: "Completed",
+    //   date: "Apr 22, 2021",
+    //   githubUrl: "https://github.com/rsakib15/Image-Stitcher"
+    // },
+    // {
+    //   title: "Harris Corner Detector",
+    //   description:
+    //     "Implementing Harris Corner Detector and Scale-Invariant Feature Transform (SIFT) for keypoint detection, feature description, and image matching under transformations like rotation, scaling, and translation.",
+    //   features: [
+    //     "Custom implementation of Harris Corner Detector",
+    //     "Corner response calculation with Gaussian smoothing and Sobel filters",
+    //     "Keypoint orientation and scale estimation",
+    //     "Feature matching using Euclidean distance and DMatch"
+    //   ],
+    //   topics: [
+    //     "computer-vision", "feature-detection", "harris-corners", "opencv", "sift"
+    //   ],
+    //   status: "Completed",
+    //   date: "Apr 1, 2021",
+    //   githubUrl: "https://github.com/rsakib15/Harris-Corner-Detector"
+    // },
+    // {
+    //   title: "DIP Super Resolution",
+    //   description:
+    //     "An efficient deep learning approach for Single Image Super-Resolution (SISR) that leverages dense projection networks with up- and down-sampling stages, iterative error feedback, and deep concatenation.",
+    //   features: [
+    //     "Designed and implemented Dense Projection Network (DPCNN)",
+    //     "Applied Iterative Error Feedback to progressively correct reconstruction errors",
+    //     "Achieved state-of-the-art performance, outperforming SRCNN, FSRCNN, VDSR, DRRN, and EDSR"
+    //   ],
+    //   topics: [
+    //     "computer-vision", "deep-learning", "image-super-resolution", "pytorch"
+    //   ],
+    //   status: "Completed",
+    //   date: "Dec 19, 2020",
+    //   githubUrl: "https://github.com/rsakib15/DIP-Super-Resolution"
+    // },
+    // {
+    //   title: "LC4 Binary Interpreter",
+    //   description:
+    //     "C-based LC4 interpreter and disassembler that executes LC4 binaries, manages memory, and converts object files into readable assembly for educational use in computer architecture.",
+    //   features: [
+    //     "Binary Interpreter: Executes LC4 machine code instructions",
+    //     "Disassembler: Converts LC4 binary into human-readable assembly",
+    //     "Memory Management: Simulated LC4 memory system",
+    //     "Loader Module: Loads .obj files into memory"
+    //   ],
+    //   topics: ["assembly", "c-language", "lc4", "pennsim"],
+    //   status: "Completed",
+    //   date: "Aug 19, 2020",
+    //   githubUrl: "https://github.com/rsakib15/LC4-Binary-Interpreter"
+    // },
     {
       title: "Bangla Newspaper Scraper",
       description:
@@ -186,21 +186,6 @@ const ProjectsPortfolio = () => {
       githubUrl: "https://github.com/rsakib15/Bangla-Newspaper-Scraper"
     },
     {
-      title: "Enemy Shooting Game",
-      description:
-        "A 2D enemy shooting game built using OpenGL and C++. Includes interactive shooter, moving enemies, scoring, lives, and a high score system.",
-      features: [
-        "2D top-down shooting game built with C++ and OpenGL",
-        "Interactive shooter controlled using arrow keys",
-        "Shoot bullets using spacebar to destroy enemies",
-        "Score tracking and high score system with file storage"
-      ],
-      topics: ["cpp", "game-development", "opengl", "shooting-game"],
-      status: "Completed",
-      date: "Dec 22, 2017",
-      githubUrl: "https://github.com/rsakib15/Enemy-Shooting-Game"
-    },
-    {
       title: "Smart Audio Profile Manager",
       description:
         "A mobile app that automatically adjusts device audio profiles based on position and user activity using sensors like accelerometer and proximity.",
@@ -214,35 +199,6 @@ const ProjectsPortfolio = () => {
       status: "Completed",
       date: "Apr 7, 2017",
       githubUrl: "https://github.com/rsakib15/smart-audio-profile-manager"
-    },
-    {
-      title: "Hangman Console Game",
-      description:
-        "A console-based Hangman game in C# supporting single-player and multiplayer modes.",
-      features: [
-        "Console-based Hangman game implemented in C#",
-        "Supports single-player and multiplayer modes",
-        "Visual representation of Hangman progress"
-      ],
-      topics: ["csharp", "console-game", "hangman"],
-      status: "Completed",
-      date: "Oct 14, 2016",
-      githubUrl: "https://github.com/rsakib15/Hangman-Console-Game"
-    },
-    {
-      title: "Tower Of Hanoi Game Java",
-      description:
-        "A Java Swing implementation of the classic Tower of Hanoi puzzle game with interactive graphical interfaces.",
-      features: [
-        "Classic Tower of Hanoi puzzle game",
-        "Objective: Move all disks from Pole A to Pole C",
-        "Rules enforced: Cannot move larger disk onto a smaller disk",
-        "Calculates minimum moves required: 2^n - 1"
-      ],
-      topics: ["java", "java-swing", "tower-of-hanoi", "recursion"],
-      status: "Completed",
-      date: "May 16, 2016",
-      githubUrl: "https://github.com/rsakib15/Tower-Of-Hanoi-Game-java"
     }
   ];
 
@@ -267,8 +223,8 @@ const ProjectsPortfolio = () => {
             className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} p-4 lg:p-6 shadow-sm flex flex-col h-full overflow-hidden group`}
           >
             {/* 3D Glass Effect */}
-            <div className={`absolute inset-0 ${theme === 'dark' ? 'bg-gradient-to-br from-blue-500/10 to-purple-500/10' : 'bg-gradient-to-br from-blue-400/10 to-purple-400/10'} rounded-xl transform -rotate-1 scale-105 opacity-60 group-hover:opacity-100 transition-all duration-300 z-0`}></div>
-            <div className="relative z-10 flex flex-col flex-grow">
+            <div className={`absolute inset-0 ${theme === 'dark' ? 'bg-linear-to-br from-blue-500/10 to-purple-500/10' : 'bg-linear-to-br from-blue-400/10 to-purple-400/10'} rounded-xl transform -rotate-1 scale-105 opacity-60 group-hover:opacity-100 transition-all duration-300 z-0`}></div>
+            <div className="relative z-10 flex flex-col grow">
               {/* Title & Status */}
               <div className="flex items-center justify-between mb-2 z-10">
                 <h4 className={`text-xl lg:text-2xl font-semibold truncate ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
@@ -276,7 +232,7 @@ const ProjectsPortfolio = () => {
                 </h4>
                 <div className="relative group/status">
                   <div className="w-3 h-3 rounded-full bg-blue-500"></div>
-                  <div className={`absolute top-4 right-0 text-sm px-3 py-1.5 rounded-lg opacity-0 group-hover/status:opacity-100 transition-all duration-300 ease-out transform scale-95 group-hover/status:scale-100 font-semibold ${theme === 'dark' ? 'bg-gradient-to-r from-blue-800 via-blue-800 to-blue-900 text-blue-100' : 'bg-gradient-to-r from-blue-200 via-blue-300 to-blue-400 text-blue-900'} shadow-md`}>
+                  <div className={`absolute top-4 right-0 text-sm px-3 py-1.5 rounded-lg opacity-0 group-hover/status:opacity-100 transition-all duration-300 ease-out transform scale-95 group-hover/status:scale-100 font-semibold ${theme === 'dark' ? 'bg-linear-to-r from-blue-800 via-blue-800 to-blue-900 text-blue-100' : 'bg-linear-to-r from-blue-200 via-blue-300 to-blue-400 text-blue-900'} shadow-md`}>
                     {project.status}
                   </div>
                 </div>
@@ -303,7 +259,7 @@ const ProjectsPortfolio = () => {
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        className={`lucide lucide-chevron-right w-3 h-3 mr-2 mt-1 ${theme === 'dark' ? 'text-green-400' : 'text-green-600'} flex-shrink-0`}
+                        className={`lucide lucide-chevron-right w-3 h-3 mr-2 mt-1 ${theme === 'dark' ? 'text-green-400' : 'text-green-600'} shrink-0`}
                       >
                         <path d="m9 18 6-6-6-6" />
                       </svg>
