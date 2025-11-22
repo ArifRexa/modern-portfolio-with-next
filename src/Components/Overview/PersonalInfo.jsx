@@ -33,20 +33,36 @@ const PersonalInfo = () => {
 
   useEffect(() => {
     // Fetch coding time from our API route
+    // const fetchCodingTime = async () => {
+    //   try {
+    //     const response = await fetch('/api/wakatime');
+    //     if (!response.ok) {
+    //       throw new Error('Failed to fetch coding time');
+    //     }
+    //     const data = await response.json();
+    //     setCodingTime(data.codingTime);
+    //   } catch (error) {
+    //     console.error('Error fetching coding time:', error);
+    //     // Fallback to a default value if API fails
+    //     setCodingTime('0 mins');
+    //   }
+    // };
+
     const fetchCodingTime = async () => {
       try {
-        const response = await fetch('/api/wakatime');
-        if (!response.ok) {
-          throw new Error('Failed to fetch coding time');
-        }
+        const response = await fetch('/api/wakatime?extended=true'); // optional if you want extended
+        if (!response.ok) throw new Error('Failed to fetch coding time');
+
         const data = await response.json();
-        setCodingTime(data.codingTime);
+        // ✅ read the correct field
+        const todayCodingTime = data.extendedData?.coding_time?.today || '0 mins';
+        setCodingTime(todayCodingTime);
       } catch (error) {
         console.error('Error fetching coding time:', error);
-        // Fallback to a default value if API fails
         setCodingTime('0 mins');
       }
     };
+
 
     // Fetch commit count from our API route
     const fetchCommitCount = async () => {

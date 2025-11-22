@@ -52,13 +52,17 @@ const RealTimeActivity = () => {
     useEffect(() => {
         const fetchCodingTime = async () => {
             try {
-                const response = await fetch('/api/wakatime'); // Replace with your actual API endpoint
+                const response = await fetch('/api/wakatime?extended=true'); // ensure extended data
                 if (!response.ok) throw new Error('Failed to fetch coding time');
+
                 const data = await response.json();
-                setDailyStats(prev => ({ ...prev, codingTime: data.codingTime })); // Using the formatted time from API
+                setDailyStats(prev => ({
+                    ...prev,
+                    codingTime: data.extendedData?.coding_time?.today || '0 mins' // ✅ corrected
+                }));
             } catch (error) {
                 console.error('Error fetching coding time:', error);
-                setDailyStats(prev => ({ ...prev, codingTime: '0 mins' })); // Fallback on error
+                setDailyStats(prev => ({ ...prev, codingTime: '0 mins' }));
             }
         };
 
