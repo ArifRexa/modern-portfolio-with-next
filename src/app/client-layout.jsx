@@ -6,6 +6,7 @@ import ChatWidget from "@/Components/Chat/ChatWidget";
 import { useState, useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { usePathname } from 'next/navigation';
+import  supabase  from '@/utils/supabaseClient';
 
 export default function ClientLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -22,6 +23,42 @@ export default function ClientLayout({ children }) {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  const handleOpenResume = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('documents')
+        .select('url')
+        .eq('name', 'Resume')
+        .single();
+
+      if (error) throw error;
+
+      if (!data || !data.url) {
+        alert("Resume URL not found.");
+        return;
+      }
+
+      let resumeUrl = data.url;
+
+      // Convert Google Drive link to preview link
+      if (resumeUrl.includes("drive.google.com")) {
+        const match = resumeUrl.match(/\/d\/(.*?)\//);
+        if (match?.[1]) {
+          const fileId = match[1];
+          resumeUrl = `https://drive.google.com/file/d/${fileId}/view`;
+        }
+      }
+
+      window.open(resumeUrl, "_blank");
+
+    } catch (err) {
+      console.error("Error opening resume:", err.message);
+      alert("Error opening resume: " + err.message);
+    }
+  };
+
+
 
   return (
     <>
@@ -68,7 +105,7 @@ export default function ClientLayout({ children }) {
                     </svg>
                   )}
                 </button>
-                <button className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-gray-800 hover:bg-gray-700 text-gray-200' : 'bg-gray-300 hover:bg-gray-400 text-gray-700'}`}>
+                <button onClick={handleOpenResume} className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-gray-800 hover:bg-gray-700 text-gray-200' : 'bg-gray-300 hover:bg-gray-400 text-gray-700'}`}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-file-text w-5 h-5 text-indigo-400"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>
                 </button>
               </div>
