@@ -25,7 +25,7 @@ const Sidebar = ({ className = '', theme = 'dark' }) => {
   };
 
   return (
-    <aside className={`fixed left-0 top-0 h-screen w-80 z-50 backdrop-blur-md border ${borderClass} shadow-sm transform transition-transform duration-300 lg:translate-x-0 -translate-x-full ${className} lg:static lg:sticky lg:top-0 lg:h-screen lg:overflow-hidden ${sidebarBgClass}`}>
+    <aside className={`fixed left-0 top-0 h-screen w-80 z-50 backdrop-blur-md border ${borderClass} shadow-sm transform transition-transform duration-300 lg:translate-x-0 -translate-x-full ${className} lg:sticky lg:top-0 lg:h-screen lg:overflow-hidden ${sidebarBgClass}`}>
       <div className="p-6">
         <div className="flex items-center space-x-4 mb-6">
           <Image src={arif} alt="Profile Picture" className="w-16 h-16 rounded-xl object-cover" />
