@@ -91,62 +91,128 @@ const RealTimeActivity = () => {
     ]);
 
     // Fetch dynamic coding activity data from the database
+    // useEffect(() => {
+    //     const fetchCodingActivity = async () => {
+    //         try {
+    //             const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+    //             const response = await fetch(`/api/daily-coding-breakdown?date=${today}`);
+    //             if (!response.ok) throw new Error('Failed to fetch coding activity breakdown');
+    //             const data = await response.json();
+
+    //             if (data.success && data.codingBreakdown) {
+    //                 const breakdown = data.codingBreakdown;
+    //                 // Calculate max value for percentage calculations
+    //                 const maxHours = Math.max(
+    //                     breakdown.night_time || 0,
+    //                     breakdown.morning_time || 0,
+    //                     breakdown.afternoon_time || 0,
+    //                     breakdown.evening_time || 0
+    //                 );
+
+    //                 // Format data for the UI
+    //                 // const formattedData = [
+    //                 //     {
+    //                 //         period: "Night (12AM-6AM)",
+    //                 //         hours: (breakdown.night_time || 0).toFixed(2),
+    //                 //         percent: maxHours > 0 ? parseFloat((((breakdown.night_time || 0) / maxHours) * 100).toFixed(2)) : 0,
+    //                 //         height: maxHours > 0 ? `${Math.round(((breakdown.night_time || 0) / maxHours) * 180)}px` : '0px'
+    //                 //     },
+    //                 //     {
+    //                 //         period: "Morning (6AM-12PM)",
+    //                 //         hours: (breakdown.morning_time || 0).toFixed(2),
+    //                 //         percent: maxHours > 0 ? parseFloat((((breakdown.morning_time || 0) / maxHours) * 100).toFixed(2)) : 0,
+    //                 //         height: maxHours > 0 ? `${Math.round(((breakdown.morning_time || 0) / maxHours) * 180)}px` : '0px'
+    //                 //     },
+    //                 //     {
+    //                 //         period: "Afternoon (12PM-6PM)",
+    //                 //         hours: (breakdown.afternoon_time || 0).toFixed(2),
+    //                 //         percent: maxHours > 0 ? parseFloat((((breakdown.afternoon_time || 0) / maxHours) * 100).toFixed(2)) : 0,
+    //                 //         height: maxHours > 0 ? `${Math.round(((breakdown.afternoon_time || 0) / maxHours) * 180)}px` : '0px'
+    //                 //     },
+    //                 //     {
+    //                 //         period: "Evening (6PM-12AM)",
+    //                 //         hours: (breakdown.evening_time || 0).toFixed(2),
+    //                 //         percent: maxHours > 0 ? parseFloat((((breakdown.evening_time || 0) / maxHours) * 100).toFixed(2)) : 0,
+    //                 //         height: maxHours > 0 ? `${Math.round(((breakdown.evening_time || 0) / maxHours) * 180)}px` : '0px'
+    //                 //     }
+    //                 // ];
+
+    //                 const formattedData = [
+    //                     {
+    //                         period: "Night (12AM-6AM)",
+    //                         hours: (breakdown.night_time || 0).toFixed(2),
+    //                     },
+    //                     {
+    //                         period: "Morning (6AM-12PM)",
+    //                         hours: ((breakdown.morning_time || 0) - (breakdown.night_time || 0)).toFixed(2),
+    //                     },
+    //                     {
+    //                         period: "Afternoon (12PM-6PM)",
+    //                         hours: ((breakdown.afternoon_time || 0) - (breakdown.morning_time || 0) - (breakdown.night_time || 0)).toFixed(2),
+    //                     },
+    //                     {
+    //                         period: "Evening (6PM-12AM)",
+    //                         hours: ((breakdown.evening_time || 0) - (breakdown.afternoon_time || 0) - (breakdown.morning_time || 0) - (breakdown.night_time || 0)).toFixed(2),
+    //                     }
+    //                 ];
+
+
+    //                 setCodingActivity(formattedData);
+    //             }
+    //         } catch (error) {
+    //             console.error('Error fetching coding activity:', error);
+    //             // Keep default values on error
+    //         }
+    //     };
+
+    //     fetchCodingActivity();
+    // }, []);
+
     useEffect(() => {
         const fetchCodingActivity = async () => {
             try {
-                const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+                const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
                 const response = await fetch(`/api/daily-coding-breakdown?date=${today}`);
                 if (!response.ok) throw new Error('Failed to fetch coding activity breakdown');
                 const data = await response.json();
 
                 if (data.success && data.codingBreakdown) {
                     const breakdown = data.codingBreakdown;
-                    // Calculate max value for percentage calculations
-                    const maxHours = Math.max(
-                        breakdown.night_time || 0,
-                        breakdown.morning_time || 0,
-                        breakdown.afternoon_time || 0,
-                        breakdown.evening_time || 0
-                    );
 
-                    // Format data for the UI
+                    // Prepare raw hours (numbers)
+                    // const night = breakdown.night_time || 0;
+                    // const morning = (breakdown.morning_time  || 0) - night;
+                    // const afternoon = (breakdown.afternoon_time || 0) - morning - night;
+                    // const evening = (breakdown.evening_time || 0) - afternoon - morning - night;
+                    const night = breakdown.night_time || 0;
+                    const morning = Math.max((breakdown.morning_time || 0) - night, 0);
+                    const afternoon = Math.max((breakdown.afternoon_time || 0) - night - morning, 0);
+                    const evening = Math.max((breakdown.evening_time || 0) - night - morning - afternoon, 0);
+
                     const formattedData = [
-                        {
-                            period: "Night (12AM-6AM)",
-                            hours: (breakdown.night_time || 0).toFixed(2),
-                            percent: maxHours > 0 ? parseFloat((((breakdown.night_time || 0) / maxHours) * 100).toFixed(2)) : 0,
-                            height: maxHours > 0 ? `${Math.round(((breakdown.night_time || 0) / maxHours) * 180)}px` : '0px'
-                        },
-                        {
-                            period: "Morning (6AM-12PM)",
-                            hours: (breakdown.morning_time || 0).toFixed(2),
-                            percent: maxHours > 0 ? parseFloat((((breakdown.morning_time || 0) / maxHours) * 100).toFixed(2)) : 0,
-                            height: maxHours > 0 ? `${Math.round(((breakdown.morning_time || 0) / maxHours) * 180)}px` : '0px'
-                        },
-                        {
-                            period: "Afternoon (12PM-6PM)",
-                            hours: (breakdown.afternoon_time || 0).toFixed(2),
-                            percent: maxHours > 0 ? parseFloat((((breakdown.afternoon_time || 0) / maxHours) * 100).toFixed(2)) : 0,
-                            height: maxHours > 0 ? `${Math.round(((breakdown.afternoon_time || 0) / maxHours) * 180)}px` : '0px'
-                        },
-                        {
-                            period: "Evening (6PM-12AM)",
-                            hours: (breakdown.evening_time || 0).toFixed(2),
-                            percent: maxHours > 0 ? parseFloat((((breakdown.evening_time || 0) / maxHours) * 100).toFixed(2)) : 0,
-                            height: maxHours > 0 ? `${Math.round(((breakdown.evening_time || 0) / maxHours) * 180)}px` : '0px'
-                        }
+                        { period: "Night (12AM-6AM)", hours: night },
+                        { period: "Morning (6AM-12PM)", hours: morning },
+                        { period: "Afternoon (12PM-6PM)", hours: afternoon },
+                        { period: "Evening (6PM-12AM)", hours: evening },
                     ];
 
-                    setCodingActivity(formattedData);
+                    // Calculate max for percentages and height
+                    const maxHours = Math.max(...formattedData.map(item => item.hours));
+                    const finalData = formattedData.map(item => ({
+                        ...item,
+                        percent: maxHours > 0 ? parseFloat(((item.hours / maxHours) * 100).toFixed(2)) : 0,
+                        height: maxHours > 0 ? `${Math.round((item.hours / maxHours) * 180)}px` : '0px',
+                        hours: item.hours.toFixed(2), // ✅ now it's safe
+                    }));
+                    setCodingActivity(finalData);
                 }
             } catch (error) {
                 console.error('Error fetching coding activity:', error);
-                // Keep default values on error
             }
         };
-
         fetchCodingActivity();
     }, []);
+
 
     const [activeDevices] = useState([
         // { name: "MacBook Pro", type: "laptop", status: "active" },
@@ -287,7 +353,7 @@ const RealTimeActivity = () => {
                     <div className="flex flex-col space-y-4 w-full md:w-auto items-center md:items-start">
                         <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 items-center">
                             <div className="relative">
-                                <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center text-white text-3xl font-bold">
+                                <div className="w-16 h-16 bg-linear-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center text-white text-3xl font-bold">
                                     {currentActivity.emoji}
                                 </div>
                                 <div className="absolute bottom-0.5 -right-0.5 w-4 h-4 bg-green-400 rounded-full border-2 border-white animate-pulse"></div>
@@ -363,7 +429,7 @@ const RealTimeActivity = () => {
                                             : theme === 'dark'
                                                 ? 'from-gray-800 to-gray-900 border-gray-700/40'
                                                 : 'from-gray-100 to-gray-200 border-gray-300'
-                                        } bg-gradient-to-br`}
+                                        } bg-linear-to-br`}
                                 >
                                     <div className="flex items-center space-x-4">
                                         <div className={`text-sm font-mono ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{item.time}</div>
@@ -442,9 +508,9 @@ const RealTimeActivity = () => {
                                         <span className={`text-xs font-semibold order-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>{`(${period.period.split('(')[1].split(')')[0]})`}</span>
                                         <div className="w-full flex flex-col items-center relative">
                                             <span className={`text-xs font-semibold mb-1 ${theme === 'dark' ? 'text-gray-200' : 'text-gray-700'}`}>{convertToHoursAndMinutes(period.hours)}</span>
-                                            <div className={`w-full max-w-[80px] h-[180px] rounded-t-md ${theme === 'dark' ? 'bg-gray-800/30' : 'bg-gray-300/30'} overflow-hidden transition-all duration-300 group-hover:shadow-md flex items-end`}>
+                                            <div className={`w-full max-w-20px h-[180px] rounded-t-md ${theme === 'dark' ? 'bg-gray-800/30' : 'bg-gray-300/30'} overflow-hidden transition-all duration-300 group-hover:shadow-md flex items-end`}>
                                                 <div
-                                                    className={`w-full rounded-t-md bg-gradient-to-t from-teal-500 to-cyan-400 group-hover:opacity-90 transition-all duration-300`}
+                                                    className={`w-full rounded-t-md bg-linear-to-t from-teal-500 to-cyan-400 group-hover:opacity-90 transition-all duration-300`}
                                                     style={{ height: period.height }}
                                                 ></div>
                                             </div>
@@ -466,7 +532,7 @@ const RealTimeActivity = () => {
                         </div>
                         {activeDevices.map((device, index) => (
                             <div key={index} className="flex items-center space-x-4 py-2 rounded-lg">
-                                <div className={`w-10 h-10 bg-gradient-to-br ${theme === 'dark' ? 'from-gray-800 to-gray-700' : 'from-gray-200 to-gray-300'} rounded-lg flex items-center justify-center`}>
+                                <div className={`w-10 h-10 bg-linear-to-br ${theme === 'dark' ? 'from-gray-800 to-gray-700' : 'from-gray-200 to-gray-300'} rounded-lg flex items-center justify-center`}>
                                     {getDeviceIcon(device.type)}
                                 </div>
                                 <div className="flex-1">
@@ -492,9 +558,9 @@ const RealTimeActivity = () => {
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2 lg:gap-3">
                     {/* Steps Card */}
-                    <div className={`relative rounded-xl p-4 lg:p-4 border backdrop-blur-md shadow-md bg-gradient-to-br ${theme === 'dark' ? 'from-gray-800 to-gray-900 border-gray-700/40' : 'from-gray-200 to-gray-300 border-gray-300/40'} h-full`}>
+                    <div className={`relative rounded-xl p-4 lg:p-4 border backdrop-blur-md shadow-md bg-linear-to-br ${theme === 'dark' ? 'from-gray-800 to-gray-900 border-gray-700/40' : 'from-gray-200 to-gray-300 border-gray-300/40'} h-full`}>
                         <div className="flex items-center space-x-3 mb-4">
-                            <div className="w-12 h-12 bg-green-500 rounded rounded-lg flex items-center justify-center shadow-sm">
+                            <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center shadow-sm">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
                                     <path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z"></path>
                                     <path d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z"></path>
@@ -523,9 +589,9 @@ const RealTimeActivity = () => {
                         </div>
                     </div>
                     {/* Calories Card */}
-                    <div className={`relative rounded-xl p-4 lg:p-4 border backdrop-blur-md shadow-md bg-gradient-to-br ${theme === 'dark' ? 'from-gray-800 to-gray-900 border-gray-700/40' : 'from-gray-200 to-gray-300 border-gray-300/40'} h-full`}>
+                    <div className={`relative rounded-xl p-4 lg:p-4 border backdrop-blur-md shadow-md bg-linear-to-br ${theme === 'dark' ? 'from-gray-800 to-gray-900 border-gray-700/40' : 'from-gray-200 to-gray-300 border-gray-300/40'} h-full`}>
                         <div className="flex items-center space-x-3 mb-4">
-                            <div className="w-12 h-12 bg-red-500 rounded rounded-lg flex items-center justify-center shadow-sm">
+                            <div className="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center shadow-sm">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
                                     <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path>
                                 </svg>
@@ -551,9 +617,9 @@ const RealTimeActivity = () => {
                         </div>
                     </div>
                     {/* Distance Card */}
-                    <div className={`relative rounded-xl p-4 lg:p-4 border backdrop-blur-md shadow-md bg-gradient-to-br ${theme === 'dark' ? 'from-gray-800 to-gray-900 border-gray-700/40' : 'from-gray-200 to-gray-300 border-gray-300/40'} h-full`}>
+                    <div className={`relative rounded-xl p-4 lg:p-4 border backdrop-blur-md shadow-md bg-linear-to-br ${theme === 'dark' ? 'from-gray-800 to-gray-900 border-gray-700/40' : 'from-gray-200 to-gray-300 border-gray-300/40'} h-full`}>
                         <div className="flex items-center space-x-3 mb-4">
-                            <div className="w-12 h-12 bg-blue-500 rounded rounded-lg flex items-center justify-center shadow-sm">
+                            <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center shadow-sm">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
                                     <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
                                     <polyline points="16 7 22 7 22 13"></polyline>
@@ -581,7 +647,7 @@ const RealTimeActivity = () => {
                     </div>
                 </div>
                 {/* Weekly Goal Achievement */}
-                <div className={`relative rounded-xl p-4 lg:p-4 border backdrop-blur-md shadow-md bg-gradient-to-br ${theme === 'dark' ? 'from-gray-800 to-gray-900 border-gray-700/40' : 'from-gray-200 to-gray-300 border-gray-300/40'} h-full`}>
+                <div className={`relative rounded-xl p-4 lg:p-4 border backdrop-blur-md shadow-md bg-linear-to-br ${theme === 'dark' ? 'from-gray-800 to-gray-900 border-gray-700/40' : 'from-gray-200 to-gray-300 border-gray-300/40'} h-full`}>
                     <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                         <div>
                             <h3 className={`text-xl font-semibold mb-2 ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>Weekly Goal Achievement</h3>
