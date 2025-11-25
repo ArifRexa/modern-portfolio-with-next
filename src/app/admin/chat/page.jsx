@@ -413,199 +413,200 @@ const AdminChatPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-200 p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Admin Chat Dashboard</h1>
-        <AnimatedLogoutButton onClick={handleLogout} />
-      </div>
+    <div className="min-h-screen bg-gray-900 text-gray-200">
+      <div className="p-6">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold">Admin Chat Dashboard</h1>
+        </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Online Users Panel */}
-        <div className="lg:col-span-1 bg-gray-800 rounded-lg p-4">
-          <h2 className="text-lg font-semibold mb-4 flex items-center">
-            <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
-            All Visitors ({allUsers.length})
-            <span className="ml-2 text-sm text-gray-400">({allUsers.filter(user => isUserOnline(user.last_seen)).length} online)</span>
-          </h2>
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Online Users Panel */}
+          <div className="lg:col-span-1 bg-gray-800 rounded-lg p-4">
+            <h2 className="text-lg font-semibold mb-4 flex items-center">
+              <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
+              All Visitors ({allUsers.length})
+              <span className="ml-2 text-sm text-gray-400">({allUsers.filter(user => isUserOnline(user.last_seen)).length} online)</span>
+            </h2>
 
-            <div className="space-y-2 max-h-96 overflow-y-auto">
-            {allUsers.length === 0 ? (
-              <p className="text-gray-500 text-sm">No visitors</p>
-            ) : (
-              allUsers.map((user) => {
-                // Get the last seen time for this user, default to a very old date
-                const userLastSeen = lastSeenTimes[user.session_id] ? new Date(lastSeenTimes[user.session_id]) : new Date(0);
+              <div className="space-y-2 max-h-96 overflow-y-auto">
+              {allUsers.length === 0 ? (
+                <p className="text-gray-500 text-sm">No visitors</p>
+              ) : (
+                allUsers.map((user) => {
+                  // Get the last seen time for this user, default to a very old date
+                  const userLastSeen = lastSeenTimes[user.session_id] ? new Date(lastSeenTimes[user.session_id]) : new Date(0);
 
-                // Count unread messages for this user (messages that came after admin last saw them)
-                const unreadCount = allMessages.filter(
-                  msg => msg.visitor_session_id === user.session_id &&
-                         msg.sender_type === 'visitor' && // Only visitor messages to admin
-                         new Date(msg.created_at) > userLastSeen
-                ).length;
+                  // Count unread messages for this user (messages that came after admin last saw them)
+                  const unreadCount = allMessages.filter(
+                    msg => msg.visitor_session_id === user.session_id &&
+                           msg.sender_type === 'visitor' && // Only visitor messages to admin
+                           new Date(msg.created_at) > userLastSeen
+                  ).length;
 
-                const userIsOnline = isUserOnline(user.last_seen);
-                const timeAgo = formatTimeAgo(user.last_seen);
+                  const userIsOnline = isUserOnline(user.last_seen);
+                  const timeAgo = formatTimeAgo(user.last_seen);
 
-                return (
-                  <div
-                    key={user.session_id}
-                    onClick={() => {
-                      // If clicking the same user that's already selected, deselect them
-                      if (selectedUser && selectedUser.session_id === user.session_id) {
-                        setSelectedUser(null);
-                        setUserMessages([]);
-                      } else {
-                        // Update last seen time when user is selected
-                        const newLastSeenTimes = {
-                          ...lastSeenTimes,
-                          [user.session_id]: new Date().toISOString()
-                        };
-                        setLastSeenTimes(newLastSeenTimes);
-                        localStorage.setItem('admin_last_seen_times', JSON.stringify(newLastSeenTimes));
-                        loadUserMessages(user.session_id);
-                        setSelectedUser(user);
-                      }
-                    }}
-                    className={`p-3 rounded-lg cursor-pointer transition-colors relative ${
-                      selectedUser?.session_id === user.session_id
-                        ? 'bg-blue-700/50 border border-blue-500'
-                        : 'bg-gray-700/50 hover:bg-gray-700'
-                    }`}
-                  >
-                    <div className="font-medium">{user.username}</div>
-                    <div className="text-xs text-gray-400 truncate">{user.page_viewed}</div>
-                    <div className="flex items-center text-xs">
-                      <div className="flex items-center mr-2">
-                        <div className={`w-2 h-2 rounded-full mr-1 ${userIsOnline ? 'bg-green-500' : 'bg-gray-500'}`}></div>
-                        <span>{userIsOnline ? 'Online' : 'Offline'}</span>
-                      </div>
-                      <span className="text-gray-500">· {timeAgo}</span>
-                    </div>
-                    {unreadCount > 0 && (
-                      <span className="absolute top-2 right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                        {unreadCount}
-                      </span>
-                    )}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation(); // Prevent triggering the user selection
-                        setShowDeleteConfirm(user.session_id);
+                  return (
+                    <div
+                      key={user.session_id}
+                      onClick={() => {
+                        // If clicking the same user that's already selected, deselect them
+                        if (selectedUser && selectedUser.session_id === user.session_id) {
+                          setSelectedUser(null);
+                          setUserMessages([]);
+                        } else {
+                          // Update last seen time when user is selected
+                          const newLastSeenTimes = {
+                            ...lastSeenTimes,
+                            [user.session_id]: new Date().toISOString()
+                          };
+                          setLastSeenTimes(newLastSeenTimes);
+                          localStorage.setItem('admin_last_seen_times', JSON.stringify(newLastSeenTimes));
+                          loadUserMessages(user.session_id);
+                          setSelectedUser(user);
+                        }
                       }}
-                      className="absolute top-2 right-8 text-gray-400 hover:text-red-500 text-lg"
-                      aria-label="Delete chat"
+                      className={`p-3 rounded-lg cursor-pointer transition-colors relative ${
+                        selectedUser?.session_id === user.session_id
+                          ? 'bg-blue-700/50 border border-blue-500'
+                          : 'bg-gray-700/50 hover:bg-gray-700'
+                      }`}
                     >
-                      …
+                      <div className="font-medium">{user.username}</div>
+                      <div className="text-xs text-gray-400 truncate">{user.page_viewed}</div>
+                      <div className="flex items-center text-xs">
+                        <div className="flex items-center mr-2">
+                          <div className={`w-2 h-2 rounded-full mr-1 ${userIsOnline ? 'bg-green-500' : 'bg-gray-500'}`}></div>
+                          <span>{userIsOnline ? 'Online' : 'Offline'}</span>
+                        </div>
+                        <span className="text-gray-500">· {timeAgo}</span>
+                      </div>
+                      {unreadCount > 0 && (
+                        <span className="absolute top-2 right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                          {unreadCount}
+                        </span>
+                      )}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent triggering the user selection
+                          setShowDeleteConfirm(user.session_id);
+                        }}
+                        className="absolute top-2 right-8 text-gray-400 hover:text-red-500 text-lg"
+                        aria-label="Delete chat"
+                      >
+                        …
+                      </button>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </div>
+
+          {/* Chat Panel */}
+          <div className="lg:col-span-3 bg-gray-800 rounded-lg flex flex-col">
+            {selectedUser ? (
+              <>
+                <div className="p-4 border-b border-gray-700">
+                  <h2 className="text-lg font-semibold">
+                    Chat with {selectedUser.username}
+                    <span className="text-xs text-gray-400 ml-2">
+                      (on {selectedUser.page_viewed})
+                    </span>
+                  </h2>
+                </div>
+
+                {/* Messages */}
+                <div ref={messagesContainerRef} className="flex-1 p-4 overflow-y-auto max-h-96">
+                  {userMessages.length === 0 ? (
+                    <div className="text-center text-gray-500 py-8">No messages yet</div>
+                  ) : (
+                    <div className="space-y-3">
+                      {userMessages.map((msg, index) => (
+                        <div
+                          key={index}
+                          className={`p-3 rounded-lg max-w-[80%] ${
+                            msg.sender_type === 'admin'
+                              ? 'bg-blue-800/30 text-blue-100 ml-auto'
+                              : 'bg-gray-700 text-gray-200'
+                          }`}
+                        >
+                          <div className="text-xs text-gray-400 mb-1">
+                            {msg.sender_type === 'admin' ? 'You (Admin)' : selectedUser.username}
+                          </div>
+                          <div className="text-sm">{msg.message}</div>
+                          <div className="text-xs text-gray-500 mt-1">
+                            {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          </div>
+                        </div>
+                      ))}
+                      <div ref={messagesEndRef} />
+                    </div>
+                  )}
+                </div>
+
+                {/* Message Input */}
+                <form onSubmit={sendMessage} className="p-4 border-t border-gray-700">
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={inputMessage}
+                      onChange={(e) => setInputMessage(e.target.value)}
+                      placeholder="Type your message..."
+                      className="flex-1 bg-gray-700 text-gray-200 px-3 py-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                    <button
+                      type="submit"
+                      disabled={!inputMessage.trim()}
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Send
                     </button>
                   </div>
-                );
-              })
+                </form>
+              </>
+            ) : (
+              <div className="flex-1 flex items-center justify-center p-8">
+                <div className="text-center text-gray-500">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mx-auto mb-4">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                  </svg>
+                  <p>Select a visitor to start chatting</p>
+                </div>
+              </div>
             )}
           </div>
         </div>
 
-        {/* Chat Panel */}
-        <div className="lg:col-span-3 bg-gray-800 rounded-lg flex flex-col">
-          {selectedUser ? (
-            <>
-              <div className="p-4 border-b border-gray-700">
-                <h2 className="text-lg font-semibold">
-                  Chat with {selectedUser.username}
-                  <span className="text-xs text-gray-400 ml-2">
-                    (on {selectedUser.page_viewed})
-                  </span>
-                </h2>
-              </div>
-
-              {/* Messages */}
-              <div ref={messagesContainerRef} className="flex-1 p-4 overflow-y-auto max-h-96">
-                {userMessages.length === 0 ? (
-                  <div className="text-center text-gray-500 py-8">No messages yet</div>
-                ) : (
-                  <div className="space-y-3">
-                    {userMessages.map((msg, index) => (
-                      <div
-                        key={index}
-                        className={`p-3 rounded-lg max-w-[80%] ${
-                          msg.sender_type === 'admin'
-                            ? 'bg-blue-800/30 text-blue-100 ml-auto'
-                            : 'bg-gray-700 text-gray-200'
-                        }`}
-                      >
-                        <div className="text-xs text-gray-400 mb-1">
-                          {msg.sender_type === 'admin' ? 'You (Admin)' : selectedUser.username}
-                        </div>
-                        <div className="text-sm">{msg.message}</div>
-                        <div className="text-xs text-gray-500 mt-1">
-                          {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                        </div>
-                      </div>
-                    ))}
-                    <div ref={messagesEndRef} />
-                  </div>
-                )}
-              </div>
-
-              {/* Message Input */}
-              <form onSubmit={sendMessage} className="p-4 border-t border-gray-700">
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={inputMessage}
-                    onChange={(e) => setInputMessage(e.target.value)}
-                    placeholder="Type your message..."
-                    className="flex-1 bg-gray-700 text-gray-200 px-3 py-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  />
-                  <button
-                    type="submit"
-                    disabled={!inputMessage.trim()}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Send
-                  </button>
-                </div>
-              </form>
-            </>
-          ) : (
-            <div className="flex-1 flex items-center justify-center p-8">
-              <div className="text-center text-gray-500">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mx-auto mb-4">
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                </svg>
-                <p>Select a visitor to start chatting</p>
-              </div>
-            </div>
-          )}
+        {/* Independent Notes Section */}
+        <div className="mt-6">
+          <NoteSection selectedUser={selectedUser} />
         </div>
-      </div>
 
-      {/* Independent Notes Section */}
-      <div className="mt-6">
-        <NoteSection selectedUser={selectedUser} />
-      </div>
-
-      {/* Delete Confirmation Modal */}
-      {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-gray-800 p-6 rounded-lg max-w-md w-full mx-4">
-            <h3 className="text-lg font-semibold text-gray-200 mb-4">Confirm Delete</h3>
-            <p className="text-gray-400 mb-6">Are you sure you want to delete this visitor&apos;s entire chat history? This action cannot be undone.</p>
-            <div className="flex justify-end space-x-3">
-              <button
-                onClick={() => setShowDeleteConfirm(null)}
-                className="px-4 py-2 bg-gray-600 text-gray-200 rounded hover:bg-gray-700 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => deleteUserChat(showDeleteConfirm)}
-                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
-              >
-                Delete
-              </button>
+        {/* Delete Confirmation Modal */}
+        {showDeleteConfirm && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-gray-800 p-6 rounded-lg max-w-md w-full mx-4">
+              <h3 className="text-lg font-semibold text-gray-200 mb-4">Confirm Delete</h3>
+              <p className="text-gray-400 mb-6">Are you sure you want to delete this visitor&apos;s entire chat history? This action cannot be undone.</p>
+              <div className="flex justify-end space-x-3">
+                <button
+                  onClick={() => setShowDeleteConfirm(null)}
+                  className="px-4 py-2 bg-gray-600 text-gray-200 rounded hover:bg-gray-700 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => deleteUserChat(showDeleteConfirm)}
+                  className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
