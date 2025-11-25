@@ -36,19 +36,8 @@ export default function AdminLayout({ children }) {
     sessionStorage.removeItem('adminAuth');
     setIsAuthenticated(false);
     // Redirect to login page
-    window.location.href = '/admin/chat';
+    window.location.href = '/admin-login';
   };
-
-  // Redirect to login when not authenticated (performed in effect)
-  useEffect(() => {
-    if (isAuthenticated === false && typeof window !== 'undefined') {
-      window.location.href = '/admin/chat';
-    }
-  }, [isAuthenticated]);
-
-  if (isAuthenticated === false) {
-    return null;
-  }
 
   // Show loading while checking auth
   if (isAuthenticated === null) {
@@ -57,6 +46,14 @@ export default function AdminLayout({ children }) {
         <div className="text-center py-12">Checking authentication...</div>
       </div>
     );
+  }
+
+  // If not authenticated and not on login page, redirect to login page
+  if (isAuthenticated === false && pathname !== '/admin-login') {
+    if (typeof window !== 'undefined') {
+      window.location.href = '/admin-login';
+    }
+    return null;
   }
 
   return (
