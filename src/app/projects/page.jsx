@@ -6,6 +6,110 @@ import { useTheme } from '@/context/ThemeContext';
 const ProjectsPortfolio = () => {
   const { theme } = useTheme();
   const projects = [
+    {
+      title: "AI Sales Assistant (TeezAI)",
+      description:
+        "A comprehensive car dealership AI assistant platform designed to handle multiple aspects of automotive sales and customer service. Features a sophisticated multi-agent AI system that routes user queries to specialized agents for optimal customer experience.",
+      features: [
+        "Multi-Agent AI System: Sophisticated AI assistant that routes user queries to specialized agents",
+        "Vehicle Inventory Management: Complete vehicle inventory system with models, brands, and specifications",
+        "Customer Interaction: Contact management, test drive booking, and appointment scheduling",
+        "Trade-In Services: Vehicle trade-in evaluation and matching system",
+        "Customer Support: FAQ handling and technical assistance booking",
+        "Human Agent Integration: Ability to connect users with human representatives",
+        "Payment and Subscription Management: Stripe integration for dealer subscriptions",
+        "Voice Assistant Integration: Twilio for voice calls and communication",
+        "Dealer Management: Complete dealer dashboard and administration panel",
+        "Conversation History: Chat history tracking and management"
+      ],
+      topics: [
+        "ai", "django", "langchain", "langgraph", "openai", "multi-agent",
+        "car-dealership", "sales-automation", "vehicle-inventory", "chatbot",
+        "python", "postgresql", "redis", "stripe", "twilio", "docker"
+      ],
+      status: "Completed",
+      date: "Dec 1, 2025",
+      githubUrl: "https://github.com/ArifRexa/AI-Car-Sales-Assistant"  // Replace with actual repository URL when available
+    },
+    {
+      title: "Surrat Backend",
+      description:
+        "A Django-based audio processing and language learning platform that integrates AI services for transcription, translation, and conversation. Designed to help users practice speaking and improve language skills through an interactive audio-based system with support for minority languages like Sami.",
+      features: [
+        "Audio Processing Pipeline: Complete workflow from audio upload to AI response with transcription, translation, and TTS generation",
+        "Multilingual Support: Focus on Sami, Norwegian, and English with Google Translate integration",
+        "AI Integration: OpenAI GPT models for intelligent conversation responses",
+        "TTS Options: Dual provider support (Acapela and GiellaLT) with voice selection",
+        "User Engagement: Star-based system for tracking user progress and engagement",
+        "Subscription Management: Multiple tiers with platform-specific tracking",
+        "Data Privacy: GDPR-compliant user data management and anonymization",
+        "Real-time Audio Transcription: Using Hugging Face Whisper model for MP3 and WAV files",
+        "Translation Services: Real-time translation between Sami, Norwegian, and English",
+        "AI-Powered Chatbot: Context-aware responses with GPT-4 and GPT-3.5 Turbo integration"
+      ],
+      topics: [
+        "django", "djangorestframework", "ai", "audio-processing", "transcription",
+        "translation", "text-to-speech", "openai", "gpt", "huggingface",
+        "minority-languages", "sami", "language-learning", "celery", "redis",
+        "postgresql", "python", "whisper", "google-translate"
+      ],
+      status: "Completed",
+      date: "Dec 1, 2025",
+      githubUrl: "https://github.com/ArifRexa/Surrat-AI-Chat-Bot"  // Replace with actual repository URL when available
+    },
+    {
+      title: "Social Media Automation Platform",
+      description:
+        "A comprehensive social media automation platform designed to automate user engagement across multiple social media platforms. The system allows users to perform various actions like liking, commenting, following, posting, and more across different social networks through a unified API interface.",
+      features: [
+        "Multi-Platform Support: Automated interactions across Instagram, Tumblr, Pinterest, Reddit, Facebook Groups, WhatsApp, and LinkedIn",
+        "Automated Interactions: Like, comment, follow, unfollow, share, and post across platforms",
+        "Content Creation: Upload photos, create stories, and make posts on various platforms",
+        "Tag/Hashtag Targeting: Perform actions based on specific hashtags or tags",
+        "User Management: Follow/unfollow users and interact with profiles",
+        "Content Management: Pin creation on Pinterest and post creation across platforms",
+        "CSV-Based Automation: Configure actions through CSV command files",
+        "Rate Limit Management: Built-in controls to minimize excessive API calls",
+        "Unified API Interface: Centralized server for diverse social media platform integration",
+        "User Authentication: Secure login/logout mechanisms for each platform"
+      ],
+      topics: [
+        "python", "blacksheep", "automation", "social-media", "api", "instagram",
+        "tumblr", "pinterest", "reddit", "facebook", "whatsapp", "linkedin",
+        "instagrapi", "selenium", "pinterest-api", "tumblr-api", "reddit-api",
+        "openapi", "rest-api", "social-media-automation"
+      ],
+      status: "Completed",
+      date: "Dec 1, 2025",
+      githubUrl: "https://github.com/ArifRexa/Social-Media-Automation-All"  // Replace with actual repository URL when available
+    },
+    {
+      title: "Planning Conditions Extractor Tool",
+      description:
+        "A FastAPI-based web application designed to scrape London planning data, extract and categorize planning conditions based on predefined keywords, and provide a RESTful API for accessing and managing planning applications. The tool automatically categorizes conditions into heritage, archaeology, ecology, and cross-discipline categories.",
+      features: [
+        "Data Scraping & Processing: Scrapes London planning data from official API with advanced filtering for 'Approved' or 'Refused' applications",
+        "Condition Categorization: Automatically categorizes conditions into heritage, archaeology, ecology, and cross-discipline categories",
+        "Supabase Integration: Stores data in a PostgreSQL database via Supabase with batched upserts for efficiency",
+        "RESTful API Endpoints: Comprehensive endpoints for authentication, data access, and application management",
+        "Advanced Filtering & Querying: Multi-parameter filtering by borough, status, date range with pagination support",
+        "User Authentication & Security: Full JWT-based authentication with email verification and password security",
+        "Monitoring & Error Tracking: Sentry integration for comprehensive error monitoring and tracking",
+        "Date Range Processing: Supports configurable date ranges with smart defaults for last 45 days",
+        "Keyword-based Matching: Uses regex patterns for accurate condition categorization",
+        "Batch Processing: Efficiently handles large data volumes with 1000-record batch processing"
+      ],
+      topics: [
+        "fastapi", "python", "planning-data", "web-scraping", "data-extraction",
+        "supabase", "postgresql", "api", "restful", "authentication",
+        "jwt", "pydantic", "sentry", "london", "planning-portal",
+        "data-categorization", "condition-classification", "async", "datetime",
+        "data-validation", "batch-processing", "error-handling", "security"
+      ],
+      status: "Completed",
+      date: "Dec 1, 2025",
+      githubUrl: "https://github.com/arif-azrul/planning-conditions-extractor"  // Replace with actual repository URL when available
+    },
     // {
     //   title: "AWS IAM User Management",
     //   description:
