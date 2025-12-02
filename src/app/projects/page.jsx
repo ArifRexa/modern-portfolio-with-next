@@ -310,7 +310,7 @@ const ProjectsPortfolio = () => {
     <section className="space-y-6">
       {/* Header */}
       <div className="text-center p-2 sm:px-8 lg:px-12">
-        <h1 className={`relative inline-block text-3xl sm:text-4xl md:text-4xl font-extrabold tracking-tight ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
+        <h1 className={`relative inline-block text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
           Projects & Portfolio
         </h1>
         <p className={`max-w-2xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
@@ -324,46 +324,46 @@ const ProjectsPortfolio = () => {
         {projects.map((project, index) => (
           <div
             key={index}
-            className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} p-4 lg:p-6 shadow-sm flex flex-col h-full overflow-hidden group`}
+            className={`relative ${theme === 'dark' ? 'bg-gray-900/90' : 'bg-gray-100/90'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} p-3 sm:p-4 shadow-sm flex flex-col h-full overflow-hidden group`}
           >
             {/* 3D Glass Effect */}
-            <div className={`absolute inset-0 ${theme === 'dark' ? 'bg-linear-to-br from-blue-500/10 to-purple-500/10' : 'bg-linear-to-br from-blue-400/10 to-purple-400/10'} rounded-xl transform -rotate-1 scale-105 opacity-60 group-hover:opacity-100 transition-all duration-300 z-0`}></div>
+            <div className={`absolute inset-0 ${theme === 'dark' ? 'bg-gradient-to-br from-blue-500/10 to-purple-500/10' : 'bg-gradient-to-br from-blue-400/10 to-purple-400/10'} rounded-xl opacity-40 group-hover:opacity-60 transition-all duration-300 z-0`}></div>
             <div className="relative z-10 flex flex-col grow">
               {/* Title & Status */}
               <div className="flex items-center justify-between mb-2 z-10">
-                <h4 className={`text-xl lg:text-2xl font-semibold truncate ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
+                <h4 className={`text-lg sm:text-xl font-semibold truncate ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
                   {project.title}
                 </h4>
                 <div className="relative group/status">
                   <div className="w-3 h-3 rounded-full bg-blue-500"></div>
-                  <div className={`absolute top-4 right-0 text-sm px-3 py-1.5 rounded-lg opacity-0 group-hover/status:opacity-100 transition-all duration-300 ease-out transform scale-95 group-hover/status:scale-100 font-semibold ${theme === 'dark' ? 'bg-linear-to-r from-blue-800 via-blue-800 to-blue-900 text-blue-100' : 'bg-linear-to-r from-blue-200 via-blue-300 to-blue-400 text-blue-900'} shadow-md`}>
+                  <div className={`absolute top-4 right-0 text-xs sm:text-sm px-2 py-1 rounded-lg opacity-0 group-hover/status:opacity-100 transition-all duration-300 ease-out transform scale-95 group-hover/status:scale-100 font-semibold ${theme === 'dark' ? 'bg-gray-900 text-blue-100' : 'bg-gray-200 text-blue-900'} shadow-md border ${theme === 'dark' ? 'border-gray-700' : 'border-gray-300'}`}>
                     {project.status}
                   </div>
                 </div>
               </div>
 
               {/* Description */}
-              <p className={`text-sm md:text-base mb-4 line-clamp-8 lg:line-clamp-6 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+              <p className={`text-xs sm:text-sm mb-3 line-clamp-6 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                 {project.description}
               </p>
 
               {/* Features */}
-              <div className="mb-4 z-10">
-                <h4 className={`text-base lg:text-lg font-semibold mb-2 ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>Key Features</h4>
+              <div className="mb-3 z-10">
+                <h4 className={`text-sm sm:text-base font-semibold mb-1.5 ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>Key Features</h4>
                 <ul className="space-y-1">
                   {project.features.map((feature, i) => (
-                    <li key={i} className={`text-sm lg:text-base flex items-start ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                    <li key={i} className={`text-xs sm:text-sm flex items-start ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
+                        width="16"
+                        height="16"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        className={`lucide lucide-chevron-right w-3 h-3 mr-2 mt-1 ${theme === 'dark' ? 'text-green-400' : 'text-green-600'} shrink-0`}
+                        className={`lucide lucide-chevron-right w-3 h-3 mr-1.5 mt-0.5 ${theme === 'dark' ? 'text-green-400' : 'text-green-600'} shrink-0 flex-shrink-0`}
                       >
                         <path d="m9 18 6-6-6-6" />
                       </svg>
@@ -374,15 +374,15 @@ const ProjectsPortfolio = () => {
               </div>
 
               {/* Topics */}
-              <div className="mb-4 z-10">
-                <div className="flex flex-row w-full items-center mb-2">
-                  <h4 className={`text-base lg:text-lg font-semibold ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>Topics</h4>
+              <div className="mb-3 z-10">
+                <div className="flex flex-row w-full items-center mb-1.5">
+                  <h4 className={`text-sm sm:text-base font-semibold ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>Topics</h4>
                 </div>
                 <div className="flex flex-wrap gap-1">
                   {project.topics.map((topic, i) => (
                     <div
                       key={i}
-                      className={`inline-flex items-center border font-semibold px-3 py-1 text-xs sm:text-sm rounded-md ${theme === 'dark' ? 'bg-gray-700/50 text-gray-300 border-gray-700/50 hover:bg-gray-600/50 hover:text-gray-100' : 'bg-gray-200/50 text-gray-700 border-gray-300 hover:bg-gray-300/50 hover:text-gray-900'}`}
+                      className={`inline-flex items-center border font-semibold px-2 py-0.5 text-[10px] sm:text-xs rounded-md ${theme === 'dark' ? 'bg-gray-700/50 text-gray-300 border-gray-700/50 hover:bg-gray-600/50 hover:text-gray-100' : 'bg-gray-200/50 text-gray-700 border-gray-300 hover:bg-gray-300/50 hover:text-gray-900'}`}
                     >
                       {topic}
                     </div>
@@ -391,33 +391,33 @@ const ProjectsPortfolio = () => {
               </div>
 
               {/* Footer: Status, Date, GitHub */}
-              <div className="flex justify-between items-center flex-wrap gap-2 mt-auto pt-2 z-10">
-                <div className="flex flex-wrap gap-2 text-xs lg:text-sm font-medium">
-                  <div className={`px-2.5 py-0.5 w-fit flex items-center text-xs lg:text-sm font-bold border backdrop-blur-sm rounded-full shadow-sm ${theme === 'dark' ? 'bg-green-500/20 text-green-300 border-green-400/40' : 'bg-green-500/30 text-green-700 border-green-500/40'}`}>
+              <div className="flex flex-col sm:flex-row justify-between items-center flex-wrap gap-2 mt-auto pt-2 z-10">
+                <div className="flex flex-wrap gap-1.5 text-[9px] sm:text-xs font-medium">
+                  <div className={`px-2 py-0.5 w-fit flex items-center font-bold border backdrop-blur-sm rounded-full shadow-sm ${theme === 'dark' ? 'bg-green-500/20 text-green-300 border-green-400/40' : 'bg-green-500/30 text-green-700 border-green-500/40'}`}>
                     {project.status}
                   </div>
-                  <div className={`px-2.5 py-0.5 w-fit flex items-center text-xs lg:text-sm font-bold border backdrop-blur-sm rounded-full shadow-sm ${theme === 'dark' ? 'bg-purple-500/20 text-purple-300 border-purple-400/40' : 'bg-purple-500/30 text-purple-700 border-purple-500/40'}`}>
+                  <div className={`px-2 py-0.5 w-fit flex items-center font-bold border backdrop-blur-sm rounded-full shadow-sm ${theme === 'dark' ? 'bg-purple-500/20 text-purple-300 border-purple-400/40' : 'bg-purple-500/30 text-purple-700 border-purple-500/40'}`}>
                     {project.date}
                   </div>
                 </div>
-                <div className="flex space-x-2">
+                <div className="flex space-x-1.5">
                   <a
                     href={project.githubUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium h-10 text-xs px-3 py-1 ${theme === 'dark' ? 'bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border-blue-400/40 border' : 'bg-blue-500/30 hover:bg-blue-500/40 text-blue-700 border-blue-500/40 border'}`}
+                    className={`inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md font-medium h-8 text-[10px] px-2 py-1 ${theme === 'dark' ? 'bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border-blue-400/40 border' : 'bg-blue-500/30 hover:bg-blue-500/40 text-blue-700 border-blue-500/40 border'}`}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
+                      width="16"
+                      height="16"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      className="lucide lucide-github w-4 h-4"
+                      className="lucide lucide-github w-3 h-3"
                     >
                       <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
                       <path d="M9 18c-4.51 2-5-2-7-2" />
