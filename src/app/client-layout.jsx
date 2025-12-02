@@ -10,9 +10,10 @@ import supabase from '@/utils/supabaseClient';
 
 export default function ClientLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const pathname = usePathname();
   const { theme, toggleTheme } = useTheme();
 
-  // Close sidebar when resizing to large screens
+  // Close sidebar when resizing to large screens or when pathname changes
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) { // lg breakpoint
@@ -23,6 +24,11 @@ export default function ClientLayout({ children }) {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Close sidebar when pathname changes (user navigates to a different page)
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [pathname]);
 
   const handleOpenResume = async () => {
     try {
@@ -64,17 +70,32 @@ export default function ClientLayout({ children }) {
     <>
       {/* <AestheticSpinner /> */}
       <div className="flex">
-        {/* Mobile menu button */}
-        <button
-          className={`fixed top-4 left-4 z-51 p-2 rounded-lg ${theme === 'dark' ? 'bg-gray-800 text-gray-200' : 'bg-gray-300 text-gray-700'} lg:hidden z-50`}
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-          </svg>
-        </button>
+        {/* Mobile menu button - Hamburger (left side when closed) */}
+        {!sidebarOpen && (
+          <button
+            className={`fixed top-4 left-4 z-51 p-2 rounded-lg ${theme === 'dark' ? 'bg-gray-800 text-gray-200' : 'bg-gray-300 text-gray-700'} lg:hidden z-50`}
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+        )}
+
+        {/* Close button - Cross (right side when open) */}
+        {sidebarOpen && (
+          <button
+            className={`fixed top-4 right-4 z-51 p-2 rounded-lg ${theme === 'dark' ? 'bg-gray-800 text-gray-200' : 'bg-gray-300 text-gray-700'} lg:hidden z-50`}
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 6 6 18"></path>
+              <path d="m6 6 12 12"></path>
+            </svg>
+          </button>
+        )}
 
         <Sidebar className={sidebarOpen ? 'translate-x-0' : '-translate-x-full'} theme={theme} />
 
