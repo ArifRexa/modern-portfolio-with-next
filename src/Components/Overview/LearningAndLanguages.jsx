@@ -148,51 +148,49 @@ const LearningAndLanguages = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+    <div className="grid grid-cols-1 gap-3 sm:gap-4 mb-4">
       {/* Currently Learning */}
       <div>
-        <div className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} p-4 lg:p-6 shadow-sm w-full h-full`}>
-          <div className="flex items-center justify-between">
-            <h3 className={`text-2xl lg:text-2xl font-bold tracking-tight ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
+        <div className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} p-3 sm:p-4 shadow-sm w-full h-full`}>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+            <h3 className={`text-lg sm:text-xl font-bold tracking-tight ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
               Currently Learning
             </h3>
             <div className="flex items-center space-x-2">
               <button
                 onClick={goToPrevLearning}
-                className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-gray-700/50 hover:bg-gray-600/50 text-gray-300' : 'bg-gray-300 hover:bg-gray-400 text-gray-700'} disabled:opacity-30 disabled:cursor-not-allowed`}
+                className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-gray-700/50 hover:bg-gray-600/50 text-gray-300' : 'bg-gray-300 hover:bg-gray-400 text-gray-700'} disabled:opacity-30 disabled:cursor-not-allowed`}
                 disabled={learningData.length <= 1} // Disable if only one item
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
+                  width="16" height="16"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="lucide lucide-chevron-left w-4 h-4"
+                  className="lucide lucide-chevron-left w-3 h-3 sm:w-4 sm:h-4"
                 >
                   <path d="m15 18-6-6 6-6"></path>
                 </svg>
               </button>
               <button
                 onClick={goToNextLearning}
-                className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-gray-700/50 hover:bg-gray-600/50 text-gray-300' : 'bg-gray-300 hover:bg-gray-400 text-gray-700'} disabled:opacity-30 disabled:cursor-not-allowed`}
+                className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-gray-700/50 hover:bg-gray-600/50 text-gray-300' : 'bg-gray-300 hover:bg-gray-400 text-gray-700'} disabled:opacity-30 disabled:cursor-not-allowed`}
                 disabled={learningData.length <= 1} // Disable if only one item
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
+                  width="16" height="16"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="lucide lucide-chevron-right w-4 h-4"
+                  className="lucide lucide-chevron-right w-3 h-3 sm:w-4 sm:h-4"
                 >
                   <path d="m9 18 6-6-6-6"></path>
                 </svg>
@@ -200,7 +198,7 @@ const LearningAndLanguages = () => {
             </div>
           </div>
 
-          <div className="relative overflow-hidden min-h-[120px] mt-4">
+          <div className="relative overflow-hidden min-h-[120px] mt-3">
             {learningData.length > 0 ? (
               <motion.div
                 key={currentLearningIndex}
@@ -208,34 +206,34 @@ const LearningAndLanguages = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
-                className={`bg-gradient-to-br ${theme === 'dark' ? 'from-gray-800 to-gray-900 border-gray-700/40' : 'from-gray-200 to-gray-100 border-gray-300'} rounded-xl p-4 lg:p-4 shadow-md backdrop-blur-md h-full`}
+                className={`bg-gradient-to-br ${theme === 'dark' ? 'from-gray-800 to-gray-900 border-gray-700/40' : 'from-gray-200 to-gray-100 border-gray-300'} rounded-xl p-3 sm:p-4 shadow-md backdrop-blur-md h-full`}
               >
-                <div className="flex items-center space-x-3 mb-4">
-                  <div>
-                    <h3 className={`text-xl font-bold leading-tight ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
+                <div className="flex flex-col sm:flex-row sm:items-start gap-2 mb-3">
+                  <div className="flex-1">
+                    <h3 className={`text-base sm:text-lg font-bold leading-tight ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
                       {currentLearning.topic}
                     </h3>
-                    <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>via {currentLearning.platform}</p>
-                    <p className={`mt-4 text-sm line-clamp-2 lg:line-clamp-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                    <p className={`text-xs sm:text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>via {currentLearning.platform}</p>
+                    <p className={`mt-2 text-xs sm:text-sm line-clamp-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                       {currentLearning.description}
                     </p>
                   </div>
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-2 sm:space-y-3">
                   <div>
                     <div className="flex items-center justify-between mb-1">
-                      <span className={`${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Progress</span>
-                      <span className={`font-bold ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>{currentLearning.progress}%</span>
+                      <span className={`text-xs sm:text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Progress</span>
+                      <span className={`font-bold text-xs sm:text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>{currentLearning.progress}%</span>
                     </div>
-                    <div className={`w-full h-4 rounded-full ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-300'}`}>
+                    <div className={`w-full h-3 sm:h-4 rounded-full ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-300'}`}>
                       <div
-                        className="h-4 bg-gradient-to-r from-orange-500 to-red-500 rounded-full transition-all duration-1000 ease-out"
+                        className="h-3 sm:h-4 bg-gradient-to-r from-orange-500 to-red-500 rounded-full transition-all duration-1000 ease-out"
                         style={{ width: `${currentLearning.progress}%` }}
                       ></div>
                     </div>
                   </div>
-                  <p className={`text-sm font-semibold ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+                  <p className={`text-xs sm:text-sm font-semibold ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
                     Est. completion: {currentLearning.finish_time}
                   </p>
                 </div>
@@ -246,14 +244,14 @@ const LearningAndLanguages = () => {
           </div>
 
           {learningData.length > 1 && ( // Only show dots if there's more than one item
-            <div className="flex justify-center mt-4 space-x-1">
+            <div className="flex justify-center mt-3 space-x-1">
               {learningData.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => handleLearningDotClick(i)}
                   className={`w-2 h-2 rounded-full transition-all duration-300 ${
                     i === currentLearningIndex
-                      ? 'w-6 bg-blue-400 shadow-lg scale-125'
+                      ? 'w-5 sm:w-6 bg-blue-400 shadow-lg scale-125'
                       : `${theme === 'dark' ? 'bg-gray-600 hover:bg-gray-500' : 'bg-gray-400 hover:bg-gray-500'}`
                   }`}
                 />
@@ -265,8 +263,8 @@ const LearningAndLanguages = () => {
 
       {/* Languages */}
       <div>
-        <div className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} p-4 lg:p-6 shadow-sm w-full h-full`}>
-          <h3 className={`text-2xl lg:text-2xl font-bold tracking-tight ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'} mb-4`}>
+        <div className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} p-3 sm:p-4 shadow-sm w-full h-full`}>
+          <h3 className={`text-lg sm:text-xl font-bold tracking-tight ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'} mb-3`}>
             Languages
           </h3>
 
@@ -275,23 +273,23 @@ const LearningAndLanguages = () => {
               languagesData.map((lang) => (
                 <div
                   key={lang.id} // Use the database ID as the key
-                  className={`bg-gradient-to-br ${theme === 'dark' ? 'from-gray-800 to-gray-900 border-gray-700/40' : 'from-gray-200 to-gray-100 border-gray-300'} rounded-xl p-4 lg:p-4 shadow-md backdrop-blur-md`}
+                  className={`bg-gradient-to-br ${theme === 'dark' ? 'from-gray-800 to-gray-900 border-gray-700/40' : 'from-gray-200 to-gray-100 border-gray-300'} rounded-xl p-3 sm:p-4 shadow-md backdrop-blur-md`}
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex items-center space-x-2 w-full sm:w-auto">
                       <div className="w-3 h-3 bg-green-500 rounded-full relative">
                         <div className="absolute top-0 left-0 w-3 h-3 bg-green-500 rounded-full"></div>
                       </div>
-                      <span className={`font-semibold text-md ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>{lang.name}</span>
+                      <span className={`font-semibold text-sm sm:text-md ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>{lang.name}</span>
                     </div>
-                    <div className="flex items-center space-x-3 ml-4 w-full max-w-md">
-                      <div className={`w-full rounded-full h-3 overflow-hidden shadow-inner relative ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-300'}`}>
+                    <div className="flex items-center space-x-2 w-full sm:w-auto flex-grow">
+                      <div className={`w-full rounded-full h-2 sm:h-3 overflow-hidden shadow-inner relative ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-300'}`}>
                         <div
-                          className="bg-gradient-to-r from-green-400 to-blue-500 h-3 rounded-full transition-all duration-500 ease-out"
+                          className="bg-gradient-to-r from-green-400 to-blue-500 h-2 sm:h-3 rounded-full transition-all duration-500 ease-out"
                           style={{ width: lang.width }} // Use the transformed width string
                         ></div>
                       </div>
-                      <span className={`text-sm w-52 text-right ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>{lang.level}</span>
+                      <span className={`text-xs sm:text-sm whitespace-nowrap ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>{lang.level}</span>
                     </div>
                   </div>
                 </div>
