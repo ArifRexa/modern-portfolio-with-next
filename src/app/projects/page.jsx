@@ -129,25 +129,31 @@ const ProjectsPortfolio = () => {
     //   date: "Jul 2, 2025",
     //   githubUrl: "https://github.com/rsakib15/aws-iam-user-management"
     // },
-    {
-      title: "LinkedIn Auto Apply",
-      description:
-        "Automate your LinkedIn job applications with ease! This Python-based bot uses Selenium to search for jobs and automatically apply to positions with Easy Apply. Designed to save time and streamline your job hunt while mimicking human-like behavior to reduce detection risk.",
-      features: [
-        "Automates LinkedIn job applications using Selenium.",
-        "Searches for jobs based on user-defined keywords and filters.",
-        "Automatically applies to positions with 'Easy Apply'.",
-        "Mimics human-like behavior to reduce detection risk.",
-        "Configurable application settings (resume, cover letter, job preferences).",
-        "Saves time and streamlines the job application process.",
-        "Logs applied jobs and application status for tracking.",
-        "Handles multiple job applications in a single session."
-      ],
-      topics: ["automation", "linkedin", "linkedin-bot", "selenium"],
-      status: "Completed",
-      date: "Jun 10, 2024",
-      githubUrl: "https://github.com/rsakib15/linkedin-auto-apply"
-    },
+
+
+
+    // {
+    //   title: "LinkedIn Auto Apply",
+    //   description:
+    //     "Automate your LinkedIn job applications with ease! This Python-based bot uses Selenium to search for jobs and automatically apply to positions with Easy Apply. Designed to save time and streamline your job hunt while mimicking human-like behavior to reduce detection risk.",
+    //   features: [
+    //     "Automates LinkedIn job applications using Selenium.",
+    //     "Searches for jobs based on user-defined keywords and filters.",
+    //     "Automatically applies to positions with 'Easy Apply'.",
+    //     "Mimics human-like behavior to reduce detection risk.",
+    //     "Configurable application settings (resume, cover letter, job preferences).",
+    //     "Saves time and streamlines the job application process.",
+    //     "Logs applied jobs and application status for tracking.",
+    //     "Handles multiple job applications in a single session."
+    //   ],
+    //   topics: ["automation", "linkedin", "linkedin-bot", "selenium"],
+    //   status: "Completed",
+    //   date: "Jun 10, 2024",
+    //   githubUrl: "https://github.com/rsakib15/linkedin-auto-apply"
+    // },
+
+
+
     // {
     //   title: "Chinese License Plate Recognition",
     //   description:
@@ -171,25 +177,32 @@ const ProjectsPortfolio = () => {
     //   date: "Nov 29, 2022",
     //   githubUrl: "https://github.com/rsakib15/Chinese-License-Plate-Recognition"
     // },
-    {
-      title: "WikiSearch",
-      description:
-        "WikiSearch is a search engine built on Wikipedia dump datasets, designed to help users quickly find relevant articles. It supports fuzzy search, wildcard queries, and multiple ranking methods to improve search accuracy and user experience.",
-      features: [
-        "Search engine built from Wikipedia dump dataset (15M+ articles).",
-        "Supports document vector, inverted, positional, and bi-gram indexing.",
-        "Fuzzy search with spelling correction using Levenshtein and bi-grams.",
-        "Wildcard search for partial or unknown terms.",
-        "Five ranking algorithms: Bag of Words, Cosine, Jaccard, TF-IDF, High-IDF."
-      ],
-      topics: [
-        "fuzzy-search", "indexing", "python", "reactjs", "search", "search-algorithms",
-        "search-engine", "wikipedia"
-      ],
-      status: "Completed",
-      date: "Apr 30, 2021",
-      githubUrl: "https://github.com/rsakib15/WikiSearch"
-    },
+
+
+
+    // {
+    //   title: "WikiSearch",
+    //   description:
+    //     "WikiSearch is a search engine built on Wikipedia dump datasets, designed to help users quickly find relevant articles. It supports fuzzy search, wildcard queries, and multiple ranking methods to improve search accuracy and user experience.",
+    //   features: [
+    //     "Search engine built from Wikipedia dump dataset (15M+ articles).",
+    //     "Supports document vector, inverted, positional, and bi-gram indexing.",
+    //     "Fuzzy search with spelling correction using Levenshtein and bi-grams.",
+    //     "Wildcard search for partial or unknown terms.",
+    //     "Five ranking algorithms: Bag of Words, Cosine, Jaccard, TF-IDF, High-IDF."
+    //   ],
+    //   topics: [
+    //     "fuzzy-search", "indexing", "python", "reactjs", "search", "search-algorithms",
+    //     "search-engine", "wikipedia"
+    //   ],
+    //   status: "Completed",
+    //   date: "Apr 30, 2021",
+    //   githubUrl: "https://github.com/rsakib15/WikiSearch"
+    // },
+
+
+
+
     // {
     //   title: "One Shot Learning",
     //   description:
@@ -275,35 +288,39 @@ const ProjectsPortfolio = () => {
     //   date: "Aug 19, 2020",
     //   githubUrl: "https://github.com/rsakib15/LC4-Binary-Interpreter"
     // },
-    {
-      title: "Bangla Newspaper Scraper",
-      description:
-        "A Python scraper to extract articles from popular Bangla newspapers, supporting text extraction, link collection, and data storage.",
-      features: [
-        "Scrapes articles from multiple Bangla newspaper websites",
-        "Extracts headlines, article text, publication date, and links",
-        "Saves scraped data in structured formats (CSV/JSON)"
-      ],
-      topics: ["automation", "beautifulsoup", "python", "selenium"],
-      status: "Completed",
-      date: "Feb 11, 2019",
-      githubUrl: "https://github.com/rsakib15/Bangla-Newspaper-Scraper"
-    },
-    {
-      title: "Smart Audio Profile Manager",
-      description:
-        "A mobile app that automatically adjusts device audio profiles based on position and user activity using sensors like accelerometer and proximity.",
-      features: [
-        "Automatically switches audio profiles based on device position",
-        "Silent mode when the device is upside down",
-        "Vibration mode when the device is in a pocket",
-        "General audio profile when the device is in hand or on desk"
-      ],
-      topics: ["android-application", "accelerometer", "proximity-sensor"],
-      status: "Completed",
-      date: "Apr 7, 2017",
-      githubUrl: "https://github.com/rsakib15/smart-audio-profile-manager"
-    }
+
+
+
+
+    // {
+    //   title: "Bangla Newspaper Scraper",
+    //   description:
+    //     "A Python scraper to extract articles from popular Bangla newspapers, supporting text extraction, link collection, and data storage.",
+    //   features: [
+    //     "Scrapes articles from multiple Bangla newspaper websites",
+    //     "Extracts headlines, article text, publication date, and links",
+    //     "Saves scraped data in structured formats (CSV/JSON)"
+    //   ],
+    //   topics: ["automation", "beautifulsoup", "python", "selenium"],
+    //   status: "Completed",
+    //   date: "Feb 11, 2019",
+    //   githubUrl: "https://github.com/rsakib15/Bangla-Newspaper-Scraper"
+    // },
+    // {
+    //   title: "Smart Audio Profile Manager",
+    //   description:
+    //     "A mobile app that automatically adjusts device audio profiles based on position and user activity using sensors like accelerometer and proximity.",
+    //   features: [
+    //     "Automatically switches audio profiles based on device position",
+    //     "Silent mode when the device is upside down",
+    //     "Vibration mode when the device is in a pocket",
+    //     "General audio profile when the device is in hand or on desk"
+    //   ],
+    //   topics: ["android-application", "accelerometer", "proximity-sensor"],
+    //   status: "Completed",
+    //   date: "Apr 7, 2017",
+    //   githubUrl: "https://github.com/rsakib15/smart-audio-profile-manager"
+    // }
   ];
 
   return (

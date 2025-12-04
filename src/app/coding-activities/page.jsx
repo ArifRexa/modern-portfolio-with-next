@@ -60,7 +60,7 @@ const CodingActivities = () => {
   useEffect(() => {
     const fetchMonthlyData = async () => {
       try {
-        const response = await fetch('/api/monthly-coding-breakdown');
+        const response = await fetch('/api/monthly-coding-breakdown?mode=last30days');
         if (!response.ok) throw new Error(`Failed to fetch monthly data: ${response.status}`);
 
         const data = await response.json();
