@@ -149,7 +149,7 @@ const PersonalInfo = () => {
               Software Engineer
             </h2>
             <p className={`text-md mb-2 leading-relaxed break-words lg:pl-0 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
-              Experienced Cloud Solutions Architect and Full-Stack Developer with 5+ years of
+              {/* Experienced Cloud Solutions Architect and Full-Stack Developer with 5+ years of
               expertise in web application development, API engineering, automation, and debugging.
               Skilled in designing and deploying scalable, high-performance systems on platforms like
               AWS and Azure, with strong proficiency in DevOps, CI/CD pipelines, and cloud
@@ -157,7 +157,8 @@ const PersonalInfo = () => {
               implementing agile methodologies to deliver secure, maintainable, and user-centric
               software. Passionate about leveraging emerging technologies to innovate, optimize
               performance, and build robust digital solutions that enhance user experience and
-              achieve business excellence.
+              achieve business excellence. */}
+              Experienced Software Engineer specializing in backend development, automation, and AI-powered systems using Python, Django, DRF, FastAPI, and LangChain. With hands-on expertise in building scalable REST APIs, integrating LLMs, automating workflows, and developing cloud-ready applications, I focus on creating maintainable, secure, and high-performance backend solutions. Skilled in database management, asynchronous task processing with Celery/Redis, and real-world SaaS product development. Passionate about leveraging AI and modern backend technologies to solve problems, enhance user experience, and deliver production-ready solutions.
             </p>
             <address className="flex flex-col lg:flex-row items-center lg:space-x-4 font-medium not-italic">
               <a
