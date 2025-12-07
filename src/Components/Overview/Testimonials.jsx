@@ -15,43 +15,43 @@ const Testimonials = () => {
       role: "CTO at Mediusware Ltd.",
       avatar: "https://png.pngtree.com/png-clipart/20230927/original/pngtree-man-avatar-image-for-profile-png-image_13001882.png",
       content:
-        "Working with Sakib bhai has been fantastic. He's sharp, practical, and knows exactly how to get things done. He handles tricky problems without overcomplicating them and is truly a go-to person on the team. His communication skills are excellent as well.",
+        "Working with Arif bhai has been fantastic. He's sharp, practical, and knows exactly how to get things done. He handles tricky problems without overcomplicating them and is truly a go-to person on the team. His communication skills are excellent as well.",
     },
     {
       name: "Fazal Mahmud Hassan",
       role: "Technical Project Manager at Mediusware Limited",
       avatar: "https://0knuxh5ufoxzu8pa.public.blob.vercel-storage.com/avatars/fazal-mahmud-hassan-9fecc267-8f6d-415f-9105-3d97cced0496.png",
       content:
-        "I've had the pleasure of managing Sakib on a number of difficult projects. He has consistently demonstrated strong technical expertise and a thoughtful approach to problem-solving. He is reliable, detail-oriented, and takes full ownership of his work. I particularly appreciate his persistence and analytical thinking, even when faced with unclear or unconventional client requirements, Sakib took the time to understand the problem deeply and deliver an effective solution. In addition to his development skills, he is also a supportive mentor to his junior teammates, always willing to guide and share his knowledge. Sakib would be a valuable asset to any team.",
+        "I've had the pleasure of managing Arif on a number of difficult projects. He has consistently demonstrated strong technical expertise and a thoughtful approach to problem-solving. He is reliable, detail-oriented, and takes full ownership of his work. I particularly appreciate his persistence and analytical thinking, even when faced with unclear or unconventional client requirements, Arif took the time to understand the problem deeply and deliver an effective solution. In addition to his development skills, he is also a supportive mentor to his junior teammates, always willing to guide and share his knowledge. Arif would be a valuable asset to any team.",
     },
     {
       name: "Rafeu Riyan",
       role: "Technical Project Manager at Mediusware",
       avatar: "https://0knuxh5ufoxzu8pa.public.blob.vercel-storage.com/avatars/rafeu-riyan-95ca9f5d-033f-44ee-8b89-b4132229a590.png",
       content:
-        "I had the privilege of working closely with Sakib as our Lead Backend Engineer on Diplomat AI, an innovative AI-powered mobile application. From the very beginning, Sakib stood out for his rare blend of technical mastery, leadership maturity, and genuine collaboration.",
+        "I had the privilege of working closely with Arif as our Lead Backend Engineer on Diplomat AI, an innovative AI-powered mobile application. From the very beginning, Arif stood out for his rare blend of technical mastery, leadership maturity, and genuine collaboration.",
     },
     {
       name: "Tarif Haque",
       role: "Technical Project Manager at Mediusware",
       avatar: "https://0knuxh5ufoxzu8pa.public.blob.vercel-storage.com/avatars/tarif-haque-b181d754-cf04-44ef-be47-e0452edc9b43.jpeg",
       content:
-        "Sakib is a super-awesome Solutions Architect and Full-Stack Developer. He leads us with his skills in designing and deploying scalable, high-performance systems. He consistently delivers a “wow” experience through his work—always cool-headed, communicative, and inspiring.",
+        "Arif is a super-awesome Solutions Architect and Full-Stack Developer. He leads us with his skills in designing and deploying scalable, high-performance systems. He consistently delivers a “wow” experience through his work—always cool-headed, communicative, and inspiring.",
     },
-    {
-      name: "Md. Moshfiqur Rahman Rony",
-      role: "Software Engineer at Worklife, Inc.",
-      avatar: "https://0knuxh5ufoxzu8pa.public.blob.vercel-storage.com/avatars/md.-moshfiqur-rahman-rony-e6230786-6adc-4084-a5a8-ce3a65c47374.png",
-      content:
-        "I had the privilege of working with Sakib Rahman, my immediate senior, for two years. Sakib is an exceptional problem solver with a deep understanding of real-world challenges.",
-    },
-    {
-      name: "Abbas Uddin Sheikh",
-      role: "CTO at Talent Pro",
-      avatar: "https://png.pngtree.com/png-clipart/20230927/original/pngtree-man-avatar-image-for-profile-png-image_13001882.png",
-      content:
-        "I had the pleasure of working with Sakib Rahman during his time at Talent Pro, where he consistently demonstrated strong dedication and professionalism.",
-    }
+    // {
+    //   name: "Md. Moshfiqur Rahman Rony",
+    //   role: "Software Engineer at Worklife, Inc.",
+    //   avatar: "https://0knuxh5ufoxzu8pa.public.blob.vercel-storage.com/avatars/md.-moshfiqur-rahman-rony-e6230786-6adc-4084-a5a8-ce3a65c47374.png",
+    //   content:
+    //     "I had the privilege of working with Ariful Islam, my immediate senior, for two years. Arif is an exceptional problem solver with a deep understanding of real-world challenges.",
+    // },
+    // {
+    //   name: "Abbas Uddin Sheikh",
+    //   role: "CTO at Talent Pro",
+    //   avatar: "https://png.pngtree.com/png-clipart/20230927/original/pngtree-man-avatar-image-for-profile-png-image_13001882.png",
+    //   content:
+    //     "I had the pleasure of working with Ariful Islam during his time at Talent Pro, where he consistently demonstrated strong dedication and professionalism.",
+    // }
   ];
 
   const [currentPage, setCurrentPage] = useState(0);
