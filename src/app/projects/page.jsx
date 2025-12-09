@@ -28,7 +28,7 @@ const ProjectsPortfolio = () => {
         "python", "postgresql", "redis", "stripe", "twilio", "docker"
       ],
       status: "Completed",
-      date: "Dec 1, 2025",
+      date: "Aug 30, 2025",
       githubUrl: "https://github.com/ArifRexa/AI-Car-Sales-Assistant"  // Replace with actual repository URL when available
     },
     {
@@ -48,13 +48,13 @@ const ProjectsPortfolio = () => {
         "AI-Powered Chatbot: Context-aware responses with GPT-4 and GPT-3.5 Turbo integration"
       ],
       topics: [
-        "django", "djangorestframework", "ai", "audio-processing", "transcription",
+        "django", "drf", "ai", "audio-processing", "transcription",
         "translation", "text-to-speech", "openai", "gpt", "huggingface",
         "minority-languages", "sami", "language-learning", "celery", "redis",
         "postgresql", "python", "whisper", "google-translate"
       ],
       status: "Completed",
-      date: "Dec 1, 2025",
+      date: "Feb 20, 2025",
       githubUrl: "https://github.com/ArifRexa/Surrat-AI-Chat-Bot"  // Replace with actual repository URL when available
     },
     {
@@ -80,7 +80,7 @@ const ProjectsPortfolio = () => {
         "openapi", "rest-api", "social-media-automation"
       ],
       status: "Completed",
-      date: "Dec 1, 2025",
+      date: "Apr 10, 2024",
       githubUrl: "https://github.com/ArifRexa/Social-Media-Automation-All"  // Replace with actual repository URL when available
     },
     {
@@ -106,8 +106,8 @@ const ProjectsPortfolio = () => {
         "data-categorization", "condition-classification", "async", "datetime",
         "data-validation", "batch-processing", "error-handling", "security"
       ],
-      status: "Completed",
-      date: "Dec 1, 2025",
+      status: "Running",
+      date: "OCT 19, 2025",
       githubUrl: "https://github.com/arif-azrul/planning-conditions-extractor"  // Replace with actual repository URL when available
     },
     // {

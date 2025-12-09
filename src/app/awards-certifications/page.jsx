@@ -9,7 +9,7 @@ const AwardsCertifications = () => {
     {
       title: "HCI Prototyping Contest – 2nd Place",
       issuer: "Central University of Science and Technology",
-      year: "2017",
+      year: "2019",
       event: "Human-Computer Interaction",
       description:
         "Awarded 2nd place in the HCI Prototyping Challenge for designing and presenting an innovative Smart Campus concept. Developed a user-centered prototype that integrated technology to enhance campus experiences, focusing on usability, accessibility, and interaction design principles. The project involved thorough research, ideation, and iterative prototyping, showcasing strong skills in human-computer interaction, creative problem-solving, and effective presentation. This recognition highlights the ability to translate complex ideas into practical, user-friendly solutions."
@@ -17,34 +17,34 @@ const AwardsCertifications = () => {
     {
       title: "CUST Intra-University Programming Contest - 2nd Place",
       issuer: "Central University of Science and Technology",
-      year: "2016",
+      year: "2020",
       event: "Competitive Programming",
       description:
         "Secured 2nd place in a highly competitive, university-wide programming contest by efficiently solving a series of complex algorithmic and computational problems under strict time constraints. The competition tested proficiency in data structures, algorithms, problem-solving strategies, and logical reasoning. Successfully tackling diverse challenges such as graph traversal, dynamic programming, and optimization problems demonstrated strong analytical thinking, coding efficiency, and adaptability under pressure, earning recognition among top peers and contributing to a track record of excellence in competitive programming."
     },
+    // {
+    //   title: "ACM National Collegiate Programming Contest (NCPC) – Participant",
+    //   issuer: "International Collegiate Programming Contest",
+    //   year: "2016",
+    //   event: "Competitive Programming",
+    //   description:
+    //     "Selected to represent the Central University of Science and Technology (CUST) in the national-level ACM National Collegiate Programming Contest (NCPC) 2017, participating in high-pressure, real-time, team-based algorithmic problem-solving. Collaborated closely with teammates to tackle complex computational challenges involving data structures, algorithms, and optimization problems, under strict time constraints. This experience honed advanced problem-solving skills, teamwork, strategic thinking, and the ability to perform effectively in competitive programming at a national scale."
+    // },
     {
-      title: "ACM National Collegiate Programming Contest (NCPC) – Participant",
-      issuer: "International Collegiate Programming Contest",
-      year: "2016",
-      event: "Competitive Programming",
-      description:
-        "Selected to represent the American International University-Bangladesh (AIUB) in the national-level ACM National Collegiate Programming Contest (NCPC) 2017, participating in high-pressure, real-time, team-based algorithmic problem-solving. Collaborated closely with teammates to tackle complex computational challenges involving data structures, algorithms, and optimization problems, under strict time constraints. This experience honed advanced problem-solving skills, teamwork, strategic thinking, and the ability to perform effectively in competitive programming at a national scale."
-    },
-    {
-      title: "ACM National Collegiate Programming Contest (NCPC) – Participant",
-      issuer: "International Collegiate Programming Contest",
-      year: "2016",
-      event: "Competitive Programming",
-      description:
-        "Participated in the ACM National Collegiate Programming Contest (NCPC) 2016, representing the American International University-Bangladesh (AIUB) in one of the country's most prestigious collegiate programming competitions. Engaged in team-based, real-time problem-solving challenges that tested advanced algorithms, data structures, and computational thinking under strict time constraints. This experience enhanced technical proficiency, teamwork, and strategic problem-solving skills, while providing exposure to high-level competitive programming at a national scale."
-    },
-    {
-      title: "CUST Intra-University Programming Contest – 3rd Place",
+      title: "CUST Intra-University Programming Contest – 1st Place",
       issuer: "Central University of Science and Technology",
-      year: "2020",
+      year: "2022",
       event: "Competitive Programming",
       description:
         "Achieved 3rd place in the annual university-level coding competition, which tested participants on advanced problem-solving skills and mastery of data structures and algorithms. Competed against a large pool of talented peers to solve challenging computational problems under strict time constraints, including tasks related to arrays, trees, graphs, and dynamic programming. This accomplishment highlights strong analytical thinking, efficient coding practices, and the ability to perform under pressure, reflecting a solid foundation in algorithmic problem-solving and technical proficiency."
+    },
+    {
+      title: "ICPC Asia Dhaka Regional Contest – Participant",
+      issuer: "International Collegiate Programming Contest (ICPC)",
+      year: "2022",
+      event: "Competitive Programming",
+      description:
+        "Represented Central University of Science and Technology (CUST) in the prestigious ICPC Asia Dhaka Regional Contest 2022, hosted by Bangladesh University of Business and Technology (BUBT), one of the largest and most competitive ICPC regional events in Asia with over 300 onsite teams. Competed in a grueling 5-hour, team-based programming contest, solving complex algorithmic problems involving advanced data structures, graph theory, dynamic programming, mathematical modeling, and optimization techniques under strict time constraints. Participation in this highly selective regional contest - which served as a direct qualifier for the ICPC World Finals 2022 held in Dhaka - demonstrates strong competitive programming skills, teamwork under pressure, and the ability to perform at an international-level standard in algorithmic problem-solving."
     }
   ];
 
