@@ -91,83 +91,6 @@ const RealTimeActivity = () => {
     ]);
 
     // Fetch dynamic coding activity data from the database
-    // useEffect(() => {
-    //     const fetchCodingActivity = async () => {
-    //         try {
-    //             const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
-    //             const response = await fetch(`/api/daily-coding-breakdown?date=${today}`);
-    //             if (!response.ok) throw new Error('Failed to fetch coding activity breakdown');
-    //             const data = await response.json();
-
-    //             if (data.success && data.codingBreakdown) {
-    //                 const breakdown = data.codingBreakdown;
-    //                 // Calculate max value for percentage calculations
-    //                 const maxHours = Math.max(
-    //                     breakdown.night_time || 0,
-    //                     breakdown.morning_time || 0,
-    //                     breakdown.afternoon_time || 0,
-    //                     breakdown.evening_time || 0
-    //                 );
-
-    //                 // Format data for the UI
-    //                 // const formattedData = [
-    //                 //     {
-    //                 //         period: "Night (12AM-6AM)",
-    //                 //         hours: (breakdown.night_time || 0).toFixed(2),
-    //                 //         percent: maxHours > 0 ? parseFloat((((breakdown.night_time || 0) / maxHours) * 100).toFixed(2)) : 0,
-    //                 //         height: maxHours > 0 ? `${Math.round(((breakdown.night_time || 0) / maxHours) * 180)}px` : '0px'
-    //                 //     },
-    //                 //     {
-    //                 //         period: "Morning (6AM-12PM)",
-    //                 //         hours: (breakdown.morning_time || 0).toFixed(2),
-    //                 //         percent: maxHours > 0 ? parseFloat((((breakdown.morning_time || 0) / maxHours) * 100).toFixed(2)) : 0,
-    //                 //         height: maxHours > 0 ? `${Math.round(((breakdown.morning_time || 0) / maxHours) * 180)}px` : '0px'
-    //                 //     },
-    //                 //     {
-    //                 //         period: "Afternoon (12PM-6PM)",
-    //                 //         hours: (breakdown.afternoon_time || 0).toFixed(2),
-    //                 //         percent: maxHours > 0 ? parseFloat((((breakdown.afternoon_time || 0) / maxHours) * 100).toFixed(2)) : 0,
-    //                 //         height: maxHours > 0 ? `${Math.round(((breakdown.afternoon_time || 0) / maxHours) * 180)}px` : '0px'
-    //                 //     },
-    //                 //     {
-    //                 //         period: "Evening (6PM-12AM)",
-    //                 //         hours: (breakdown.evening_time || 0).toFixed(2),
-    //                 //         percent: maxHours > 0 ? parseFloat((((breakdown.evening_time || 0) / maxHours) * 100).toFixed(2)) : 0,
-    //                 //         height: maxHours > 0 ? `${Math.round(((breakdown.evening_time || 0) / maxHours) * 180)}px` : '0px'
-    //                 //     }
-    //                 // ];
-
-    //                 const formattedData = [
-    //                     {
-    //                         period: "Night (12AM-6AM)",
-    //                         hours: (breakdown.night_time || 0).toFixed(2),
-    //                     },
-    //                     {
-    //                         period: "Morning (6AM-12PM)",
-    //                         hours: ((breakdown.morning_time || 0) - (breakdown.night_time || 0)).toFixed(2),
-    //                     },
-    //                     {
-    //                         period: "Afternoon (12PM-6PM)",
-    //                         hours: ((breakdown.afternoon_time || 0) - (breakdown.morning_time || 0) - (breakdown.night_time || 0)).toFixed(2),
-    //                     },
-    //                     {
-    //                         period: "Evening (6PM-12AM)",
-    //                         hours: ((breakdown.evening_time || 0) - (breakdown.afternoon_time || 0) - (breakdown.morning_time || 0) - (breakdown.night_time || 0)).toFixed(2),
-    //                     }
-    //                 ];
-
-
-    //                 setCodingActivity(formattedData);
-    //             }
-    //         } catch (error) {
-    //             console.error('Error fetching coding activity:', error);
-    //             // Keep default values on error
-    //         }
-    //     };
-
-    //     fetchCodingActivity();
-    // }, []);
-
     useEffect(() => {
         const fetchCodingActivity = async () => {
             try {
@@ -185,9 +108,9 @@ const RealTimeActivity = () => {
                     // const afternoon = (breakdown.afternoon_time || 0) - morning - night;
                     // const evening = (breakdown.evening_time || 0) - afternoon - morning - night;
                     const night = breakdown.night_time || 0;
-                    const morning = Math.max((breakdown.morning_time || 0) - night, 0);
-                    const afternoon = Math.max((breakdown.afternoon_time || 0) - night - morning, 0);
-                    const evening = Math.max((breakdown.evening_time || 0) - night - morning - afternoon, 0);
+                    const morning = breakdown.morning_time || 0;
+                    const afternoon = breakdown.afternoon_time || 0;
+                    const evening = breakdown.evening_time || 0;
 
                     const formattedData = [
                         { period: "Night (12AM-6AM)", hours: night },
