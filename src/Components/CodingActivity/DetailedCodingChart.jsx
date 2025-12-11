@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import EditorUsageChart from './EditorUsageChart';
-import OSUsageChart from './OSUsageChart';
-import ProjectUsageChart from './ProjectUsageChart';
-import LanguageUsageChart from './LanguageUsageChart';
+import GenericUsageChart from './GenericUsageChart';
 import { useTheme } from '@/context/ThemeContext';
 
 const DetailedCodingChart = ({ date }) => {
@@ -101,31 +98,39 @@ const DetailedCodingChart = ({ date }) => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Editor Usage */}
-        <EditorUsageChart
-          editorsData={codingDetails.editors}
+        <GenericUsageChart
+          data={codingDetails.editors}
+          title="Editor Usage"
           chartType={chartType}
           theme={theme}
+          dataType="editors"
         />
 
         {/* Operating System Usage */}
-        <OSUsageChart
-          osData={codingDetails.operating_systems}
+        <GenericUsageChart
+          data={codingDetails.operating_systems}
+          title="Operating System Usage"
           chartType={chartType}
           theme={theme}
+          dataType="operating_systems"
         />
 
         {/* Project Activity */}
-        <ProjectUsageChart
-          projectsData={codingDetails.projects}
+        <GenericUsageChart
+          data={codingDetails.projects}
+          title="Project Activity"
           chartType={chartType}
           theme={theme}
+          dataType="projects"
         />
 
         {/* Language Usage */}
-        <LanguageUsageChart
-          languagesData={codingDetails.languages}
+        <GenericUsageChart
+          data={codingDetails.languages}
+          title="Language Usage"
           chartType={chartType}
           theme={theme}
+          dataType="languages"
         />
       </div>
 
