@@ -114,6 +114,19 @@ const Sidebar = ({ className = '', theme = 'dark' }) => {
             <span className="font-medium">Coding Activities</span>
           </Link>
           <Link
+            href="/detailed-coding-activity"
+            className={`w-full flex items-center space-x-3 py-2 lg:py-2.5 px-4 rounded-xl transition-colors duration-300 border ${isActiveRoute('/detailed-coding-activity') ? navItemActiveClass : `${theme === 'dark' ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-800/30 border-transparent' : 'text-gray-600 hover:text-gray-800 hover:bg-gray-300/30 border-transparent'} text-left`}`}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24"
+              height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+              className="lucide lucide-bar-chart w-5 h-5">
+              <line x1="12" x2="12" y1="20" y2="10"></line>
+              <line x1="18" x2="18" y1="20" y2="4"></line>
+              <line x1="6" x2="6" y1="20" y2="16"></line>
+            </svg>
+            <span className="font-medium">Detailed Coding Activity</span>
+          </Link>
+          <Link
             href="/github-contributions"
             className={`w-full flex items-center space-x-3 py-2 lg:py-2.5 px-4 rounded-xl transition-colors duration-300 border ${isActiveRoute('/github-contributions') ? navItemActiveClass : `${theme === 'dark' ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-800/30 border-transparent' : 'text-gray-600 hover:text-gray-800 hover:bg-gray-300/30 border-transparent'} text-left`}`}>
             <svg xmlns="http://www.w3.org/2000/svg" width="24"

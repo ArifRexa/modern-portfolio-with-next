@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { getTodaysMeetings, getCoffeeCount } from '@/utils/activityTracker';
 import { useTheme } from '@/context/ThemeContext';
+import DetailedCodingChart from '@/Components/CodingActivity/DetailedCodingChart';
 
 const RealTimeActivity = () => {
     const { theme } = useTheme();
@@ -586,6 +587,24 @@ const RealTimeActivity = () => {
                         </div>
                     </div>
                 </div>
+            </div>
+            {/* Detailed Coding Activity Section */}
+            <div
+                className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300/50'} p-4 lg:p-6 shadow-sm`}
+                style={{ opacity: 1, transform: 'none' }}
+            >
+                <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-4">
+                        <h3 className={`text-2xl lg:text-2xl font-bold tracking-tight ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>Detailed Coding Activity</h3>
+                    </div>
+                    <a
+                        href="/detailed-coding-activity"
+                        className={`px-4 py-2 rounded-lg transition-colors ${theme === 'dark' ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+                    >
+                        View Full Details
+                    </a>
+                </div>
+                <DetailedCodingChart date={new Date().toISOString().split('T')[0]} />
             </div>
         </div>
     );

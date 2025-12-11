@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Legend, AreaChart, Area } from 'recharts';
 import { useTheme } from '@/context/ThemeContext';
+import DetailedCodingChart from '@/Components/CodingActivity/DetailedCodingChart';
 
 const StatCard = ({ title, value, icon, color, theme }) => (
   <div className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} p-4 lg:p-6 shadow-sm flex flex-col items-center justify-center h-full relative overflow-hidden group`}>
@@ -378,6 +379,21 @@ const CodingActivities = () => {
 
 
 
+      {/* Detailed Coding Activity Section */}
+      <div className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} p-4 lg:p-6 shadow-sm`}>
+        <div className="flex justify-between items-center mb-4">
+          <h3 className={`text-2xl font-bold tracking-tight ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
+            Detailed Coding Breakdown
+          </h3>
+          <a
+            href="/detailed-coding-activity"
+            className={`px-4 py-2 rounded-lg transition-colors ${theme === 'dark' ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+          >
+            View All Details
+          </a>
+        </div>
+        <DetailedCodingChart date={new Date().toISOString().split('T')[0]} />
+      </div>
     </section>
   );
 };
