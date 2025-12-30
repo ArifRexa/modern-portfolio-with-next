@@ -13,6 +13,11 @@ export default function ClientLayout({ children }) {
   const pathname = usePathname();
   const { theme, toggleTheme } = useTheme();
 
+  // Scroll to top on initial load and route changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [pathname]);
+
   // Close sidebar when resizing to large screens or when pathname changes
   useEffect(() => {
     const handleResize = () => {
