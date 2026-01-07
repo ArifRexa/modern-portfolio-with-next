@@ -4,18 +4,18 @@ import { motion, useInView } from 'framer-motion';
 import { useTheme } from '@/context/ThemeContext';
 
 const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1
+    hidden: { opacity: 0 },
+    show: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.1
+        }
     }
-  }
 };
 
 const item = {
-  hidden: { opacity: 0, y: 10 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } }
+    hidden: { opacity: 0, y: 10 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } }
 };
 
 const TerminalWindow = () => {
@@ -135,43 +135,50 @@ const TerminalWindow = () => {
 
     return (
         <motion.div
-          ref={ref}
-          initial="hidden"
-          animate={isInView ? "show" : "hidden"}
-          variants={container}
-          className={`w-full mx-auto ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} backdrop-blur-md rounded-xl border overflow-hidden shadow-sm`}
+            ref={ref}
+            initial="hidden"
+            animate={isInView ? "show" : "hidden"}
+            variants={container}
+            className={`w-full mx-auto backdrop-blur-xl rounded-2xl border overflow-hidden shadow-2xl relative transition-all duration-300 ${theme === 'dark' ? 'bg-gray-900/40 border-white/10' : 'bg-white/60 border-white/40'}`}
         >
-            <motion.div className={`${theme === 'dark' ? 'bg-gray-800/30' : 'bg-gray-200/30'} ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} px-4 py-3 flex items-center justify-between border-b`} variants={item}>
+            {/* Decorative element */}
+            <div className={`absolute -right-20 -top-20 w-64 h-64 bg-green-500/10 rounded-full blur-[80px] pointer-events-none`}></div>
+
+            <motion.div className={`${theme === 'dark' ? 'bg-black/40 border-white/5' : 'bg-white/40 border-black/5'} px-4 py-3 flex items-center justify-between border-b relative z-10`} variants={item}>
                 <div className="flex items-center space-x-2">
                     <motion.div
-                      className="w-3 h-3 bg-red-500 rounded-full"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ duration: 0.2, delay: 0.1 }}
+                        className="w-3 h-3 bg-red-500 rounded-full shadow-sm"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ duration: 0.2, delay: 0.1 }}
+                        whileHover={{ scale: 1.2 }}
                     ></motion.div>
                     <motion.div
-                      className="w-3 h-3 bg-yellow-500 rounded-full"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ duration: 0.2, delay: 0.2 }}
+                        className="w-3 h-3 bg-yellow-400 rounded-full shadow-sm"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ duration: 0.2, delay: 0.2 }}
+                        whileHover={{ scale: 1.2 }}
                     ></motion.div>
                     <motion.div
-                      className="w-3 h-3 bg-green-500 rounded-full"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ duration: 0.2, delay: 0.3 }}
+                        className="w-3 h-3 bg-green-500 rounded-full shadow-sm"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ duration: 0.2, delay: 0.3 }}
+                        whileHover={{ scale: 1.2 }}
                     ></motion.div>
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className={`text-xs font-mono font-medium opacity-50 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+                    zsh — {username} — 80x24
+                </div>
+                <div className="flex items-center space-x-2 opacity-0 md:opacity-100">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-minimize w-4 h-4 text-gray-400"><path d="M8 3v3a2 2 0 0 1-2 2H3"></path><path d="M21 8h-3a2 2 0 0 1-2-2V3"></path><path d="M3 16h3a2 2 0 0 1 2 2v3"></path><path d="M16 21v-3a2 2 0 0 1 2-2h3"></path></svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-maximize w-4 h-4 text-gray-400"><path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M21 8V5a2 2 0 0 0-2-2h-3"></path><path d="M3 16v3a2 2 0 0 0 2 2h3"></path><path d="M16 21h3a2 2 0 0 0 2-2v-3"></path></svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x w-4 h-4 text-gray-400"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
                 </div>
             </motion.div>
-            <motion.div className="p-4 lg:p-6" variants={item}>
+            <motion.div className="p-4 lg:p-6 relative z-10" variants={item}>
                 <motion.div
                     ref={terminalRef}
-                    className={`font-mono text-xs md:text-sm leading-relaxed h-130 md:h-120 mb-4 w-full overflow-y-auto border rounded-md px-4 py-4 text-green-400 ${theme === 'dark' ? 'bg-black/30' : 'bg-white/30'} ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'}`}
+                    className={`font-mono text-xs md:text-sm leading-relaxed h-80 md:h-96 mb-4 w-full overflow-y-auto border rounded-xl px-4 py-4 transition-colors ${theme === 'dark' ? 'bg-black/60 text-green-400 border-white/5' : 'bg-gray-100/50 text-gray-800 border-gray-200'}`}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5, duration: 0.5 }}
@@ -180,20 +187,22 @@ const TerminalWindow = () => {
                     <>
                         {/* Command history */}
                         {commandHistory.map((cmd, index) => (
-                            <div key={index}>
-                                <div className="mb-1 text-green-400">
-                                    $ {username}@macbook:~$ {cmd.input}
+                            <div key={index} className="mb-3">
+                                <div className="mb-1 flex">
+                                    <span className={theme === 'dark' ? 'text-blue-400' : 'text-blue-600'}>➜</span>
+                                    <span className={`mx-2 ${theme === 'dark' ? 'text-cyan-400' : 'text-cyan-600'}`}>~</span>
+                                    <span className={theme === 'dark' ? 'text-green-400' : 'text-gray-600'}>{cmd.input}</span>
                                 </div>
-                                <div className="mb-2 text-green-400 whitespace-pre-wrap">{cmd.output}</div>
+                                <div className={`ml-6 whitespace-pre-wrap ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>{cmd.output}</div>
                             </div>
                         ))}
                     </>
 
                     {/* Current input - starts with $ and then shows the prompt */}
                     <div className="flex items-center">
-                        <span className="text-green-400">$ {username}@macbook:~$ </span>
-                        {/* <span className={`${showCursor ? 'opacity-100' : 'opacity-0'} transition-opacity text-green-400`}>_</span> */}
-                        <span className={`${showCursor ? 'opacity-100' : 'opacity-0'} transition-opacity text-green-400`}> &nbsp;▌</span>
+                        <span className={theme === 'dark' ? 'text-blue-400' : 'text-blue-600'}>➜</span>
+                        <span className={`mx-2 ${theme === 'dark' ? 'text-cyan-400' : 'text-cyan-600'}`}>~</span>
+                        <span className={theme === 'dark' ? 'text-green-400' : 'text-green-600'}>&nbsp;▌</span>
                     </div>
                 </motion.div>
                 <motion.div
@@ -201,7 +210,7 @@ const TerminalWindow = () => {
                     variants={container}
                 >
                     <motion.button
-                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 rounded-md px-3 bg-green-500/20 hover:bg-green-500/30 text-green-400 border-green-500/50 border text-xs"
+                        className={`inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium ring-offset-background transition-all focus-visible:outline-none h-9 rounded-lg px-4 text-xs shadow-lg hover:-translate-y-0.5 ${theme === 'dark' ? 'bg-green-500/20 hover:bg-green-500/30 text-green-400 border border-green-500/30' : 'bg-green-100/80 hover:bg-green-200 text-green-700 border border-green-200'}`}
                         variants={item}
                         onClick={async () => {
                             const newCommand = {
@@ -277,7 +286,7 @@ const TerminalWindow = () => {
                         }}
                     >./download_cv.sh</motion.button>
                     <motion.button
-                        className={`inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 rounded-md px-3 ${theme === 'dark' ? 'bg-gray-700/50 hover:bg-gray-600/50 text-gray-300' : 'bg-gray-300/50 hover:bg-gray-400/50 text-gray-700'} ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} border text-xs`}
+                        className={`inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium ring-offset-background transition-all focus-visible:outline-none h-9 rounded-lg px-4 text-xs shadow-lg hover:-translate-y-0.5 ${theme === 'dark' ? 'bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-400 border border-indigo-500/30' : 'bg-indigo-100/80 hover:bg-indigo-200 text-indigo-700 border border-indigo-200'}`}
                         variants={item}
                         onClick={() => {
                             navigator.clipboard.writeText('arif.reza3126@gmail.com');
@@ -289,7 +298,7 @@ const TerminalWindow = () => {
                         }}
                     >copy email</motion.button>
                     <motion.button
-                        className={`inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 rounded-md px-3 ${theme === 'dark' ? 'bg-gray-700/50 hover:bg-gray-600/50 text-gray-300' : 'bg-gray-300/50 hover:bg-gray-400/50 text-gray-700'} ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} border text-xs`}
+                        className={`inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium ring-offset-background transition-all focus-visible:outline-none h-9 rounded-lg px-4 text-xs shadow-lg hover:-translate-y-0.5 ${theme === 'dark' ? 'bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 border border-purple-500/30' : 'bg-purple-100/80 hover:bg-purple-200 text-purple-700 border border-purple-200'}`}
                         variants={item}
                         onClick={() => {
                             window.open('https://github.com/arifrexa', '_blank');
