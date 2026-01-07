@@ -1,110 +1,123 @@
 import React from 'react';
 import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { useTheme } from '@/context/ThemeContext';
 
-const COLORS = ['#3B82F6', '#10B981', '#8B5CF6', '#F59E0B', '#EF4444', '#06B6D4', '#8B5CF6', '#EC4899'];
+const COLORS = [
+  '#3B82F6', '#8B5CF6', '#10B981', '#F59E0B',
+  '#EC4899', '#6366F1', '#14B8A6', '#F43F5E'
+];
 
 const GenericUsageChart = ({ data, title, chartType = 'bar', theme, dataType = 'general' }) => {
   if (!data || data.length === 0) {
     return (
-      <div className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} p-6 shadow-sm h-80 flex items-center justify-center`}>
-        <p className={`${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>No ${title.toLowerCase()} data available</p>
+      <div className={`backdrop-blur-md rounded-3xl border p-6 shadow-sm h-80 flex flex-col items-center justify-center ${theme === 'dark' ? 'bg-gray-900/40 border-white/5' : 'bg-white/60 border-white/40'}`}>
+        <span className="text-4xl opacity-50 mb-2">📉</span>
+        <p className={`${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>No data for {title}</p>
       </div>
     );
   }
 
-  // Prepare data for charts
-  const chartData = data.map(item => {
-    const baseData = {
-      name: item.name,
-      hours: parseFloat(item.decimal),
-      time: item.text,
-      percent: item.percent
-    };
-
-    // Add additional properties based on data type
-    if (dataType === 'projects' && item.human_additions !== undefined) {
-      baseData.humanAdditions = item.human_additions || 0;
-      baseData.humanDeletions = item.human_deletions || 0;
-    }
-
-    return baseData;
-  });
+  // Prepare data
+  const chartData = data.map(item => ({
+    name: item.name,
+    hours: parseFloat(item.decimal),
+    time: item.text,
+    percent: item.percent,
+    // For projects
+    humanAdditions: item.human_additions || 0,
+    humanDeletions: item.human_deletions || 0,
+  }));
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <div className={`p-3 rounded-lg shadow-lg ${theme === 'dark' ? 'bg-gray-800 text-gray-100' : 'bg-white text-gray-800'} border ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'}`}>
-          <p className="font-bold">{data.name}</p>
-          <p>Time: {data.time}</p>
-          <p>Percentage: {data.percent}%</p>
-          {dataType === 'projects' && (
-            <p>Human Code: +{data.humanAdditions}/-{data.humanDeletions}</p>
-          )}
+        <div className={`p-4 rounded-xl shadow-2xl backdrop-blur-xl border ${theme === 'dark' ? 'bg-gray-800/90 border-white/10 text-white' : 'bg-white/90 border-gray-100 text-gray-800'}`}>
+          <p className="font-bold text-lg mb-1">{data.name}</p>
+          <div className="space-y-1 text-sm">
+            <div className="flex justify-between gap-4">
+              <span className="opacity-70">Time:</span>
+              <span className="font-mono font-medium">{data.time}</span>
+            </div>
+            <div className="flex justify-between gap-4">
+              <span className="opacity-70">Percent:</span>
+              <span className="font-mono font-medium">{data.percent}%</span>
+            </div>
+            {dataType === 'projects' && (
+              <div className="pt-2 mt-2 border-t border-gray-500/20">
+                <p className="text-xs opacity-70 mb-1">Code Changes:</p>
+                <div className="flex gap-3 text-xs">
+                  <span className="text-green-500 font-bold">+{data.humanAdditions}</span>
+                  <span className="text-red-500 font-bold">-{data.humanDeletions}</span>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       );
     }
     return null;
   };
 
-  // Determine color based on data type
-  const getColor = () => {
-    switch(dataType) {
-      case 'editors': return '#3B82F6';
-      case 'languages': return '#F59E0B';
-      case 'projects': return '#10B981';
-      case 'operating_systems': return '#8B5CF6';
-      default: return '#3B82F6';
-    }
-  };
-
   return (
-    <div className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} backdrop-blur-md rounded-xl border ${theme === 'dark' ? 'border-gray-700/50' : 'border-gray-300'} p-4 lg:p-6 shadow-sm h-80`}>
-      <h3 className={`text-xl font-bold mb-4 ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>{title}</h3>
-      
-      {chartType === 'bar' ? (
-        <ResponsiveContainer width="100%" height="85%">
-          <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? '#4B5563' : '#D1D5DB'} />
-            <XAxis 
-              dataKey="name" 
-              angle={-45} 
-              textAnchor="end" 
-              height={60}
-              stroke={theme === 'dark' ? '#9CA3AF' : '#6B7280'}
-            />
-            <YAxis 
-              stroke={theme === 'dark' ? '#9CA3AF' : '#6B7280'}
-              tickFormatter={(value) => `${value}h`}
-            />
-            <Tooltip content={<CustomTooltip />} />
-            <Legend />
-            <Bar dataKey="hours" name="Hours" fill={getColor()} radius={[4, 4, 0, 0]} />
-          </BarChart>
+    <div className={`backdrop-blur-md rounded-3xl border p-6 shadow-lg transition-all hover:shadow-xl ${theme === 'dark' ? 'bg-gray-900/40 border-white/5' : 'bg-white/60 border-white/40'}`}>
+      <h3 className={`text-lg font-bold mb-6 flex items-center gap-2 ${theme === 'dark' ? 'text-gray-100' : 'text-gray-800'}`}>
+        {title}
+      </h3>
+
+      <div className="h-72 w-full">
+        <ResponsiveContainer width="100%" height="100%">
+          {chartType === 'bar' ? (
+            <BarChart data={chartData} layout="vertical" margin={{ top: 5, right: 30, left: 40, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke={theme === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'} />
+              <XAxis type="number" hide />
+              <YAxis
+                dataKey="name"
+                type="category"
+                width={100}
+                tick={{ fill: theme === 'dark' ? '#9CA3AF' : '#4B5563', fontSize: 12 }}
+                axisLine={false}
+                tickLine={false}
+              />
+              <Tooltip content={<CustomTooltip />} cursor={{ fill: theme === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }} />
+              <Bar
+                dataKey="hours"
+                radius={[0, 4, 4, 0]}
+                barSize={20}
+              >
+                {chartData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Bar>
+            </BarChart>
+          ) : (
+            <PieChart>
+              <Pie
+                data={chartData}
+                cx="50%"
+                cy="50%"
+                innerRadius={60}
+                outerRadius={80}
+                paddingAngle={5}
+                dataKey="percent"
+                stroke="none"
+              >
+                {chartData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip content={<CustomTooltip />} />
+              <Legend
+                layout="vertical"
+                verticalAlign="middle"
+                align="right"
+                iconType="circle"
+                iconSize={8}
+                wrapperStyle={{ fontSize: '12px', color: theme === 'dark' ? '#9CA3AF' : '#4B5563' }}
+              />
+            </PieChart>
+          )}
         </ResponsiveContainer>
-      ) : (
-        <ResponsiveContainer width="100%" height="85%">
-          <PieChart>
-            <Pie
-              data={chartData}
-              cx="50%"
-              cy="50%"
-              labelLine={true}
-              label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-              outerRadius={80}
-              fill="#8884d8"
-              dataKey="percent"
-            >
-              {chartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip content={<CustomTooltip />} />
-            <Legend />
-          </PieChart>
-        </ResponsiveContainer>
-      )}
+      </div>
     </div>
   );
 };
