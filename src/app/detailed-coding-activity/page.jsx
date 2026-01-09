@@ -89,43 +89,7 @@ const DetailedCodingActivity = () => {
           </h1>
         </motion.div>
 
-        {/* Controls Section: Average vs Date */}
-        <motion.div variants={item} className="flex justify-center">
-          <div className={`backdrop-blur-xl rounded-2xl border p-2 flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4 shadow-lg ${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white/40 border-white/20'}`}>
 
-            <button
-              onClick={() => setSelectedDate('')}
-              className={`px-6 py-2 rounded-xl transition-all font-semibold ${selectedDate === ''
-                  ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg'
-                  : theme === 'dark' ? 'text-gray-300 hover:bg-white/5' : 'text-gray-600 hover:bg-black/5'
-                }`}
-            >
-              30-Day Average
-            </button>
-
-            <div className={`h-8 w-[1px] hidden sm:block ${theme === 'dark' ? 'bg-white/10' : 'bg-black/10'}`}></div>
-
-            <div className="flex items-center space-x-2 px-2">
-              <span className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>or pick date:</span>
-              <input
-                type="date"
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
-                className={`rounded-xl px-3 py-1.5 outline-none border transition-all focus:ring-2 focus:ring-purple-500 ${theme === 'dark' ? 'bg-gray-800/50 border-gray-600 text-white' : 'bg-white/80 border-gray-200 text-gray-800'}`}
-              />
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Status Indicator */}
-        <motion.div variants={item} className="text-center">
-          <span className={`inline-block px-4 py-1 rounded-full text-sm font-medium ${theme === 'dark' ? 'bg-blue-900/30 text-blue-300' : 'bg-blue-100 text-blue-700'}`}>
-            {selectedDate
-              ? `Showing details for: ${new Date(selectedDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`
-              : 'Showing Average Stats (Last 30 Days)'
-            }
-          </span>
-        </motion.div>
 
         {/* Historical Trend Chart Area */}
         <motion.div variants={item}>
@@ -218,6 +182,44 @@ const DetailedCodingActivity = () => {
               )}
             </div>
           </div>
+        </motion.div>
+
+        {/* Controls Section: Average vs Date */}
+        <motion.div variants={item} className="flex justify-center">
+          <div className={`backdrop-blur-xl rounded-2xl border p-2 flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4 shadow-lg ${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white/40 border-white/20'}`}>
+
+            <button
+              onClick={() => setSelectedDate('')}
+              className={`px-6 py-2 rounded-xl transition-all font-semibold ${selectedDate === ''
+                ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg'
+                : theme === 'dark' ? 'text-gray-300 hover:bg-white/5' : 'text-gray-600 hover:bg-black/5'
+                }`}
+            >
+              30-Day Average
+            </button>
+
+            <div className={`h-8 w-[1px] hidden sm:block ${theme === 'dark' ? 'bg-white/10' : 'bg-black/10'}`}></div>
+
+            <div className="flex items-center space-x-2 px-2">
+              <span className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>or pick date:</span>
+              <input
+                type="date"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+                className={`rounded-xl px-3 py-1.5 outline-none border transition-all focus:ring-2 focus:ring-purple-500 ${theme === 'dark' ? 'bg-gray-800/50 border-gray-600 text-white' : 'bg-white/80 border-gray-200 text-gray-800'}`}
+              />
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Status Indicator */}
+        <motion.div variants={item} className="text-center">
+          <span className={`inline-block px-4 py-1 rounded-full text-sm font-medium ${theme === 'dark' ? 'bg-blue-900/30 text-blue-300' : 'bg-blue-100 text-blue-700'}`}>
+            {selectedDate
+              ? `Showing details for: ${new Date(selectedDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`
+              : 'Showing Average Stats (Last 30 Days)'
+            }
+          </span>
         </motion.div>
 
         {/* Detailed Breakdown Component */}

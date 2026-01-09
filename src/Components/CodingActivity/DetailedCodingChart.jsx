@@ -190,11 +190,11 @@ const DetailedCodingChart = ({ date }) => {
             dataType="languages"
           />
 
-          {/* Project Activity - Always Bar for readability if many projects */}
+          {/* Project Activity */}
           <GenericUsageChart
             data={codingDetails.projects}
             title="Project Activity"
-            chartType="bar" // Force bar for projects usually better
+            chartType={chartType}
             theme={theme}
             dataType="projects"
           />

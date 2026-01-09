@@ -145,7 +145,7 @@ const CodingActivities = () => {
         <StatCard title="Weekly Coding Time" value={codingData.coding_time.weekly} icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /><path d="m9 16 2 2 4-4" /></svg>} color="text-green-500" theme={theme} />
 
 
-        <StatCard title="Total Coding Time" value={codingData.coding_time.monthly} icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>} color="text-blue-500" theme={theme} />
+        <StatCard title="Total Coding Time" value={codingData.coding_time.all_time} icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>} color="text-blue-500" theme={theme} />
 
 
         <StatCard title="Avg. Daily Time" value={codingData.coding_time.average} icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2" /></svg>} color="text-purple-500" theme={theme} />
@@ -257,125 +257,122 @@ const CodingActivities = () => {
 
 
 
-{/* Monthly Chart */}
-{monthlyDailyHours.length > 0 && (
-  <div className={`${theme === 'dark' ? 'bg-gray-900 border border-gray-700/50' : 'bg-gray-100 border border-gray-300'} backdrop-blur-md rounded-xl p-4 lg:p-6 shadow-sm`}>
-    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
-      <h3 className={`text-2xl font-bold tracking-tight ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
-        Monthly Daily Activity (hours)
-      </h3>
+      {/* Monthly Chart */}
+      {monthlyDailyHours.length > 0 && (
+        <div className={`${theme === 'dark' ? 'bg-gray-900 border border-gray-700/50' : 'bg-gray-100 border border-gray-300'} backdrop-blur-md rounded-xl p-4 lg:p-6 shadow-sm`}>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
+            <h3 className={`text-2xl font-bold tracking-tight ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
+              Monthly Daily Activity (hours)
+            </h3>
 
-      <div className="flex flex-wrap gap-2 items-center">
-        {/* Chart Type Buttons */}
-        {['Bar', 'Line', 'Area'].map(t => (
-          <button
-            key={t}
-            onClick={() => setMonthlyChartType(t)}
-            className={`px-3 py-1 text-sm rounded-lg transition-colors ${
-              monthlyChartType === t
-                ? `${theme === 'dark' ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white'}`
-                : `${theme === 'dark' ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' : 'bg-gray-300 text-gray-700 hover:bg-gray-400'}`
-            }`}
-          >
-            {t}
-          </button>
-        ))}
+            <div className="flex flex-wrap gap-2 items-center">
+              {/* Chart Type Buttons */}
+              {['Bar', 'Line', 'Area'].map(t => (
+                <button
+                  key={t}
+                  onClick={() => setMonthlyChartType(t)}
+                  className={`px-3 py-1 text-sm rounded-lg transition-colors ${monthlyChartType === t
+                      ? `${theme === 'dark' ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white'}`
+                      : `${theme === 'dark' ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' : 'bg-gray-300 text-gray-700 hover:bg-gray-400'}`
+                    }`}
+                >
+                  {t}
+                </button>
+              ))}
 
-        {/* Toggle for Grid */}
-        <label className="flex items-center gap-3 ml-4 cursor-pointer select-none">
-          <span className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-200' : 'text-gray-700'}`}>Show Grid</span>
-          <div className="relative">
-            <input
-              type="checkbox"
-              checked={showGrid}
-              onChange={() => setShowGrid(!showGrid)}
-              className="sr-only"
-            />
-            {/* Track */}
-            <div className={`w-12 h-6 rounded-full transition-colors duration-300 ${
-              showGrid
-                ? 'bg-blue-500'
-                : theme === 'dark'
-                ? 'bg-gray-700'
-                : 'bg-gray-300'
-            }`}></div>
-            {/* Thumb */}
-            <div
-              className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 ${
-                showGrid ? 'translate-x-6' : 'translate-x-0'
-              }`}
-            ></div>
+              {/* Toggle for Grid */}
+              <label className="flex items-center gap-3 ml-4 cursor-pointer select-none">
+                <span className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-200' : 'text-gray-700'}`}>Show Grid</span>
+                <div className="relative">
+                  <input
+                    type="checkbox"
+                    checked={showGrid}
+                    onChange={() => setShowGrid(!showGrid)}
+                    className="sr-only"
+                  />
+                  {/* Track */}
+                  <div className={`w-12 h-6 rounded-full transition-colors duration-300 ${showGrid
+                      ? 'bg-blue-500'
+                      : theme === 'dark'
+                        ? 'bg-gray-700'
+                        : 'bg-gray-300'
+                    }`}></div>
+                  {/* Thumb */}
+                  <div
+                    className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 ${showGrid ? 'translate-x-6' : 'translate-x-0'
+                      }`}
+                  ></div>
+                </div>
+              </label>
+            </div>
           </div>
-        </label>
-      </div>
-    </div>
 
-    <div className="h-64">
-      <ResponsiveContainer width="100%" height="100%">
-        {monthlyChartType === 'Bar' && (
-          <BarChart data={monthlyChartData} margin={{ top: 20, right: 20, bottom: 30, left: 0 }}>
-            {showGrid && <CartesianGrid stroke={theme === 'dark' ? '#374151' : '#E5E7EB'} strokeDasharray="3 3" />}
-            <XAxis dataKey="day" stroke={theme === 'dark' ? '#9CA3AF' : '#6B7280'} />
-            <YAxis tickFormatter={formatHoursToHHMM} stroke={theme === 'dark' ? '#9CA3AF' : '#6B7280'} />
-            <Tooltip
-              formatter={v => formatHoursToHHMM(v)}
-              contentStyle={{
-                backgroundColor: theme === 'dark' ? '#1F2937' : '#F9FAFB',
-                borderColor: theme === 'dark' ? '#374151' : '#E5E7EB',
-                borderRadius: '0.5rem',
-                color: theme === 'dark' ? '#F9FAFB' : '#1F2937',
-              }}
-              itemStyle={{
-                color: theme === 'dark' ? '#F9FAFB' : '#1F2937',
-              }}
-            />
-            <Bar dataKey="hours" radius={[4, 4, 0, 0]} fill="#10B981" />
-          </BarChart>
-        )}
-        {monthlyChartType === 'Line' && (
-          <LineChart data={monthlyChartData} margin={{ top: 20, right: 20, bottom: 30, left: 0 }}>
-            {showGrid && <CartesianGrid stroke={theme === 'dark' ? '#374151' : '#E5E7EB'} strokeDasharray="3 3" />}
-            <XAxis dataKey="day" stroke={theme === 'dark' ? '#9CA3AF' : '#6B7280'} />
-            <YAxis tickFormatter={formatHoursToHHMM} stroke={theme === 'dark' ? '#9CA3AF' : '#6B7280'} />
-            <Tooltip
-              formatter={v => formatHoursToHHMM(v)}
-              contentStyle={{
-                backgroundColor: theme === 'dark' ? '#1F2937' : '#F9FAFB',
-                borderColor: theme === 'dark' ? '#374151' : '#E5E7EB',
-                borderRadius: '0.5rem',
-                color: theme === 'dark' ? '#F9FAFB' : '#1F2937',
-              }}
-              itemStyle={{
-                color: theme === 'dark' ? '#F9FAFB' : '#1F2937',
-              }}
-            />
-            <Line type="monotone" dataKey="hours" stroke="#10B981" strokeWidth={3} dot={{ r: 4, fill: theme === 'dark' ? '#1F2937' : '#F9FAFB', stroke: '#10B981', strokeWidth: 2 }} activeDot={{ r: 6 }} />
-          </LineChart>
-        )}
-        {monthlyChartType === 'Area' && (
-          <AreaChart data={monthlyChartData} margin={{ top: 20, right: 20, bottom: 30, left: 0 }}>
-            {showGrid && <CartesianGrid stroke={theme === 'dark' ? '#374151' : '#E5E7EB'} strokeDasharray="3 3" />}
-            <XAxis dataKey="day" stroke={theme === 'dark' ? '#9CA3AF' : '#6B7280'} />
-            <YAxis tickFormatter={formatHoursToHHMM} stroke={theme === 'dark' ? '#9CA3AF' : '#6B7280'} />
-            <Tooltip
-              formatter={v => formatHoursToHHMM(v)}
-              contentStyle={{
-                backgroundColor: theme === 'dark' ? '#1F2937' : '#F9FAFB',
-                borderColor: theme === 'dark' ? '#374151' : '#E5E7EB',
-                borderRadius: '0.5rem',
-                color: theme === 'dark' ? '#F9FAFB' : '#1F2937',
-              }}
-              itemStyle={{
-                color: theme === 'dark' ? '#F9FAFB' : '#1F2937',
-              }}
-            />
-            <Area type="monotone" dataKey="hours" stroke="#10B981" strokeWidth={3} fill="rgba(16,185,129,0.3)" />
-          </AreaChart>
-        )}
-      </ResponsiveContainer>
-    </div>
-  </div>
-)}
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              {monthlyChartType === 'Bar' && (
+                <BarChart data={monthlyChartData} margin={{ top: 20, right: 20, bottom: 30, left: 0 }}>
+                  {showGrid && <CartesianGrid stroke={theme === 'dark' ? '#374151' : '#E5E7EB'} strokeDasharray="3 3" />}
+                  <XAxis dataKey="day" stroke={theme === 'dark' ? '#9CA3AF' : '#6B7280'} />
+                  <YAxis tickFormatter={formatHoursToHHMM} stroke={theme === 'dark' ? '#9CA3AF' : '#6B7280'} />
+                  <Tooltip
+                    formatter={v => formatHoursToHHMM(v)}
+                    contentStyle={{
+                      backgroundColor: theme === 'dark' ? '#1F2937' : '#F9FAFB',
+                      borderColor: theme === 'dark' ? '#374151' : '#E5E7EB',
+                      borderRadius: '0.5rem',
+                      color: theme === 'dark' ? '#F9FAFB' : '#1F2937',
+                    }}
+                    itemStyle={{
+                      color: theme === 'dark' ? '#F9FAFB' : '#1F2937',
+                    }}
+                  />
+                  <Bar dataKey="hours" radius={[4, 4, 0, 0]} fill="#10B981" />
+                </BarChart>
+              )}
+              {monthlyChartType === 'Line' && (
+                <LineChart data={monthlyChartData} margin={{ top: 20, right: 20, bottom: 30, left: 0 }}>
+                  {showGrid && <CartesianGrid stroke={theme === 'dark' ? '#374151' : '#E5E7EB'} strokeDasharray="3 3" />}
+                  <XAxis dataKey="day" stroke={theme === 'dark' ? '#9CA3AF' : '#6B7280'} />
+                  <YAxis tickFormatter={formatHoursToHHMM} stroke={theme === 'dark' ? '#9CA3AF' : '#6B7280'} />
+                  <Tooltip
+                    formatter={v => formatHoursToHHMM(v)}
+                    contentStyle={{
+                      backgroundColor: theme === 'dark' ? '#1F2937' : '#F9FAFB',
+                      borderColor: theme === 'dark' ? '#374151' : '#E5E7EB',
+                      borderRadius: '0.5rem',
+                      color: theme === 'dark' ? '#F9FAFB' : '#1F2937',
+                    }}
+                    itemStyle={{
+                      color: theme === 'dark' ? '#F9FAFB' : '#1F2937',
+                    }}
+                  />
+                  <Line type="monotone" dataKey="hours" stroke="#10B981" strokeWidth={3} dot={{ r: 4, fill: theme === 'dark' ? '#1F2937' : '#F9FAFB', stroke: '#10B981', strokeWidth: 2 }} activeDot={{ r: 6 }} />
+                </LineChart>
+              )}
+              {monthlyChartType === 'Area' && (
+                <AreaChart data={monthlyChartData} margin={{ top: 20, right: 20, bottom: 30, left: 0 }}>
+                  {showGrid && <CartesianGrid stroke={theme === 'dark' ? '#374151' : '#E5E7EB'} strokeDasharray="3 3" />}
+                  <XAxis dataKey="day" stroke={theme === 'dark' ? '#9CA3AF' : '#6B7280'} />
+                  <YAxis tickFormatter={formatHoursToHHMM} stroke={theme === 'dark' ? '#9CA3AF' : '#6B7280'} />
+                  <Tooltip
+                    formatter={v => formatHoursToHHMM(v)}
+                    contentStyle={{
+                      backgroundColor: theme === 'dark' ? '#1F2937' : '#F9FAFB',
+                      borderColor: theme === 'dark' ? '#374151' : '#E5E7EB',
+                      borderRadius: '0.5rem',
+                      color: theme === 'dark' ? '#F9FAFB' : '#1F2937',
+                    }}
+                    itemStyle={{
+                      color: theme === 'dark' ? '#F9FAFB' : '#1F2937',
+                    }}
+                  />
+                  <Area type="monotone" dataKey="hours" stroke="#10B981" strokeWidth={3} fill="rgba(16,185,129,0.3)" />
+                </AreaChart>
+              )}
+            </ResponsiveContainer>
+          </div>
+        </div>
+      )}
 
 
 

@@ -62,9 +62,19 @@ export async function GET(request) {
         .lte("date", endDate.format("YYYY-MM-DD"));
 
       if (monthError) console.error("Error fetching monthly data:", monthError);
-
       const monthlyTotal = monthData?.reduce((sum, record) => sum + (record.coding_time || 0), 0) || 0;
-      const avgDaily = monthData && monthData.length > 0 ? monthlyTotal / monthData.length : 0;
+
+      // Fetch ALL time total from Supabase
+      const { data: allTimeData, error: allTimeError } = await supabase
+        .from("daily_coding_time")
+        .select("coding_time");
+
+      if (allTimeError) console.error("Error fetching all-time data:", allTimeError);
+
+      const allTimeTotal = allTimeData?.reduce((sum, record) => sum + (record.coding_time || 0), 0) || 0;
+
+      const activeDaysCount = monthData?.filter(record => (record.coding_time || 0) > 0).length || 0;
+      const avgDaily = activeDaysCount > 0 ? monthlyTotal / activeDaysCount : 0;
 
       const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
       const weeklyActivity = [];
@@ -91,6 +101,7 @@ export async function GET(request) {
             today: formattedToday,
             weekly: formatHoursToTime(weekData?.reduce((sum, r) => sum + (r.coding_time || 0), 0) || 0),
             monthly: formatHoursToTime(monthlyTotal),
+            all_time: formatHoursToTime(allTimeTotal),
             average: formatHoursToTime(avgDaily),
             today_numeric: numericHoursToday,
           },

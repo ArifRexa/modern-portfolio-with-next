@@ -21,7 +21,7 @@ const GenericUsageChart = ({ data, title, chartType = 'bar', theme, dataType = '
     name: item.name,
     hours: parseFloat(item.decimal),
     time: item.text,
-    percent: item.percent,
+    percent: parseFloat(item.percent), // Ensure percent is a number
     // For projects
     humanAdditions: item.human_additions || 0,
     humanDeletions: item.human_deletions || 0,
