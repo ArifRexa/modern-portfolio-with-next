@@ -7,7 +7,8 @@ import { useTheme } from '@/context/ThemeContext';
 
 const DetailedCodingActivity = () => {
   const { theme } = useTheme();
-  // Default to empty string for "Average" view
+  // 'overview' | 'languages' | 'projects'
+  const [viewMode, setViewMode] = useState('overview');
   const [selectedDate, setSelectedDate] = useState('');
   const [historicalData, setHistoricalData] = useState([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
@@ -49,19 +50,92 @@ const DetailedCodingActivity = () => {
     fetchHistoricalData();
   }, []);
 
-  // Prepare data for charts
-  const chartData = historicalData.map(item => ({
-    date: item.date.split('-').pop(), // Just the day number
-    fullDate: item.date, // Full date for tooltip
-    hours: item.totalHours,
-    projects: item.projectCount
-  }));
-
-  // Gradient Colors
-  const chartColors = {
-    hours: { stroke: '#8B5CF6', fill: '#8B5CF6' }, // Violet
-    projects: { stroke: '#10B981', fill: '#10B981' } // Emerald
+  // Helper: Get top N items by total duration across all history
+  const getTopItems = (data, field, n = 7) => {
+    const totals = {};
+    data.forEach(day => {
+      if (day[field]) {
+        day[field].forEach(item => {
+          totals[item.name] = (totals[item.name] || 0) + item.hours;
+        });
+      }
+    });
+    return Object.entries(totals)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, n)
+      .map(([name]) => name);
   };
+
+  // Helper to format decimal hours to "1h 30m"
+  const formatDuration = (decimalHours) => {
+    const hours = Math.floor(decimalHours);
+    const minutes = Math.round((decimalHours - hours) * 60);
+    if (hours === 0) return `${minutes}m`;
+    return `${hours}h ${minutes}m`;
+  };
+
+  const topLanguages = React.useMemo(() => getTopItems(historicalData, 'languages'), [historicalData]);
+  const topProjects = React.useMemo(() => getTopItems(historicalData, 'projects'), [historicalData]);
+
+  // Color Palettes
+  const colors = {
+    overview: {
+      items: ['Hours', 'Projects'],
+      map: { Hours: '#8B5CF6', Projects: '#10B981' }
+    },
+    languages: {
+      items: topLanguages,
+      map: topLanguages.reduce((acc, lang, i) => ({
+        ...acc,
+        [lang]: [
+          '#3B82F6', '#8B5CF6', '#EC4899', '#F59E0B', '#10B981', '#EF4444', '#6366F1'
+        ][i % 7]
+      }), {})
+    },
+    projects: {
+      items: topProjects,
+      map: topProjects.reduce((acc, proj, i) => ({
+        ...acc,
+        [proj]: [
+          '#F472B6', '#34D399', '#60A5FA', '#A78BFA', '#FBBF24', '#F87171', '#2DD4BF'
+        ][i % 7]
+      }), {})
+    }
+  };
+
+  // Prepare data for charts with dynamic keys
+  const chartData = historicalData.map(item => {
+    const base = {
+      date: item.date.split('-').pop(),
+      fullDate: item.date,
+      Hours: item.totalHours,
+      Projects: item.projectCount
+    };
+
+    // Initialize all keys to 0 to prevent gaps in Stacked Area Chart
+    topLanguages.forEach(lang => base[lang] = 0);
+    topProjects.forEach(proj => base[proj] = 0);
+
+    // Flatten languages
+    if (item.languages) {
+      item.languages.forEach(l => {
+        if (topLanguages.includes(l.name)) {
+          base[l.name] = l.hours;
+        }
+      });
+    }
+
+    // Flatten projects
+    if (item.projects) {
+      item.projects.forEach(p => {
+        if (topProjects.includes(p.name)) {
+          base[p.name] = p.hours;
+        }
+      });
+    }
+
+    return base;
+  });
 
   return (
     <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-950' : 'bg-gray-50'} transition-colors duration-300`}>
@@ -94,19 +168,41 @@ const DetailedCodingActivity = () => {
         {/* Historical Trend Chart Area */}
         <motion.div variants={item}>
           <div className={`rounded-3xl p-1 md:p-8 backdrop-blur-xl border shadow-2xl ${theme === 'dark' ? 'bg-gray-900/40 border-white/5' : 'bg-white/60 border-white/40'}`}>
-            <div className="flex flex-col md:flex-row justify-between items-center mb-8 px-4">
-              <h3 className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
-                30-Day Activity Trend
-              </h3>
-              <div className="flex gap-4 mt-4 md:mt-0">
-                <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-violet-500"></span>
-                  <span className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Hours</span>
+            <div className="flex flex-col gap-6 mb-8 px-4">
+              <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div className="flex items-center gap-4">
+                  <h3 className={`text-2xl font-bold whitespace-nowrap ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+                    30-Day Trend
+                  </h3>
+                  {/* View Selector */}
+                  <div className={`flex rounded-lg p-1 border ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-gray-100 border-gray-200'}`}>
+                    {['overview', 'languages', 'projects'].map((mode) => (
+                      <button
+                        key={mode}
+                        onClick={() => setViewMode(mode)}
+                        className={`px-3 py-1 text-xs sm:text-sm font-medium rounded-md capitalize transition-all ${viewMode === mode
+                          ? theme === 'dark' ? 'bg-gray-700 text-white shadow' : 'bg-white text-gray-800 shadow'
+                          : theme === 'dark' ? 'text-gray-400 hover:text-gray-200' : 'text-gray-500 hover:text-gray-700'
+                          }`}
+                      >
+                        {mode}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-emerald-500"></span>
-                  <span className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Projects</span>
-                </div>
+              </div>
+
+              {/* Dynamic Legend */}
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                {colors[viewMode].items.map((item, i) => (
+                  <div key={item} className="flex items-center gap-1.5">
+                    <span
+                      className="w-2.5 h-2.5 rounded-full"
+                      style={{ backgroundColor: viewMode === 'overview' ? colors.overview.map[item] : colors[viewMode].map[item] }}
+                    ></span>
+                    <span className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>{item}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -123,13 +219,29 @@ const DetailedCodingActivity = () => {
                   <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                     <defs>
                       <linearGradient id="colorHours" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor={chartColors.hours.fill} stopOpacity={0.3} />
-                        <stop offset="95%" stopColor={chartColors.hours.fill} stopOpacity={0} />
+                        <stop offset="5%" stopColor={colors.overview.map.Hours} stopOpacity={0.3} />
+                        <stop offset="95%" stopColor={colors.overview.map.Hours} stopOpacity={0} />
                       </linearGradient>
                       <linearGradient id="colorProjects" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor={chartColors.projects.fill} stopOpacity={0.3} />
-                        <stop offset="95%" stopColor={chartColors.projects.fill} stopOpacity={0} />
+                        <stop offset="5%" stopColor={colors.overview.map.Projects} stopOpacity={0.3} />
+                        <stop offset="95%" stopColor={colors.overview.map.Projects} stopOpacity={0} />
                       </linearGradient>
+
+                      {/* Dynamic Gradients for Languages */}
+                      {topLanguages.map((lang, index) => (
+                        <linearGradient key={`grad-lang-${index}`} id={`color-lang-${index}`} x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor={colors.languages.map[lang]} stopOpacity={0.4} />
+                          <stop offset="95%" stopColor={colors.languages.map[lang]} stopOpacity={0.05} />
+                        </linearGradient>
+                      ))}
+
+                      {/* Dynamic Gradients for Projects */}
+                      {topProjects.map((proj, index) => (
+                        <linearGradient key={`grad-proj-${index}`} id={`color-proj-${index}`} x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor={colors.projects.map[proj]} stopOpacity={0.4} />
+                          <stop offset="95%" stopColor={colors.projects.map[proj]} stopOpacity={0.05} />
+                        </linearGradient>
+                      ))}
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={theme === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'} />
                     <XAxis
@@ -143,36 +255,79 @@ const DetailedCodingActivity = () => {
                       axisLine={false}
                       tickLine={false}
                       tick={{ fill: theme === 'dark' ? '#9CA3AF' : '#6B7280', fontSize: 12 }}
-                      tickFormatter={(value) => `${value}h`}
+                      tickFormatter={(value) => `${value}`}
                     />
                     <Tooltip
-                      contentStyle={{
-                        backgroundColor: theme === 'dark' ? 'rgba(17, 24, 39, 0.8)' : 'rgba(255, 255, 255, 0.8)',
-                        backdropFilter: 'blur(10px)',
-                        border: 'none',
-                        borderRadius: '12px',
-                        boxShadow: '0 4px 20px rgba(0,0,0,0.1)'
+                      content={({ active, payload, label }) => {
+                        if (active && payload && payload.length) {
+                          // Filter out zero values
+                          const activeItems = payload.filter(entry => entry.value > 0);
+
+                          if (activeItems.length === 0) return null;
+
+                          return (
+                            <div className={`p-3 rounded-xl border backdrop-blur-md shadow-xl ${theme === 'dark'
+                              ? 'bg-gray-900/90 border-gray-700 text-white'
+                              : 'bg-white/90 border-gray-200 text-gray-800'
+                              }`}>
+                              <p className={`text-sm font-medium mb-2 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+                                {label}
+                              </p>
+                              <div className="space-y-1">
+                                {activeItems.map((entry, index) => {
+                                  // Determine appropriate display unit
+                                  let valueDisplay = entry.value;
+                                  if (viewMode === 'overview' && entry.name === 'Projects') {
+                                    valueDisplay = entry.value; // Projects keeps raw count
+                                  } else {
+                                    // Everything else is hours (Overview 'Hours', Languages, Projects view items)
+                                    valueDisplay = formatDuration(entry.value);
+                                  }
+
+                                  return (
+                                    <div key={index} className="flex items-center gap-2 text-xs">
+                                      <span
+                                        className="w-2 h-2 rounded-full"
+                                        style={{ backgroundColor: entry.color || entry.fill }}
+                                      ></span>
+                                      <span className="font-medium">{entry.name}:</span>
+                                      <span>{valueDisplay}</span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          );
+                        }
+                        return null;
                       }}
-                      itemStyle={{ color: theme === 'dark' ? '#fff' : '#000' }}
-                      labelStyle={{ color: theme === 'dark' ? '#9CA3AF' : '#6B7280', marginBottom: '0.5rem' }}
                       cursor={{ stroke: theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)', strokeWidth: 2 }}
                     />
-                    <Area
-                      type="monotone"
-                      dataKey="hours"
-                      stroke={chartColors.hours.stroke}
-                      fillOpacity={1}
-                      fill="url(#colorHours)"
-                      strokeWidth={3}
-                    />
-                    <Area
-                      type="monotone"
-                      dataKey="projects"
-                      stroke={chartColors.projects.stroke}
-                      fillOpacity={1}
-                      fill="url(#colorProjects)"
-                      strokeWidth={3}
-                    />
+
+                    {colors[viewMode].items.map((item, index) => {
+                      // Determine fill URL
+                      let fillUrl;
+                      if (viewMode === 'overview') {
+                        fillUrl = item === 'Hours' ? "url(#colorHours)" : "url(#colorProjects)";
+                      } else if (viewMode === 'languages') {
+                        fillUrl = `url(#color-lang-${index})`;
+                      } else {
+                        fillUrl = `url(#color-proj-${index})`;
+                      }
+
+                      return (
+                        <Area
+                          key={item}
+                          type="monotone"
+                          dataKey={item}
+                          stackId={viewMode === 'overview' ? undefined : "1"}
+                          stroke={viewMode === 'overview' ? colors.overview.map[item] : colors[viewMode].map[item]}
+                          fill={fillUrl}
+                          fillOpacity={1}
+                          strokeWidth={2}
+                        />
+                      );
+                    })}
                   </AreaChart>
                 </ResponsiveContainer>
               ) : (

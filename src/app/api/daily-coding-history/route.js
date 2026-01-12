@@ -51,6 +51,9 @@ export async function GET(request) {
         topEditor: editors.length > 0 ? editors[0].name : null,
         topLanguage: languages.length > 0 ? languages[0].name : null,
         topProject: projects.length > 0 ? projects[0].name : null,
+        // Detailed breakdowns for graphs
+        languages: languages.map(l => ({ name: l.name, hours: parseFloat(l.decimal || 0) })),
+        projects: projects.map(p => ({ name: p.name, hours: parseFloat(p.decimal || 0) })),
         created_at: record.created_at
       };
     });
