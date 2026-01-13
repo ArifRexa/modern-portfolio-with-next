@@ -21,7 +21,7 @@ const TechnicalSkills = () => {
         "PostgreSQL", "MongoDB", "Redis", "MySQL", "Firebase", "Elasticsearch",
         "Git", "Postman", "Figma", "Trello", "Selenium", "VSCode",
         "TensorFlow", "PyTorch", "Scikit-learn", "Keras", "OpenCV",
-        "Docker",
+        "Docker", "AWS", "Terraform",
         "Linux", "macOS", "Windows"
     ];
 
@@ -35,7 +35,7 @@ const TechnicalSkills = () => {
         "Database": ["PostgreSQL", "MongoDB", "Redis", "MySQL", "Firebase", "Elasticsearch"],
         "ML Frameworks": ["TensorFlow", "PyTorch", "Scikit-learn", "Keras", "OpenCV"],
         // "Cloud & DevOps": ["Docker", "AWS", "Kubernetes", "Terraform", "Argo CD"],
-        "Cloud & DevOps": ["Docker"],
+        "Cloud & DevOps": ["Docker", "AWS", "Terraform"],
         "Tools": ["Git", "Postman", "Figma", "Trello", "Selenium", "VSCode"],
         "Operating Systems": ["Linux", "macOS", "Windows"]
     };
@@ -79,9 +79,9 @@ const TechnicalSkills = () => {
         "Keras": "/images/icons/keras.svg",
         "OpenCV": "/images/icons/opencv.svg",
         "Docker": "/images/icons/docker.svg",
-        // "AWS": "/images/icons/aws.svg",
+        "AWS": "/images/icons/aws.svg",
         // "Kubernetes": "/images/icons/kubernetes.svg",
-        // "Terraform": "/images/icons/terraform.svg",
+        "Terraform": "/images/icons/terraform.svg",
         // "Argo CD": "/images/icons/argocd.svg",
         "Linux": "/images/icons/linux.svg",
         "macOS": "/images/icons/macos.svg",
